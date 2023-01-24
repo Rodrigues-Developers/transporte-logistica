@@ -1,36 +1,16 @@
-<div class="div_form">
-  <form class="form_nfe" action="">
-    <label for="input_nfe">Nota Fiscal:</label>
-    <input id="input_nfe" type="text">
+<header class="navbar">
+  <ul class="navbar__menu">
+    <li received="tracking" class="navbar__item">Home</li>
+    <li received="tracking" class="menu__item">Rastrear</li>
+    <li received="registration" class="menu__item">Registrar</li>
+    <li received="received" class="menu__item">Entregues</li>
+  </ul>
+</header>
 
-    <label for="input_emission">Data de Emissão:</label>
-    <input id="input_emission" type="date">
+<main>
+  <router-outlet></router-outlet>
+</main>
 
-    <label for="input_transport">Transportadora:</label>
-    <input id="input_transport" type="text">
-
-    <label for="input_departure_date">Data de Saída:</label>
-    <input id="input_departure_date" type="date">
-
-    <label for="input_arrival_forecast">Previsão de Chegada:</label>
-    <input id="input_arrival_forecast" type="date">
-
-    <label for="input_merchandise">Mercadoria:</label>
-    <input id="input_merchandise" type="text">
-
-    <label for="input_amount">Quantidade:</label>
-    <input id="input_amount" type="number">
-
-    <label for="input_nf_value">Valor da NF:</label>
-    <input id="input_nf_value" type="number">
-
-    <label for="input_pin_release">Liberação do PIN:</label>
-    <input id="input_pin_release" type="date">
-
-    <label for="input_obs">Observações:</label>
-    <input id="input_obs" type="text">
-
-    <button type="submit" form="form_nfe" value="Submit">Enviar</button>
-
-  </form>
-</div>
+<footer class="footer">
+  <p>&copy; 2019 Gabriel Machado</p>
+</footer>
