@@ -6,6 +6,11 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TrackingComponent } from './tracking/tracking.component';
 import { RegistrationComponent } from './registration/registration.component';
+import { ProductService } from './product.service';
+
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';  
+
+import { HttpClientModule, HttpClient } from '@angular/common/http';  
 
 @NgModule({
   declarations: [
@@ -13,12 +18,17 @@ import { RegistrationComponent } from './registration/registration.component';
     TrackingComponent,
     RegistrationComponent
   ],
+
   imports: [
     BrowserModule,
     AppRoutingModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    FormsModule,
+    ReactiveFormsModule,
   ],
-  providers: [],
+
+  providers: [HttpClientModule, ProductService],
   bootstrap: [AppComponent]
 })
+
 export class AppModule { }
