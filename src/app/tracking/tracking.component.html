@@ -4,10 +4,10 @@
         <th>Emissão</th>
         <th>Transportadora</th>
     </tr>
-    <tr *ngFor="let emp of empData">
-        <td>{{emp.Id}}</td>
-        <td>{{emp.FirstName}}</td>
-        <td>{{emp.LastName}}</td>
+    <tr *ngFor="let prod of products">
+        <td>{{prod.id}}</td>
+        <td>{{prod.description}}</td>
+        <td>{{prod.price}}</td>
         <!-- TODO:ORGANIZAR OS DADOS CONFORME -->
     </tr>
 </table>

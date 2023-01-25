@@ -1,11 +1,30 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { ProductService } from '../product.service';
+import { Product } from '../product.type';
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-tracking',
   templateUrl: './tracking.component.html',
   styleUrls: ['./tracking.component.less'],
 })
-export class TrackingComponent {
+export class TrackingComponent implements OnInit{
+
+  product = {} as Product;
+  products: Product[] = [];
+
+  constructor(private productService: ProductService) {}
+
+  ngOnInit(): void {
+    this.getProducts();
+  }
+
+  getProducts() {
+    this.productService.getAllProducts().subscribe((products: Product[]) => {
+      this.products = products;
+    });
+  }
+
   empData: Employee[] = [
     {
       Id: 1,
