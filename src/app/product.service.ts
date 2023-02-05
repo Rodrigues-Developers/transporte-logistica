@@ -1,41 +1,48 @@
 import { Product } from './product.type';
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';  
-import { HttpHeaders } from '@angular/common/http';  
-import { Observable } from 'rxjs';  
+import { Injectable, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { HttpHeaders } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
-var httpOptions = {headers: new HttpHeaders({"Content-Type": "application/json"})};
+var httpOptions = {
+  headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+};
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
-
 export class ProductService {
-  
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+    fetch('http://localhost:3000/logistics', {
+      method: 'GET',
+    })
+      .then((response) => {})
+      .catch((error) => {});
+  }
 
-  url = 'http://localhost:3000/logistics/';  
+  url = 'http://localhost:3000/logistics';
 
-  getAllProducts(): Observable<Product[]> {  
-    return this.http.get<Product[]>(this.url);  
-  }  
-  
-  getProductById(Productid: string): Observable<Product> {  
+  getAllProducts(): Observable<Product[]> {
+    console.log('teste' + this.http.get<Product[]>(this.url));
+    return this.http.get<Product[]>(this.url);
+  }
+
+  getProductById(Productid: string): Observable<Product> {
     const apiurl = `${this.url}/${Productid}`;
-    return this.http.get<Product>(apiurl);  
-  } 
+    return this.http.get<Product>(apiurl);
+  }
 
-  createProduct(Product: Product): Observable<Product> {  
-    return this.http.post<Product>(this.url, Product, httpOptions);  
-  } 
+  createProduct(Product: Product): Observable<Product> {
+    return this.http.post<Product>(this.url, Product, httpOptions);
+  }
 
-  updateProduct(Productid: string, Product: Product): Observable<Product> {  
+  updateProduct(Productid: string, Product: Product): Observable<Product> {
     const apiurl = `${this.url}/${Productid}`;
-    return this.http.put<Product>(apiurl,Product, httpOptions);  
-  }  
+    return this.http.put<Product>(apiurl, Product, httpOptions);
+  }
 
-  deleteProductById(Productid: string): Observable<number> {  
+  deleteProductById(Productid: string): Observable<number> {
     const apiurl = `${this.url}/${Productid}`;
-    return this.http.delete<number>(apiurl, httpOptions);  
-  }  
+    return this.http.delete<number>(apiurl, httpOptions);
+  }
 }
