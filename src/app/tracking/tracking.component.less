@@ -1,5 +1,73 @@
-table {
-    border: 1px solid;
-    border-spacing: 1px;
-    border-collapse: separate;
+.tracking__table {
+  min-width: 950px;
+  thead {
+    tr,
+    th {
+      border-top: none;
+      border-bottom: none !important;
+    }
+  }
+  tbody {
+    th,
+    td {
+      color: #707070;
+      font-weight: 400;
+      padding-bottom: 20px;
+      padding-top: 20px;
+      font-weight: 300;
+      small {
+        color: darken(#ccc, 10%);
+        font-weight: 300;
+      }
+      tr {
+        th,
+        td {
+          position: relative;
+          transition: 0.3s all ease;
+          &:before,
+          &:after {
+            transition: 0.3s all ease;
+            content: "";
+            left: 0;
+            right: 0;
+            position: absolute;
+            height: 1px;
+            background: #ccc;
+            width: 100%;
+            opacity: 0;
+            visibility: hidden;
+          }
+          &:before {
+            top: -1px;
+          }
+          &:after {
+            bottom: -1px;
+          }
+        }
+        &:hover {
+          th,
+          td {
+            background: rgba(rgb(119, 157, 226), 0.03);
+            &:before,
+            &:after {
+              opacity: 1;
+              visibility: visible;
+            }
+          }
+        }
+
+        &.active {
+          th,
+          td {
+            background: rgba(#f07070, 0.03);
+            &:before,
+            &:after {
+              opacity: 1;
+              visibility: visible;
+            }
+          }
+        }
+      }
+    }
+  }
 }

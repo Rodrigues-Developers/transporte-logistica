@@ -1,13 +1,35 @@
-<table>
-    <tr>
-        <th>NFe</th>
-        <th>Emissão</th>
-        <th>Transportadora</th>
-    </tr>
-    <tr *ngFor="let prod of products">
-        <td>{{prod.id}}</td>
-        <td>{{prod.description}}</td>
-        <td>{{prod.price}}</td>
-        <!-- TODO:ORGANIZAR OS DADOS CONFORME -->
-    </tr>
+<table class="tracking__table">
+    <thead>
+        <tr>
+            <th><input type="checkbox" class="check__all"></th>
+            <th>NFe</th>
+            <th>Emissão da NF</th>
+            <th>Transportadora</th>
+            <th>Data de Saída</th>
+            <th>Previsão de Chegada</th>
+            <th>Mercadoria</th>
+            <th>Valor</th>
+            <th>Data da Liberação do PIN</th>
+            <th>Observações</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let prod of products">
+
+            <th><input type="checkbox" id="{{prod.id}}"></th>
+            <td>{{prod.sys_code}}</td>
+            <td>{{prod.sys_code}}</td>
+            <td>{{prod.description}}</td>
+            <td>{{prod.price}}</td>
+            <td>{{prod.amount}}</td>
+            <td>{{prod.group}}</td>
+            <td>{{prod.sub_group}}</td>
+            <td>{{prod.brand}}</td>
+            <td>{{prod.factory_code}}</td>
+            <td>{{prod.factory_code}}</td>
+            <td>{{prod.factory_code}}</td>
+            <!-- TODO:ORGANIZAR OS DADOS CONFORME -->
+        </tr>
+    </tbody>
 </table>
