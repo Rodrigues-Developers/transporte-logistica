@@ -15,21 +15,19 @@
         </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let prod of products">
+        <tr *ngFor="let logis of logistics">
 
-            <th><input type="checkbox" id="{{prod.id}}"></th>
-            <td>{{prod.sys_code}}</td>
-            <td>{{prod.sys_code}}</td>
-            <td>{{prod.description}}</td>
-            <td>{{prod.price}}</td>
-            <td>{{prod.amount}}</td>
-            <td>{{prod.group}}</td>
-            <td>{{prod.sub_group}}</td>
-            <td>{{prod.brand}}</td>
-            <td>{{prod.factory_code}}</td>
-            <td>{{prod.factory_code}}</td>
-            <td>{{prod.factory_code}}</td>
-            <!-- TODO:ORGANIZAR OS DADOS CONFORME -->
+            <th><input type="checkbox" id="{{logis.id}}"></th>
+            <td>{{logis.nfe}}</td>
+            <td>{{logis.emissionNf | date: 'dd/MM/yyyy'}}</td>
+            <td>{{logis.shipping_company}}</td>
+            <td>{{logis.arrival_forecast | date: 'dd/MM/yyyy'}}</td>
+            <td>{{logis.date_out | date: 'dd/MM/yyyy'}}</td>
+            <td>{{logis.merchandise}}</td>
+            <td>{{logis.nfe_value}}</td>
+            <td>{{logis.note}}</td>
+            <td>{{logis.pin_release | date: 'dd/MM/yyyy'}}</td>
+            <td>{{logis.status}}</td>
         </tr>
     </tbody>
 </table>

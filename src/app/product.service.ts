@@ -1,4 +1,4 @@
-import { Product } from './product.type';
+import { Product } from './interfaces/product.interface';
 import { Injectable, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { HttpHeaders } from '@angular/common/http';
@@ -13,18 +13,17 @@ var httpOptions = {
 })
 export class ProductService {
   constructor(private http: HttpClient) {
-    fetch('http://localhost:3000/logistics', {
+    fetch('http://localhost:3000/', {
       method: 'GET',
     })
       .then((response) => {})
       .catch((error) => {});
   }
 
-  url = 'http://localhost:3000/logistics';
+  url = 'http://localhost:3000/';
 
   getAllProducts(): Observable<Product[]> {
-    console.log('teste' + this.http.get<Product[]>(this.url));
-    return this.http.get<Product[]>(this.url);
+    return this.http.get<Product[]>(this.url+"products");
   }
 
   getProductById(Productid: string): Observable<Product> {
