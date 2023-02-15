@@ -26,6 +26,8 @@ export class LogisticService {
     return this.http.get<Logistic[]>(this.url+"logistics")
   }
 
+  
+
   // getLogistcById(Logistcid: string): Observable<Logistic> {
   //   const apiurl = `${this.url}/${Logistcid}`;
   //   return this.http.get<Logistc>(apiurl);

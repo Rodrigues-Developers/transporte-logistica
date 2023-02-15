@@ -5,7 +5,7 @@ export interface Logistic {
     shipping_company: string;
     arrival_forecast: string;
     date_out: Date;
-    merchandise: Object;
+    merchandise: [string];
     nfe_value: number;
     note: string;
     pin_release: string;

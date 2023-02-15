@@ -23,7 +23,10 @@
             <td>{{logis.shipping_company}}</td>
             <td>{{logis.arrival_forecast | date: 'dd/MM/yyyy'}}</td>
             <td>{{logis.date_out | date: 'dd/MM/yyyy'}}</td>
-            <td>{{logis.merchandise}}</td>
+           
+            <td class="td__products"><p *ngFor="let prod of logis.merchandise" >{{prod}}</p></td>
+                <!-- TODO: Arrumar para colocar o código de fábrica do produto -->
+
             <td>{{logis.nfe_value}}</td>
             <td>{{logis.note}}</td>
             <td>{{logis.pin_release | date: 'dd/MM/yyyy'}}</td>
