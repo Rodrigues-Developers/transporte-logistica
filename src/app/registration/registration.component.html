@@ -1,36 +1,82 @@
 <div class="div_form">
-    <form class="form_nfe" action="">
-      <label for="input_nfe">Nota Fiscal:</label>
-      <input id="input_nfe" type="text">
-  
-      <label for="input_emission">Data de Emissão:</label>
-      <input id="input_emission" type="date">
-  
-      <label for="input_transport">Transportadora:</label>
-      <input id="input_transport" type="text">
-  
-      <label for="input_departure_date">Data de Saída:</label>
-      <input id="input_departure_date" type="date">
-  
-      <label for="input_arrival_forecast">Previsão de Chegada:</label>
-      <input id="input_arrival_forecast" type="date">
-  
-      <label for="input_merchandise">Mercadoria:</label>
-      <input id="input_merchandise" type="text">
-  
-      <label for="input_amount">Quantidade:</label>
-      <input id="input_amount" type="number">
-  
-      <label for="input_nf_value">Valor da NF:</label>
-      <input id="input_nf_value" type="number">
-  
-      <label for="input_pin_release">Liberação do PIN:</label>
-      <input id="input_pin_release" type="date">
-  
-      <label for="input_obs">Observações:</label>
-      <input id="input_obs" type="text">
-  
-      <button type="submit" form="form_nfe" value="Submit">Enviar</button>
-  
-    </form>
-  </div>
+  <form class="form_nfe" [formGroup]="registrationForm" (ngSubmit)="onSubmit()">
+    <label for="input_nfe">Nota Fiscal:</label>
+    <input id="input_nfe" type="text" formControlName="nfe">
+    <div
+      *ngIf="registrationForm.get('nfe')?.invalid && (registrationForm.get('nfe')?.dirty || registrationForm.get('nfe')?.touched)">
+      <div class="validation_input" *ngIf="registrationForm.get('nfe')?.errors?.['required']">Nota fiscal é obrigatória
+      </div>
+    </div>
+
+    <label for="input_emission">Data de Emissão:</label>
+    <input id="input_emission" type="date" formControlName="emissionDate">
+    <div
+      *ngIf="registrationForm.get('emissionDate')?.invalid && (registrationForm.get('emissionDate')?.dirty || registrationForm.get('emissionDate')?.touched)">
+      <div class="validation_input" *ngIf="registrationForm.get('emissionDate')?.errors?.['required']">Data de emissão é
+        obrigatória</div>
+    </div>
+
+    <label for="input_transport">Transportadora:</label>
+    <input id="input_transport" type="text" formControlName="transport">
+    <div
+      *ngIf="registrationForm.get('transport')?.invalid && (registrationForm.get('transport')?.dirty || registrationForm.get('transport')?.touched)">
+      <div class="validation_input" *ngIf="registrationForm.get('transport')?.errors?.['required']">Transportadora é
+        obrigatória</div>
+    </div>
+
+    <label for="input_departure_date">Data de Saída:</label>
+    <input id="input_departure_date" type="date" formControlName="departureDate">
+    <div
+      *ngIf="registrationForm.get('departureDate')?.invalid && (registrationForm.get('departureDate')?.dirty || registrationForm.get('departureDate')?.touched)">
+      <div class="validation_input" *ngIf="registrationForm.get('departureDate')?.errors?.['required']">Data de saída é
+        obrigatória</div>
+    </div>
+
+
+    <label for="input_arrival_forecast">Previsão de Chegada:</label>
+    <input id="input_arrival_forecast" type="date" formControlName="arrivalForecast">
+    <div
+      *ngIf="registrationForm.get('arrivalForecast')?.invalid && (registrationForm.get('arrivalForecast')?.dirty || registrationForm.get('arrivalForecast')?.touched)">
+      <div class="validation_input" *ngIf="registrationForm.get('arrivalForecast')?.errors?.['required']">Data de saída
+        é obrigatória</div>
+    </div>
+
+    <label for="input_merchandise">Mercadoria:</label>
+    <input id="input_merchandise" type="text" formControlName="merchandise">
+    <div
+      *ngIf="registrationForm.get('merchandise')?.invalid && (registrationForm.get('merchandise')?.dirty || registrationForm.get('merchandise')?.touched)">
+      <div class="validation_input" *ngIf="registrationForm.get('merchandise')?.errors?.['required']">Nome da Mercadoria
+        é obrigatório</div>
+    </div>
+
+    <label for="input_amount">Quantidade:</label>
+    <input id="input_amount" type="number" formControlName="amount">
+    <div
+      *ngIf="registrationForm.get('amount')?.invalid && (registrationForm.get('amount')?.dirty || registrationForm.get('amount')?.touched)">
+      <div class="validation_input" *ngIf="registrationForm.get('amount')?.errors?.['required']">Quantidade é
+        obrigatória</div>
+    </div>
+
+    <label for="input_nf_value">Valor da NF:</label>
+    <input id="input_nf_value" type="number" formControlName="nfValue">
+    <div
+      *ngIf="registrationForm.get('nfValue')?.invalid && (registrationForm.get('nfValue')?.dirty || registrationForm.get('nfValue')?.touched)">
+      <div class="validation_input" *ngIf="registrationForm.get('nfValue')?.errors?.['required']">Valor da NF é
+        obrigatório</div>
+    </div>
+
+    <label for="input_pin_release">Liberação do PIN:</label>
+    <input id="input_pin_release" type="date" formControlName="pinRelease">
+    <div
+      *ngIf="registrationForm.get('pinRelease')?.invalid && (registrationForm.get('pinRelease')?.dirty || registrationForm.get('pinRelease')?.touched)">
+      <div class="validation_input" *ngIf="registrationForm.get('pinRelease')?.errors?.['required']">Data da liberação
+        do PIN é obrigatória</div>
+    </div>
+
+    <label for="input_obs">Observações:</label>
+    <input id="input_obs" type="text">
+
+    <button type="submit" [disabled]="registrationForm.invalid">Enviar</button>
+
+  </form>
+</div>
