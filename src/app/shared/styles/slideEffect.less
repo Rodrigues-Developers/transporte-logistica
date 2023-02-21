@@ -1,0 +1,13 @@
+.slide_right(@color, @background-color, @hover-color) {
+  color: @color;
+  box-shadow: inset 0 0 0 0 @background-color;
+  -webkit-transition: ease-out 0.4s;
+  -moz-transition: ease-out 0.4s;
+  transition: ease-out 0.4s;
+  letter-spacing: 1px;
+
+  &:hover {
+    box-shadow: inset 350px 0 0 0 @background-color;
+    color: @hover-color;
+  }
+}

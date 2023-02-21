@@ -1,14 +1,17 @@
+@import "./shared/styles/slideEffect.less";
+@import "./shared//styles//colors.less";
+
 .navbar {
   .navbar__menu {
     display: flex;
     justify-content: center;
 
-    margin: .5rem;
+    margin: 0.5rem;
 
     .menu__item {
       display: flex;
       justify-content: center;
-      align-items: center ;
+      align-items: center;
 
       width: 7rem;
       height: 1.7rem;
@@ -17,6 +20,9 @@
 
       border: 1px solid;
       border-radius: 5px;
+
+      cursor: pointer;
+      .slide_right(@color: @font-default-black, @background-color: @background-default-black, @hover-color: @font-default-white);
     }
   }
 }
@@ -24,7 +30,7 @@ main {
   display: flex;
   justify-content: center;
 
-  margin: .5rem auto;
+  margin: 0.5rem auto;
 
   min-height: 85vh;
   min-width: 80vw;
