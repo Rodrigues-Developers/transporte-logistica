@@ -14,7 +14,7 @@ var httpOptions = {
 export class LogisticService {
   constructor(private http: HttpClient) {
     // fetch('http://localhost:3000/logistics', {
-    fetch('http://18.230.57.243/:3000/logistics', {
+    fetch('http://18.230.57.243:3000/logistics', {
       method: 'GET',
     })
       .then((response) => {})
