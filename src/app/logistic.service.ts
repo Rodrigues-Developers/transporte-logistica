@@ -13,14 +13,16 @@ var httpOptions = {
 })
 export class LogisticService {
   constructor(private http: HttpClient) {
-    fetch('http://localhost:3000/logistics', {
+    // fetch('http://localhost:3000/logistics', {
+    fetch('http://18.230.57.243/:3000/logistics', {
       method: 'GET',
     })
       .then((response) => {})
       .catch((error) => {});
   }
 
-  url = 'http://localhost:3000/';
+  // url = 'http://localhost:3000/';
+  url = 'http://18.230.57.243:3000/';
 
   getAllLogistcs(): Observable<Logistic[]> {
     return this.http.get<Logistic[]>(this.url+"logistics")

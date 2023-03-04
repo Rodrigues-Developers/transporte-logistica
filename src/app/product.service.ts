@@ -13,14 +13,15 @@ var httpOptions = {
 })
 export class ProductService {
   constructor(private http: HttpClient) {
-    fetch('http://localhost:3000/', {
+    fetch('http://18.230.57.243/:3000/', {
       method: 'GET',
     })
       .then((response) => {})
       .catch((error) => {});
   }
 
-  url = 'http://localhost:3000/';
+  urlL = 'http://localhost/:3000/';
+  url = 'http://18.230.57.243/:3000/';
 
   getAllProducts(): Observable<Product[]> {
     return this.http.get<Product[]>(this.url+"products");
