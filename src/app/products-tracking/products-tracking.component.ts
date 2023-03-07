@@ -3,14 +3,13 @@ import { LogisticService } from './../logistic.service';
 import { ProductService } from '../product.service';
 import { Product } from '../interfaces/product.interface';
 import { Logistic } from '../interfaces/logistic.interface';
-import { NgForm } from '@angular/forms';
 
 @Component({
-  selector: 'app-tracking',
-  templateUrl: './tracking.component.html',
-  styleUrls: ['./tracking.component.less'],
+  selector: 'app-products-tracking',
+  templateUrl: './products-tracking.component.html',
+  styleUrls: ['./products-tracking.component.less'],
 })
-export class TrackingComponent implements OnInit {
+export class ProductsTrackingComponent implements OnInit {
   product = {} as Product;
   products: Product[] = [];
 
@@ -23,15 +22,8 @@ export class TrackingComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.getLogistics();
+    this.getProducts();
   }
-  //Get all logistics from database
-  getLogistics() {
-    this.logisticService.getAllLogistcs().subscribe((logistics: Logistic[]) => {
-      this.logistics = logistics;
-    });
-  }
-
   //Get all products from database.
   getProducts() {
     this.productService.getAllProducts().subscribe((products: Product[]) => {
