@@ -5,7 +5,7 @@ import { RegistrationComponent } from './registration/registration.component';
 import { ProductsTrackingComponent } from './products-tracking/products-tracking.component';
 
 const routes: Routes = [
-  {path: '', redirectTo: "/tracking", pathMatch: "full"},
+  {path: '', redirectTo: "/productsTracking", pathMatch: "full"},
   {path: 'productsTracking', component: ProductsTrackingComponent},
   {path: 'tracking', component: TrackingComponent},
   {path: 'registration', component: RegistrationComponent},
