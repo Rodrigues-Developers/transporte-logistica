@@ -1,0 +1,40 @@
+#!/bin/sh
+red="\e[31m "
+green="\e[32m "
+blue="\e[34m "
+yellow="\e[33m "
+close="\e[0m"
+
+
+if [ -z "$1" ]; then
+	echo "Missing argument (commit message). Did you try to run this manually?"
+	exit 1
+fi
+
+commitTitle="$(cat $1 | head -n1)"
+
+# ignore merge requests
+if echo "$commitTitle" | grep -qE "^Merge branch \'"; then
+	echo "Commit hook: ignoring branch merge"
+	exit 0
+fi
+
+# check semantic versioning scheme
+if ! echo "$commitTitle" | grep -qE '^((build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test|¯\\_\(ツ\)_/¯)(\(\w+\))?(!)?(: (.*\s*)*))|(Merge (.*\s*)*)|(Initial commit$)'; then
+	echo -e "$red Your commit title($commitTitle) did not follow semantic versioning$close "
+	echo -e "$red Please follow the correct format like below:$close"
+	echo -e "$red <type>$close$blue[optional scope]:$close$red<description>$close"
+	echo -e "$blue [optional body]$close"
+	echo -e "$blue [optional footer]$close"
+	echo -e "$red Type must be one of the following:$close"
+	echo -e "$yellow feat:$close A new feature"
+	echo -e "$yellow fix:$close A bug fix"
+	echo -e "$yellow docs:$close Documentation only changes"
+	echo -e "$yellow style:$close Changes that do not affect the meaning of the code (formatting, missing semi-colons, etc)"
+	echo -e "$yellow refactor:$close A code change that neither fixes a bug nor adds a feature"
+	echo -e "$yellow perf:$close A code change that improves performance"
+	echo -e "$yellow test:$close Adding missing or correcting existing tests"
+	echo -e "$yellow chore:$close Changes to the build process or auxiliary tools and libraries such as documentation generation"
+
+	exit 1
+fi
