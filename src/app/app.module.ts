@@ -9,13 +9,15 @@ import { ProductService } from './product.service';
 import { LogisticService } from './logistic.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';  
 
-import { HttpClientModule, HttpClient } from '@angular/common/http';  
+import { HttpClientModule, HttpClient } from '@angular/common/http';
+import { ProductsTrackingComponent } from './products-tracking/products-tracking.component';  
 
 @NgModule({
   declarations: [
     AppComponent,
     TrackingComponent,
-    RegistrationComponent
+    RegistrationComponent,
+    ProductsTrackingComponent
   ],
 
   imports: [

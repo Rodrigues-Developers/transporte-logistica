@@ -1,0 +1,91 @@
+.tracking__table {
+    width: 950px;
+    thead {
+      height: 2.5rem;
+      tr,
+      th {
+        vertical-align: middle;
+        text-align: center;
+        background-color: #303030;
+        color: #ffffff;
+        border-top: none;
+        border-bottom: none !important;
+      }
+    }
+    tbody {
+      .td__products{
+        overflow-wrap: break-word;
+      }
+      th,
+      td {
+        vertical-align: middle;
+        max-width: 85px;
+  
+        color: #525252;
+        text-align: center;
+        
+        font-weight: 400;
+        padding-bottom: 20px;
+        padding-top: 20px;
+        font-weight: 300;
+        small {
+          color: darken(#ccc, 10%);
+          font-weight: 300;
+        }
+      }
+  
+      tr {
+        &:nth-child(even) {
+          background-color: #ebebeb;
+        }
+        th,
+        td {
+          position: relative;
+          transition: 0.3s all ease;
+          &:before,
+          &:after {
+            transition: 0.3s all ease;
+            content: "";
+            left: 0;
+            right: 0;
+            position: absolute;
+            height: 1px;
+            background: #025de6;
+            width: 100%;
+            opacity: 0;
+            visibility: hidden;
+          }
+          &:before {
+            top: 0px;
+          }
+          &:after {
+            bottom: 0px;
+          }
+        }
+        &:hover {
+          th,
+          td {
+            background: rgba(rgb(119, 157, 226), 0.03);
+            &:before,
+            &:after {
+              opacity: 1;
+              visibility: visible;
+            }
+          }
+        }
+  
+        &.active {
+          th,
+          td {
+            background: rgba(#f07070, 0.03);
+            &:before,
+            &:after {
+              opacity: 1;
+              visibility: visible;
+            }
+          }
+        }
+      }
+    }
+  }
+  

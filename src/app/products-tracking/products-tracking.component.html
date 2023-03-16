@@ -1,0 +1,24 @@
+<table class="tracking__table">
+    <thead>
+        <tr>
+            <th>Código</th>
+            <th>Descrição</th>
+            <th>Data de Saída</th>
+            <th>Quantidade</th>            
+            <th>PIN</th>
+           
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let prod of products">
+
+            <td>{{prod.factory_code}}</td>
+            <td>{{prod.description}}</td>
+           
+            
+            <td>{{prod.brand}}</td>
+            <td>{{prod.amount}}</td>
+            <td>{{prod.price}}</td>
+        </tr>
+    </tbody>
+</table>
