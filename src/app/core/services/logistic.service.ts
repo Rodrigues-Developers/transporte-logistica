@@ -1,8 +1,8 @@
 import { HttpHeaders } from '@angular/common/http';
-import { Logistic } from './interfaces/logistic.interface';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { Logistic } from 'src/app/core/interfaces/logistic.interface';
 
 var httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' }),

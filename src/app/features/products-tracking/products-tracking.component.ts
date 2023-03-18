@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { LogisticService } from './../logistic.service';
-import { ProductService } from '../product.service';
-import { Product } from '../interfaces/product.interface';
-import { Logistic } from '../interfaces/logistic.interface';
+import { Product } from '../../core/interfaces/product.interface';
+import { Logistic } from '../../core/interfaces/logistic.interface';
+import { ProductService } from 'src/app/core/services/product.service';
+import { LogisticService } from 'src/app/core/services/logistic.service';
 
 @Component({
   selector: 'app-products-tracking',
