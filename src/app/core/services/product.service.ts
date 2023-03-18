@@ -1,8 +1,8 @@
-import { Product } from './interfaces/product.interface';
 import { Injectable, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { Product } from 'src/app/core/interfaces/product.interface';
 
 var httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
@@ -23,7 +23,7 @@ export class ProductService {
   url = 'http://localhost:3000/';
 
   getAllProducts(): Observable<Product[]> {
-    return this.http.get<Product[]>(this.url+"products");
+    return this.http.get<Product[]>(this.url + 'products');
   }
 
   getProductById(Productid: string): Observable<Product> {

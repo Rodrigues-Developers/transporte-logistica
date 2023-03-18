@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { TrackingComponent } from './tracking/tracking.component';
-import { RegistrationComponent } from './registration/registration.component';
-import { ProductsTrackingComponent } from './products-tracking/products-tracking.component';
+import { TrackingComponent } from './features/tracking/tracking.component';
+import { RegistrationComponent } from './features/registration/registration.component';
+import { ProductsTrackingComponent } from './features/products-tracking/products-tracking.component';
 
 const routes: Routes = [
   {path: '', redirectTo: "/productsTracking", pathMatch: "full"},
