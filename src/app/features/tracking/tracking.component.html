@@ -12,7 +12,7 @@
         </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let logis of logistics">
+        <tr routerLink="details" *ngFor="let logis of logistics" >
 
             <th><input type="checkbox" id="{{logis.id}}"></th>
             <td>{{logis.nfe}}</td>
