@@ -1,3 +1,4 @@
+import { DetailsComponent } from './../../shared/details/details.component';
 import { Component, OnInit } from '@angular/core';
 import { Product } from '../../core/interfaces/product.interface';
 import { Logistic } from '../../core/interfaces/logistic.interface';
@@ -16,12 +17,18 @@ export class TrackingComponent implements OnInit {
   logistic = {} as Logistic;
   logistics: Logistic[] = [];
 
+  details = 'sidebar';
+  backgrond = 'hide_backgrond';
+
   constructor(
     private productService: ProductService,
     private logisticService: LogisticService
   ) {}
 
   ngOnInit(): void {
+    this.details = 'sidebar_details';
+    this.backgrond = 'show_backgrond';
+
     this.getLogistics();
   }
   //Get all logistics from database
@@ -41,5 +48,14 @@ export class TrackingComponent implements OnInit {
     this.productService.getProductById(id).subscribe((product: Product) => {
       this.product = product;
     });
+  }
+
+  openSidebar() {
+    this.details = 'sidebar_details';
+    this.backgrond = 'show_backgrond';
+  }
+  closeSidebar() {
+    this.details = 'sidebar';
+    this.backgrond = 'hide_backgrond';
   }
 }

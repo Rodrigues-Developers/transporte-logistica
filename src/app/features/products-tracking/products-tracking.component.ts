@@ -16,6 +16,8 @@ export class ProductsTrackingComponent implements OnInit {
   logistic = {} as Logistic;
   logistics: Logistic[] = [];
 
+  details = 'sidebar';
+
   constructor(
     private productService: ProductService,
     private logisticService: LogisticService
@@ -35,4 +37,10 @@ export class ProductsTrackingComponent implements OnInit {
       this.product = product;
     });
   }
+
+  callSidebar(){
+    this.details = 'sidebar_details';
+    console.log(this.details);
+  }
+
 }
