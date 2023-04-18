@@ -25,6 +25,7 @@ export class ProductsTrackingComponent implements OnInit {
 
   ngOnInit(): void {
     this.getProducts();
+    this.details = 'sidebar';
   }
   //Get all products from database.
   getProducts() {
@@ -38,9 +39,8 @@ export class ProductsTrackingComponent implements OnInit {
     });
   }
 
-  callSidebar(){
+  callSidebar() {
     this.details = 'sidebar_details';
     console.log(this.details);
   }
-
 }

@@ -26,8 +26,8 @@ export class TrackingComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.details = 'sidebar_details';
-    this.backgrond = 'show_backgrond';
+    this.details = 'sidebar';
+    this.backgrond = 'hide_backgrond';
 
     this.getLogistics();
   }
