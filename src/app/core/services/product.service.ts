@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Product } from 'src/app/core/interfaces/product.interface';
+import { ObjectId } from 'mongodb';
 
 var httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
@@ -26,8 +27,8 @@ export class ProductService {
     return this.http.get<Product[]>(this.url + 'products');
   }
 
-  getProductById(Productid: string): Observable<Product> {
-    const apiurl = `${this.url}/${Productid}`;
+  getProductById(Productid: ObjectId): Observable<Product> {
+    const apiurl = `${this.url}products/${Productid}`;
     return this.http.get<Product>(apiurl);
   }
 

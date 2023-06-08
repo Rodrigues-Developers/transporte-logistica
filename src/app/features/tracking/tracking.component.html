@@ -6,26 +6,30 @@
             <th>Emissão da NF</th>
             <th>Transportadora</th>
             <th>Data de Saída</th>
-            <th>Previsão de Chegada</th>            
+            <th>Previsão de Chegada</th>
             <th>PIN</th>
             <th>Status</th>
         </tr>
     </thead>
+
     <tbody>
-        <tr (click)="openSidebar()" *ngFor="let logis of logistics" >
+        <tr *ngFor="let logis of logistics">
 
             <th><input type="checkbox" id="{{logis.id}}"></th>
-            <td>{{logis.nfe}}</td>
-            <td>{{logis.emissionNf | date: 'dd/MM/yyyy'}}</td>
-            <td>{{logis.shipping_company}}</td>
-            <td>{{logis.arrival_forecast | date: 'dd/MM/yyyy'}}</td>
-            <td>{{logis.date_out | date: 'dd/MM/yyyy'}}</td>            
-            <td>{{logis.pin_release | date: 'dd/MM/yyyy'}}</td>
-            <td>{{logis.status}}</td>
+            <td (click)="openSidebar(logis)">{{logis.nfe}}</td>
+            <td (click)="openSidebar(logis)">{{logis.emissionNf | date: 'dd/MM/yyyy'}}</td>
+            <td (click)="openSidebar(logis)">{{logis.shipping_company}}</td>
+            <td (click)="openSidebar(logis)">{{logis.arrival_forecast | date: 'dd/MM/yyyy'}}</td>
+            <td (click)="openSidebar(logis)">{{logis.date_out | date: 'dd/MM/yyyy'}}</td>
+            <td (click)="openSidebar(logis)">{{logis.pin_release | date: 'dd/MM/yyyy'}}</td>
+            <td (click)="openSidebar(logis)">{{logis.status}}</td>
+
         </tr>
     </tbody>
 </table>
-<div >
-    <app-details class="{{details}}"></app-details>
-    <div (click)="closeSidebar()" class="{{backgrond}}"></div>
+<div>
+    <div *ngIf="showDetails">
+        <app-details class="{{details}}"></app-details>
+        <div (click)="closeSidebar()" class="{{backgrond}}"></div>
+    </div>
 </div>

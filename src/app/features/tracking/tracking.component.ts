@@ -4,6 +4,8 @@ import { Product } from '../../core/interfaces/product.interface';
 import { Logistic } from '../../core/interfaces/logistic.interface';
 import { LogisticService } from 'src/app/core/services/logistic.service';
 import { ProductService } from 'src/app/core/services/product.service';
+import { Router } from '@angular/router';
+import { ObjectId } from 'mongodb';
 
 @Component({
   selector: 'app-tracking',
@@ -17,12 +19,14 @@ export class TrackingComponent implements OnInit {
   logistic = {} as Logistic;
   logistics: Logistic[] = [];
 
+  showDetails = false;
   details = 'sidebar';
   backgrond = 'hide_backgrond';
 
   constructor(
     private productService: ProductService,
-    private logisticService: LogisticService
+    private logisticService: LogisticService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -44,15 +48,19 @@ export class TrackingComponent implements OnInit {
       this.products = products;
     });
   }
-  getProduct(id: string) {
+  getProduct(id: ObjectId) {
     this.productService.getProductById(id).subscribe((product: Product) => {
       this.product = product;
     });
   }
 
-  openSidebar() {
+  openSidebar(logis: Logistic) {
+    this.showDetails = true;
     this.details = 'sidebar_details';
     this.backgrond = 'show_backgrond';
+
+    const data = logis; // Dados a serem passados
+    this.router.navigate(['/details'], { queryParams: data });
   }
   closeSidebar() {
     this.details = 'sidebar';

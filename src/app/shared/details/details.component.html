@@ -11,6 +11,8 @@
             <p>PIN: 10/01/2023</p>
         </div>
     </section>
+    <div class="line"></div>
+
     <section class="dates_details">
         <div class="departure">
             <p>Data de saída</p>
@@ -21,7 +23,11 @@
             <p>10/03/2023</p>
         </div>
     </section>
+    <div class="line"></div>
+
     <h2 class="nfe_type">Compra ZFM</h2>
+    <div class="line"></div>
+
     <section>
         <p class="itens_title">Itens:</p>
         <table class="product_details">
@@ -33,14 +39,17 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <th>4565289</th>
-                    <th>MHDX 1108 - c</th>
-                    <th>20</th>
+                <tr *ngFor="let prod of productsNfe">
+                    <th>{{prod.factory_code}}</th>
+                    <th>{{prod.description}}</th>
+                    <th>{{prod.amount}}</th>
                 </tr>
             </tbody>
         </table>
     </section>
+
+    <div class="line"></div>
+
     <section class="observations">
         <h2>Observações</h2>
         <div></div>

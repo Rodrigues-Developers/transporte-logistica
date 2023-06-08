@@ -3,6 +3,7 @@ import { Product } from '../../core/interfaces/product.interface';
 import { Logistic } from '../../core/interfaces/logistic.interface';
 import { ProductService } from 'src/app/core/services/product.service';
 import { LogisticService } from 'src/app/core/services/logistic.service';
+import { ObjectId } from 'mongodb';
 
 @Component({
   selector: 'app-products-tracking',
@@ -33,7 +34,7 @@ export class ProductsTrackingComponent implements OnInit {
       this.products = products;
     });
   }
-  getProduct(id: string) {
+  getProduct(id: ObjectId) {
     this.productService.getProductById(id).subscribe((product: Product) => {
       this.product = product;
     });
