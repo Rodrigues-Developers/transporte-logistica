@@ -11,6 +11,7 @@ import { ProductsTrackingComponent } from './features/products-tracking/products
 import { ProductService } from 'src/app/core/services/product.service';
 import { LogisticService } from 'src/app/core/services/logistic.service';
 import { DetailsComponent } from './shared/details/details.component';
+import { DeliveredComponent } from './features/delivered/delivered.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { DetailsComponent } from './shared/details/details.component';
     TrackingComponent,
     RegistrationComponent,
     ProductsTrackingComponent,
-    DetailsComponent
+    DetailsComponent,
+    DeliveredComponent
   ],
 
   imports: [

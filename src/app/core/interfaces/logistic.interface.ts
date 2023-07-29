@@ -12,4 +12,5 @@ export interface Logistic {
     note: string;
     pin_release: string;
     status: string;
+    //TODO insert new atributes here
 }

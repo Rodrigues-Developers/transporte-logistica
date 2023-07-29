@@ -1,3 +1,4 @@
+import { DataShareService } from './../../core/services/data-share.service';
 import { Component, OnInit } from '@angular/core';
 import { ProductService } from 'src/app/core/services/product.service';
 import { LogisticService } from 'src/app/core/services/logistic.service';
@@ -11,6 +12,9 @@ import { Logistic } from 'src/app/core/interfaces/logistic.interface';
   templateUrl: './details.component.html',
   styleUrls: ['./details.component.less'],
 })
+
+// TODO turn this page generic to use in any component
+
 export class DetailsComponent implements OnInit {
   product = {} as Product;
   products: Product[] = [];
@@ -21,13 +25,17 @@ export class DetailsComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private productService: ProductService // private logisticService: LogisticService
-  ) {}
+    private productService: ProductService, // private logisticService: LogisticService
+    private dataShareService: DataShareService // Received the data from another page
+  ) {
+    this.logistic =this.dataShareService.getData(); // Get the data from another page
+  }
 
   ngOnInit(): void {
-    this.route.queryParams.subscribe((params) => {
-      this.getProduct(params);
-    });
+    this.getProduct(this.logistic);
+    // this.route.queryParams.subscribe((params) => {
+    //   this.getProduct(params);
+    // });
   }
 
   getProduct(nfe: any) {

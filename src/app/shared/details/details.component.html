@@ -1,14 +1,16 @@
-<div class="main_details">
+<div class="main_details" >
     <h1>Detalhes</h1>
     <section class="header_details">
         <div class="supplier">INTELBRAS</div>
+        <!-- TODO Fix this when correct the interface -->
         <div class="nfe">
-            <P>Nº: 202020</P>
-            <P>Série: 01</P>
+            <P>Nº: {{logistic.nfe}}</P>
+            <P>Série: 01</P> 
+            <!-- // TODO Fix this when correct the interface -->
         </div>
         <div class="date">
-            <p>Emissão: 10/01/2023</p>
-            <p>PIN: 10/01/2023</p>
+            <p>Emissão: {{logistic.emissionNf | date: 'dd/MM/yyyy'}}</p>
+            <p>PIN: {{logistic.pin_release | date:'dd/MM/yyyy'}}</p>
         </div>
     </section>
     <div class="line"></div>
@@ -16,16 +18,17 @@
     <section class="dates_details">
         <div class="departure">
             <p>Data de saída</p>
-            <p>10/02/2023</p>
+            <p>{{logistic.date_out | date:'dd/MM/yyyy'}}</p>
         </div>
         <div class="estimated_arrival">
             <p>Previsão de Chegada</p>
-            <p>10/03/2023</p>
+            <p>{{logistic.arrival_forecast | date: 'dd/MM/yyyy'}}</p>
         </div>
     </section>
     <div class="line"></div>
 
-    <h2 class="nfe_type">Compra ZFM</h2>
+    <h2 class="nfe_type">Compra ZFM</h2> 
+    <!-- TODO Fix this when correct the interface -->
     <div class="line"></div>
 
     <section>
