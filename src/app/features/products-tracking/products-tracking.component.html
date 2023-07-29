@@ -1,6 +1,8 @@
 <table class="tracking__table">
     <thead>
         <tr>
+            <th><input type="checkbox" class="check__all"></th>
+            
             <th>Código</th>
             <th>Descrição</th>
             <th>Data de Saída</th>
@@ -11,6 +13,7 @@
     </thead>
     <tbody>
         <tr *ngFor="let prod of products">
+            <th><input type="checkbox" id={{prod.factory_code}}></th>
 
             <td>{{prod.factory_code}}</td>
             <td>{{prod.description}}</td>

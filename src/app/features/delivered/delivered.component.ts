@@ -9,11 +9,11 @@ import { Router } from '@angular/router';
 import { ObjectId } from 'mongodb';
 
 @Component({
-  selector: 'app-tracking',
-  templateUrl: './tracking.component.html',
-  styleUrls: ['./tracking.component.less'],
+  selector: 'app-delivered',
+  templateUrl: './delivered.component.html',
+  styleUrls: ['./delivered.component.less']
 })
-export class TrackingComponent implements OnInit {
+export class DeliveredComponent {
   product = {} as Product;
   products: Product[] = [];
 
