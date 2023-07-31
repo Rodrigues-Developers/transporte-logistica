@@ -59,7 +59,7 @@ export class TrackingComponent implements OnInit {
     this.details = 'sidebar_details';
     this.backgrond = 'show_backgrond';
 
-    const data = logis; // Dados a serem passados
+    const data = logis; // Data to be sent
     this.router.navigate(['/details'], { queryParams: data });
   }
   closeSidebar() {
