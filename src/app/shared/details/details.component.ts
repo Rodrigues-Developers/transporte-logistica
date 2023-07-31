@@ -40,9 +40,3 @@ export class DetailsComponent implements OnInit {
     }
   }
 
-  // getProducts() {
-  //   this.productService.getAllProducts().subscribe((products: Product[]) => {
-  //     this.products = products;
-  //   });
-  // }
-}
