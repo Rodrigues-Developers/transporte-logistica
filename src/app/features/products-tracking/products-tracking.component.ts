@@ -42,6 +42,5 @@ export class ProductsTrackingComponent implements OnInit {
 
   callSidebar() {
     this.details = 'sidebar_details';
-    console.log(this.details);
   }
 }
