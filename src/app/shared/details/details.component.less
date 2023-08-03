@@ -1,0 +1,159 @@
+.main_details {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 1rem;
+
+  border: 1px solid black;
+  border-radius: 10px;
+
+  z-index: 1000;
+
+  padding: 1rem;
+
+  .line {
+    width: 100%;
+    border-top: 1px solid black;}
+
+  .header_details,
+  .dates_details {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1rem;
+
+    width: 80%;
+
+    margin: 0.5rem auto;
+
+    align-items: center;
+    justify-items: center;
+    align-content: center;
+    justify-content: center;
+
+    div {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+
+      width: 10rem;
+      height: 3.5rem;
+
+      border: 1px solid black;
+
+      p {
+        margin: 0.5px;
+      }
+    }
+  }
+
+  .dates_details {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .product_details {
+    width: 37rem;
+
+    thead {
+      height: 2rem;
+
+      tr,
+      th {
+        vertical-align: middle;
+        text-align: center;
+        background-color: #303030;
+        color: #ffffff;
+        border-top: none;
+        border-bottom: none !important;
+      }
+    }
+
+    tbody {
+      .td__products {
+        overflow-wrap: break-word;
+      }
+
+      th,
+      td {
+        vertical-align: middle;
+        max-width: 85px;
+
+        color: #525252;
+        text-align: center;
+
+        font-weight: 400;
+        padding-bottom: 10px;
+        padding-top: 10px;
+        font-weight: 300;
+
+        small {
+          color: darken(#adadad, 10%);
+          font-weight: 300;
+        }
+      }
+
+      tr {
+        &:nth-child(even) {
+          background-color: #acacac;
+        }
+
+        th,
+        td {
+          position: relative;
+          transition: 0.3s all ease;
+
+          &:before,
+          &:after {
+            transition: 0.3s all ease;
+            content: "";
+            left: 0;
+            right: 0;
+            position: absolute;
+            height: 1px;
+            background: #025de6;
+            width: 100%;
+            opacity: 0;
+            visibility: hidden;
+          }
+
+          &:before {
+            top: 0px;
+          }
+
+          &:after {
+            bottom: 0px;
+          }
+        }
+
+        &:hover {
+
+          th,
+          td {
+            background: rgba(rgb(119, 157, 226), 0.03);
+
+            &:before,
+            &:after {
+              opacity: 1;
+              visibility: visible;
+            }
+          }
+        }
+
+        &.active {
+
+          th,
+          td {
+            background: rgba(#f07070, 0.03);
+
+            &:before,
+            &:after {
+              opacity: 1;
+              visibility: visible;
+            }
+          }
+        }
+      }
+    }
+  }
+
+}

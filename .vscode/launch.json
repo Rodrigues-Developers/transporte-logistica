@@ -1,0 +1,10 @@
+{
+    "configurations": [
+        {
+            "type": "msedge",
+            "name": "http://localhost:4200/productsTracking",
+            "request": "launch",
+            "url": "http://localhost:4200/productsTracking"
+        }
+    ]
+}

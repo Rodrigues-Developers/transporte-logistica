@@ -10,13 +10,15 @@ import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { ProductsTrackingComponent } from './features/products-tracking/products-tracking.component';  
 import { ProductService } from 'src/app/core/services/product.service';
 import { LogisticService } from 'src/app/core/services/logistic.service';
+import { DetailsComponent } from './shared/details/details.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     TrackingComponent,
     RegistrationComponent,
-    ProductsTrackingComponent
+    ProductsTrackingComponent,
+    DetailsComponent
   ],
 
   imports: [

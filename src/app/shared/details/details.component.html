@@ -1,0 +1,57 @@
+<div class="main_details">
+    <h1>Detalhes</h1>
+    <section class="header_details">
+        <div class="supplier">INTELBRAS</div>
+        <div class="nfe">
+            <P>Nº: 202020</P>
+            <P>Série: 01</P>
+        </div>
+        <div class="date">
+            <p>Emissão: 10/01/2023</p>
+            <p>PIN: 10/01/2023</p>
+        </div>
+    </section>
+    <div class="line"></div>
+
+    <section class="dates_details">
+        <div class="departure">
+            <p>Data de saída</p>
+            <p>10/02/2023</p>
+        </div>
+        <div class="estimated_arrival">
+            <p>Previsão de Chegada</p>
+            <p>10/03/2023</p>
+        </div>
+    </section>
+    <div class="line"></div>
+
+    <h2 class="nfe_type">Compra ZFM</h2>
+    <div class="line"></div>
+
+    <section>
+        <p class="itens_title">Itens:</p>
+        <table class="product_details">
+            <thead>
+                <tr>
+                    <th>Código</th>
+                    <th>Descrição</th>
+                    <th>Qtd.</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let prod of productsNfe">
+                    <th>{{prod.factory_code}}</th>
+                    <th>{{prod.description}}</th>
+                    <th>{{prod.amount}}</th>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <div class="line"></div>
+
+    <section class="observations">
+        <h2>Observações</h2>
+        <div></div>
+    </section>
+</div>

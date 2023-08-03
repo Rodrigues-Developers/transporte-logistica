@@ -1,3 +1,4 @@
+import { DetailsComponent } from './shared/details/details.component';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { TrackingComponent } from './features/tracking/tracking.component';
@@ -5,14 +6,15 @@ import { RegistrationComponent } from './features/registration/registration.comp
 import { ProductsTrackingComponent } from './features/products-tracking/products-tracking.component';
 
 const routes: Routes = [
-  {path: '', redirectTo: "/productsTracking", pathMatch: "full"},
-  {path: 'productsTracking', component: ProductsTrackingComponent},
-  {path: 'tracking', component: TrackingComponent},
-  {path: 'registration', component: RegistrationComponent},
+  { path: '', redirectTo: '/productsTracking', pathMatch: 'full' },
+  { path: 'productsTracking', component: ProductsTrackingComponent },
+  { path: 'tracking', component: TrackingComponent },
+  { path: 'registration', component: RegistrationComponent },
+  { path: 'details', component: DetailsComponent },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

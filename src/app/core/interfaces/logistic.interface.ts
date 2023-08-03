@@ -1,5 +1,7 @@
+import { ObjectId } from "mongodb";
+
 export interface Logistic {
-    id?:string;
+    id?:ObjectId;
     nfe: string;
     emissionNf: Date;
     shipping_company: string;
