@@ -11,7 +11,7 @@ import { ObjectId } from 'mongodb';
 @Component({
   selector: 'app-delivered',
   templateUrl: './delivered.component.html',
-  styleUrls: ['./delivered.component.less']
+  styleUrls: ['./delivered.component.less'],
 })
 export class DeliveredComponent {
   product = {} as Product;
@@ -38,17 +38,20 @@ export class DeliveredComponent {
     this.getLogistics();
   }
   //Get all logistics from database
-  getLogistics() {
-    this.logisticService.getAllLogistcs().subscribe((logistics: Logistic[]) => {
+  async getLogistics() {
+    (await this.logisticService.getAllLogistcs()).subscribe((logistics: Logistic[]) => {
       this.logistics = logistics;
     });
   }
 
+
   //Get all products from database.
-  getProducts() {
-    this.productService.getAllProducts().subscribe((products: Product[]) => {
-      this.products = products;
-    });
+  async getProducts() {
+    (await this.productService.getAllProducts()).subscribe(
+      (products: Product[]) => {
+        this.products = products;
+      }
+    );
   }
   getProduct(id: ObjectId) {
     this.productService.getProductById(id).subscribe((product: Product) => {
@@ -85,6 +88,6 @@ export class DeliveredComponent {
 
   recive() {
     this.getCheckBoxes();
-    //TODO whem add a new atribute in object, change here to recived.
+    //TODO when add a new atribute in object, change here to received.
   }
 }

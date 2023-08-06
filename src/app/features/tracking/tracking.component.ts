@@ -20,7 +20,7 @@ export class TrackingComponent implements OnInit {
   logistic = {} as Logistic;
   logistics: Logistic[] = [];
 
-  showDetails = false;
+  // showDetails = false;
   details = 'sidebar';
   backgrond = 'hide_backgrond';
 
@@ -38,15 +38,15 @@ export class TrackingComponent implements OnInit {
     this.getLogistics();
   }
   //Get all logistics from database
-  getLogistics() {
-    this.logisticService.getAllLogistcs().subscribe((logistics: Logistic[]) => {
+  async getLogistics() {
+    (await this.logisticService.getAllLogistcs()).subscribe((logistics: Logistic[]) => {
       this.logistics = logistics;
     });
   }
 
   //Get all products from database.
-  getProducts() {
-    this.productService.getAllProducts().subscribe((products: Product[]) => {
+  async getProducts() {
+    (await this.productService.getAllProducts()).subscribe((products: Product[]) => {
       this.products = products;
     });
   }
@@ -57,16 +57,16 @@ export class TrackingComponent implements OnInit {
   }
 
   openSidebar(logis: Logistic) {
-    this.showDetails = true;
+    // this.showDetails = true;
     this.details = 'sidebar_details';
     this.backgrond = 'show_backgrond';
 
-    const data = logis; // Dados a serem passados
-    this.dataShareService.setData(data);
+    const data = logis; // Data to be sent
+    this.dataShareService.setDataLogistic(data);
     // this.router.navigate(['/details'], { queryParams: data });
   }
   closeSidebar() {
-    this.showDetails = false;
+    // this.showDetails = false;
     this.details = 'sidebar';
     this.backgrond = 'hide_backgrond';
   }

@@ -29,8 +29,8 @@ export class ProductsTrackingComponent implements OnInit {
     this.details = 'sidebar';
   }
   //Get all products from database.
-  getProducts() {
-    this.productService.getAllProducts().subscribe((products: Product[]) => {
+  async getProducts() {
+    (await this.productService.getAllProducts()).subscribe((products: Product[]) => {
       this.products = products;
     });
   }
