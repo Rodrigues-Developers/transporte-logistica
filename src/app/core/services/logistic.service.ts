@@ -11,6 +11,7 @@ var httpOptions = {
 @Injectable({
   providedIn: 'root',
 })
+
 export class LogisticService {
   constructor(private http: HttpClient) {
     fetch('http://localhost:3000/logistics', {
@@ -22,11 +23,13 @@ export class LogisticService {
 
   url = 'http://localhost:3000/';
 
-  getAllLogistcs(): Observable<Logistic[]> {
+  getAllLogistcs = async (): Promise<Observable<Logistic[]>> => {
     return this.http.get<Logistic[]>(this.url+"logistics")
   }
 
-  
+  // getAllProducts = async (): Promise<Observable<Product[]>> => {
+  //   return this.http.get<Product[]>(this.url + 'products');
+  // }
 
   // getLogistcById(Logistcid: string): Observable<Logistic> {
   //   const apiurl = `${this.url}/${Logistcid}`;

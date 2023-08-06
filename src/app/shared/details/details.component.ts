@@ -6,6 +6,8 @@ import { Product } from 'src/app/core/interfaces/product.interface';
 import { ActivatedRoute } from '@angular/router';
 import { ObjectId } from 'mongodb';
 import { Logistic } from 'src/app/core/interfaces/logistic.interface';
+import { Subject } from 'rxjs/internal/Subject';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-details',
@@ -23,34 +25,33 @@ export class DetailsComponent implements OnInit {
   logistic = {} as Logistic;
   logistics: Logistic[] = [];
 
+  //Lib to observe the changes in the logistic.
+  private logisticObservable: Observable<Logistic>;
+
   constructor(
     private route: ActivatedRoute,
     private productService: ProductService, // private logisticService: LogisticService
     private dataShareService: DataShareService // Received the data from another page
   ) {
-    this.logistic =this.dataShareService.getData(); // Get the data from another page
+    this.logisticObservable = this.dataShareService.getDataObservable(); // Get the data from another page
   }
 
   ngOnInit(): void {
     this.getProduct(this.logistic);
-    // this.route.queryParams.subscribe((params) => {
-    //   this.getProduct(params);
-    // });
   }
 
-  getProduct(nfe: any) {
-    for (let i = 0; i < nfe.merchandise.length; i++) {
-      this.productService
-        .getProductById(nfe.merchandise[i])
-        .subscribe((product: Product) => {
-          this.productsNfe.push(product);
-        });
+  async getProduct(nfe: any) {
+    try{
+      for (let i = 0; i < nfe.merchandise.length; i++) {
+        await this.productService
+          .getProductById(nfe.merchandise[i])
+          .subscribe((product: Product) => {
+            this.productsNfe.push(product);
+            console.log("in");
+          });
+    }
+    } catch {
+      console.error("Details error")
     }
   }
-
-  // getProducts() {
-  //   this.productService.getAllProducts().subscribe((products: Product[]) => {
-  //     this.products = products;
-  //   });
-  // }
 }

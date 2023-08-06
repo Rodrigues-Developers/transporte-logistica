@@ -23,10 +23,10 @@ export class ProductService {
 
   url = 'http://localhost:3000/';
 
-  getAllProducts(): Observable<Product[]> {
+  getAllProducts = async (): Promise<Observable<Product[]>> => {
     return this.http.get<Product[]>(this.url + 'products');
   }
-
+  
   getProductById(Productid: ObjectId): Observable<Product> {
     const apiurl = `${this.url}products/${Productid}`;
     return this.http.get<Product>(apiurl);
