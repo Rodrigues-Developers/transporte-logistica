@@ -1,7 +1,7 @@
 import { HttpHeaders } from '@angular/common/http';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { Logistic } from 'src/app/core/interfaces/logistic.interface';
 
 var httpOptions = {
@@ -11,7 +11,6 @@ var httpOptions = {
 @Injectable({
   providedIn: 'root',
 })
-
 export class LogisticService {
   constructor(private http: HttpClient) {
     fetch('http://localhost:3000/logistics', {
@@ -22,14 +21,30 @@ export class LogisticService {
   }
 
   url = 'http://localhost:3000/';
+  urlOnline = 'https://nodejs-api-logistica.onrender.com';
+  logistic = {} as Logistic;
 
+  /**
+   * 
+   * @returns All logistics
+   */
   getAllLogistcs = async (): Promise<Observable<Logistic[]>> => {
-    return this.http.get<Logistic[]>(this.url+"logistics")
-  }
+    return this.http.get<Logistic[]>(this.url + 'logistics');
+  };
 
-  // getAllProducts = async (): Promise<Observable<Product[]>> => {
-  //   return this.http.get<Product[]>(this.url + 'products');
-  // }
+  /**
+   * 
+   * @returns Delivered Logistic array
+   */
+  getAllDeliveredLogistics(): Observable<Logistic[]> {
+    return this.http
+      .get<Logistic[]>(this.url + 'logistics')
+      .pipe(
+        map((logistics: Logistic[]) =>
+          logistics.filter((log: Logistic) => log.status === 'delivered')
+        )
+      );
+  }
 
   // getLogistcById(Logistcid: string): Observable<Logistic> {
   //   const apiurl = `${this.url}/${Logistcid}`;

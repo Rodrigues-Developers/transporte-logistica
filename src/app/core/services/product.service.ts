@@ -14,7 +14,7 @@ var httpOptions = {
 })
 export class ProductService {
   constructor(private http: HttpClient) {
-    fetch('http://localhost:3000/', {
+    fetch('http://localhost:3000/products', {
       method: 'GET',
     })
       .then((response) => {})
@@ -22,6 +22,7 @@ export class ProductService {
   }
 
   url = 'http://localhost:3000/';
+  urlOnline = 'https://nodejs-api-logistica.onrender.com';
 
   getAllProducts = async (): Promise<Observable<Product[]>> => {
     return this.http.get<Product[]>(this.url + 'products');

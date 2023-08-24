@@ -19,6 +19,7 @@ export class TrackingComponent implements OnInit {
 
   logistic = {} as Logistic;
   logistics: Logistic[] = [];
+  selectedLogistics: Logistic[] = [];
 
   // showDetails = false;
   details = 'sidebar';
@@ -37,18 +38,23 @@ export class TrackingComponent implements OnInit {
 
     this.getLogistics();
   }
+  
   //Get all logistics from database
   async getLogistics() {
-    (await this.logisticService.getAllLogistcs()).subscribe((logistics: Logistic[]) => {
-      this.logistics = logistics;
-    });
+    (await this.logisticService.getAllLogistcs()).subscribe(
+      (logistics: Logistic[]) => {
+        this.logistics = logistics;
+      }
+    );
   }
 
   //Get all products from database.
   async getProducts() {
-    (await this.productService.getAllProducts()).subscribe((products: Product[]) => {
-      this.products = products;
-    });
+    (await this.productService.getAllProducts()).subscribe(
+      (products: Product[]) => {
+        this.products = products;
+      }
+    );
   }
   getProduct(id: ObjectId) {
     this.productService.getProductById(id).subscribe((product: Product) => {
@@ -57,7 +63,6 @@ export class TrackingComponent implements OnInit {
   }
 
   openSidebar(logis: Logistic) {
-    // this.showDetails = true;
     this.details = 'sidebar_details';
     this.backgrond = 'show_backgrond';
 
@@ -66,25 +71,40 @@ export class TrackingComponent implements OnInit {
     // this.router.navigate(['/details'], { queryParams: data });
   }
   closeSidebar() {
-    // this.showDetails = false;
     this.details = 'sidebar';
     this.backgrond = 'hide_backgrond';
   }
 
-  getCheckBoxes() {
-    const selectedLogisIds: string[] = [];
-    const selectedCheckboxes: NodeListOf<HTMLInputElement> =
-      document.querySelectorAll('input[type="checkbox"]:checked');
-    selectedCheckboxes.forEach((checkbox: HTMLInputElement) => {
-      const id = checkbox.id;
-      selectedLogisIds.push(id);
-    });
-
-    console.log(selectedLogisIds);
+  /**
+   * 
+   * Include or remove in array selected or unselected item
+   * @param {Logistic} logis  
+   */
+  toggleSelection(logis: Logistic): void {
+    if (this.isSelected(logis)) {
+      this.selectedLogistics = this.selectedLogistics.filter(
+        (selected) => selected !== logis
+      );
+    } else {
+      this.selectedLogistics.push(logis);
+    }
   }
 
-  recive() {
-    this.getCheckBoxes();
-    //TODO whem add a new atribute in object, change here to recived.
+  /**
+   * 
+   * @param {Logistic} logis 
+   * @returns verification if is selected
+   */
+  isSelected(logis: Logistic): boolean {
+    return this.selectedLogistics.includes(logis);
+  }
+
+  /**
+   * 
+   */
+  receive() {
+    for (const logis of this.selectedLogistics) {
+      logis.status = 'delivered'; // TODO make this change on database
+    }
   }
 }

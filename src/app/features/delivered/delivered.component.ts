@@ -37,15 +37,21 @@ export class DeliveredComponent {
 
     this.getLogistics();
   }
-  //Get all logistics from database
+
+  /**
+   * Get all delivered logistics from data base
+   */
   async getLogistics() {
-    (await this.logisticService.getAllLogistcs()).subscribe((logistics: Logistic[]) => {
-      this.logistics = logistics;
-    });
+    (await this.logisticService.getAllDeliveredLogistics()).subscribe(
+      (logistics: Logistic[]) => {
+        this.logistics = logistics;
+      }
+    );
   }
 
-
-  //Get all products from database.
+  /**
+   * Get all products from database.
+   */
   async getProducts() {
     (await this.productService.getAllProducts()).subscribe(
       (products: Product[]) => {
@@ -53,41 +59,38 @@ export class DeliveredComponent {
       }
     );
   }
+
+  /**
+   * 
+   * @param {ObjectId} id  The id of products from database
+   */
   getProduct(id: ObjectId) {
     this.productService.getProductById(id).subscribe((product: Product) => {
       this.product = product;
     });
   }
 
+  /**
+   * 
+   * @param {Logistic} logis 
+   */
   openSidebar(logis: Logistic) {
     this.showDetails = true;
     this.details = 'sidebar_details';
     this.backgrond = 'show_backgrond';
 
-    const data = logis; // Dados a serem passados
+    const data = logis; // Data to be passed
     this.dataShareService.setData(data);
-    // this.router.navigate(['/details'], { queryParams: data });
+    
   }
+
+  /**
+   * Close the sidebar information
+   */
   closeSidebar() {
     this.showDetails = false;
     this.details = 'sidebar';
     this.backgrond = 'hide_backgrond';
   }
 
-  getCheckBoxes() {
-    const selectedLogisIds: string[] = [];
-    const selectedCheckboxes: NodeListOf<HTMLInputElement> =
-      document.querySelectorAll('input[type="checkbox"]:checked');
-    selectedCheckboxes.forEach((checkbox: HTMLInputElement) => {
-      const id = checkbox.id;
-      selectedLogisIds.push(id);
-    });
-
-    console.log(selectedLogisIds);
-  }
-
-  recive() {
-    this.getCheckBoxes();
-    //TODO when add a new atribute in object, change here to received.
-  }
 }

@@ -14,7 +14,7 @@
 
     <tbody>
         <tr *ngFor="let logis of logistics">
-            <th><input type="checkbox" id="{{logis.nfe}}"></th>
+            <th><input type="checkbox" [checked]="isSelected(logis)" (change)="toggleSelection(logis)" id="{{logis.nfe}}"></th>
             <td (click)="openSidebar(logis)">{{logis.nfe}}</td>
             <td (click)="openSidebar(logis)">{{logis.emissionNf | date: 'dd/MM/yyyy'}}</td>
             <td (click)="openSidebar(logis)">{{logis.shipping_company}}</td>
@@ -26,7 +26,7 @@
     </tbody>
 </table>
 <div class="recive__div">
-    <button class="recive__button" (click)="recive()">Receber</button>
+    <button class="recive__button" (click)="receive()">Receber</button>
 </div>
 <div>
     <div >
