@@ -1,10 +1,21 @@
 {
+    "version": "0.2.0",
     "configurations": [
-        {
-            "type": "msedge",
-            "name": "http://localhost:4200/productsTracking",
-            "request": "launch",
-            "url": "http://localhost:4200/productsTracking"
-        }
+      {
+        "name": "Launch Edge",
+        "request": "launch",
+        "type": "msedge",
+        "url": "http://localhost:4200",
+        "webRoot": "${workspaceFolder}"
+      },
+
+      // {
+      //   "type": "firefox",
+      //   "request": "launch",
+      //   "name": "Launch Firefox",
+      //   "url": "http://localhost:4200", // Coloque a URL do seu aplicativo aqui
+      //   "webRoot": "${workspaceFolder}"
+      // }
     ]
-}
+  }
+  

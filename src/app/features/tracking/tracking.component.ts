@@ -1,8 +1,8 @@
+import { Logistic } from 'src/app/core/interfaces/logistic.interface';
 import { Component, OnInit } from '@angular/core';
 import { DataShareService } from './../../core/services/data-share.service';
 import { DetailsComponent } from './../../shared/details/details.component';
 import { Product } from '../../core/interfaces/product.interface';
-import { Logistic } from '../../core/interfaces/logistic.interface';
 import { LogisticService } from 'src/app/core/services/logistic.service';
 import { ProductService } from 'src/app/core/services/product.service';
 import { Router } from '@angular/router';
@@ -38,7 +38,7 @@ export class TrackingComponent implements OnInit {
 
     this.getLogistics();
   }
-  
+
   //Get all logistics from database
   async getLogistics() {
     (await this.logisticService.getAllLogistcs()).subscribe(
@@ -76,9 +76,9 @@ export class TrackingComponent implements OnInit {
   }
 
   /**
-   * 
+   *
    * Include or remove in array selected or unselected item
-   * @param {Logistic} logis  
+   * @param {Logistic} logis
    */
   toggleSelection(logis: Logistic): void {
     if (this.isSelected(logis)) {
@@ -91,8 +91,8 @@ export class TrackingComponent implements OnInit {
   }
 
   /**
-   * 
-   * @param {Logistic} logis 
+   *
+   * @param {Logistic} logis
    * @returns verification if is selected
    */
   isSelected(logis: Logistic): boolean {
@@ -100,11 +100,20 @@ export class TrackingComponent implements OnInit {
   }
 
   /**
-   * 
+   *
    */
-  receive() {
-    for (const logis of this.selectedLogistics) {
-      logis.status = 'delivered'; // TODO make this change on database
+  async receive(logisticsArray: Logistic[]) { 
+    for (const logis of logisticsArray) {
+      console.log("Checking id: "+logis.id);
+      if (logis.id) { //TODO Verify this is correct
+        try {
+          await this.logisticService.updateLogistc(logis.id, logis);
+          logis.status = 'delivered';
+        } catch (error) {
+          console.error(`Error updating logistics ${logis.id}: ${error}`);
+        }
+      }
     }
   }
+  
 }
