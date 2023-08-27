@@ -1,6 +1,7 @@
 import { HttpHeaders } from '@angular/common/http';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { ObjectId } from 'mongodb';
 import { Observable, map } from 'rxjs';
 import { Logistic } from 'src/app/core/interfaces/logistic.interface';
 
@@ -37,6 +38,7 @@ export class LogisticService {
    * @returns Delivered Logistic array
    */
   getAllDeliveredLogistics(): Observable<Logistic[]> {
+
     return this.http
       .get<Logistic[]>(this.url + 'logistics')
       .pipe(
@@ -55,10 +57,12 @@ export class LogisticService {
   //   return this.http.post<Logistic>(this.url, Logistc, httpOptions);
   // }
 
-  // updateLogistc(Logistcid: string, Logistc: Logistic): Observable<Logistic> {
-  //   const apiurl = `${this.url}/${Logistcid}`;
-  //   return this.http.put<Logistic>(apiurl, Logistc, httpOptions);
-  // }
+  updateLogistc(Logistcid: ObjectId, Logistc: Logistic): Observable<Logistic> {
+    console.log("Checking 2")
+
+    const apiurl = `${this.url}logistics/${Logistcid}`;
+    return this.http.put<Logistic>(apiurl, Logistc, httpOptions);
+  }
 
   // deleteLogistcById(Logisticid: string): Observable<number> {
   //   const apiurl = `${this.url}/${Logisticid}`;
