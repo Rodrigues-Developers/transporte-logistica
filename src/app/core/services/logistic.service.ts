@@ -13,20 +13,14 @@ var httpOptions = {
   providedIn: 'root',
 })
 export class LogisticService {
-  constructor(private http: HttpClient) {
-    fetch('http://localhost:3000/logistics', {
-      method: 'GET',
-    })
-      .then((response) => {})
-      .catch((error) => {});
-  }
+  constructor(private http: HttpClient) {}
 
   url = 'http://localhost:3000/';
   urlOnline = 'https://nodejs-api-logistica.onrender.com';
   logistic = {} as Logistic;
 
   /**
-   * 
+   *
    * @returns All logistics
    */
   getAllLogistcs = async (): Promise<Observable<Logistic[]>> => {
@@ -34,11 +28,10 @@ export class LogisticService {
   };
 
   /**
-   * 
+   *
    * @returns Delivered Logistic array
    */
   getAllDeliveredLogistics(): Observable<Logistic[]> {
-
     return this.http
       .get<Logistic[]>(this.url + 'logistics')
       .pipe(
@@ -48,24 +41,18 @@ export class LogisticService {
       );
   }
 
-  // getLogistcById(Logistcid: string): Observable<Logistic> {
-  //   const apiurl = `${this.url}/${Logistcid}`;
-  //   return this.http.get<Logistc>(apiurl);
-  // }
-
-  // createLogistc(Logistc: Logistic): Observable<Logistic> {
-  //   return this.http.post<Logistic>(this.url, Logistc, httpOptions);
-  // }
-
-  updateLogistc(Logistcid: ObjectId, Logistc: Logistic): Observable<Logistic> {
-    console.log("Checking 2")
-
-    const apiurl = `${this.url}logistics/${Logistcid}`;
-    return this.http.put<Logistic>(apiurl, Logistc, httpOptions);
+  getAllTravelingLogistic(): Observable<Logistic[]> {
+    return this.http
+      .get<Logistic[]>(this.url + 'logistics')
+      .pipe(
+        map((logistics: Logistic[]) =>
+          logistics.filter((logis: Logistic) => logis.status !== 'delivered')
+        )
+      );
   }
 
-  // deleteLogistcById(Logisticid: string): Observable<number> {
-  //   const apiurl = `${this.url}/${Logisticid}`;
-  //   return this.http.delete<number>(apiurl, httpOptions);
-  // }
+  updateLogistic(logistic: Logistic): Observable<Logistic> {
+    const apiurl = `${this.url}logistics/${logistic._id}`;
+    return this.http.put<Logistic>(apiurl, logistic, httpOptions);
+  }
 }

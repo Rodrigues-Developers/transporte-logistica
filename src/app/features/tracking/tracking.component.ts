@@ -41,7 +41,7 @@ export class TrackingComponent implements OnInit {
 
   //Get all logistics from database
   async getLogistics() {
-    (await this.logisticService.getAllLogistcs()).subscribe(
+    (await this.logisticService.getAllTravelingLogistic()).subscribe(
       (logistics: Logistic[]) => {
         this.logistics = logistics;
       }
@@ -102,18 +102,17 @@ export class TrackingComponent implements OnInit {
   /**
    *
    */
-  async receive(logisticsArray: Logistic[]) { 
-    for (const logis of logisticsArray) {
-      console.log("Checking id: "+logis.id);
-      if (logis.id) { //TODO Verify this is correct
+  async receive() {
+    for (const logis of this.selectedLogistics) {
+      if (logis._id) {
         try {
-          await this.logisticService.updateLogistc(logis.id, logis);
+          const updatedLogistic: Logistic = logis;
           logis.status = 'delivered';
+          this.logisticService.updateLogistic(updatedLogistic).subscribe();
         } catch (error) {
-          console.error(`Error updating logistics ${logis.id}: ${error}`);
+          console.error(`Error updating logistics ${logis._id}: ${error}`);
         }
       }
     }
   }
-  
 }
