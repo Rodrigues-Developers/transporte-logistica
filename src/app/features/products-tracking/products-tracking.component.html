@@ -1,24 +1,14 @@
-<table class="tracking__table">
-    <thead>
-        <tr>
-            <th>Código</th>
-            <th>Descrição</th>
-            <th>Data de Saída</th>
-            <th>Quantidade</th>            
-            <th>PIN</th>
-           
-        </tr>
-    </thead>
-    <tbody>
-        <tr *ngFor="let prod of products">
-
-            <td>{{prod.factory_code}}</td>
-            <td>{{prod.description}}</td>
-           
-            
-            <td>{{prod.brand}}</td>
-            <td>{{prod.amount}}</td>
-            <td>{{prod.price}}</td>
-        </tr>
-    </tbody>
-</table>
+<div class="home__container">
+    <h2>Deck Card</h2>
+    <div class="cards__container">
+        <div class="card" *ngFor="let products of productsArray" #productCards>
+            <div class="product" *ngFor="let product of products">
+                <p><strong>NFE: </strong> {{product.factory_code}}</p>
+                <p><strong>Marca: </strong> {{product.brand}}</p>
+                <p><strong>Qte: </strong> {{product.amount}}</p>
+                <p><strong>Preço: </strong> {{product.price}}</p>
+                <p><strong>Descrição: </strong> {{product.description}}</p>
+            </div>
+        </div>
+    </div>
+</div>
