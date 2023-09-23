@@ -5,13 +5,21 @@ import { ProductService } from "src/app/core/services/product.service";
 import { LogisticService } from "src/app/core/services/logistic.service";
 import { ObjectId } from "mongodb";
 import { objectValuesToArray } from "src/app/core/utils/objects";
+import { animate, state, style, transition, trigger } from "@angular/animations";
 @Component({
   selector: "app-products-tracking",
   templateUrl: "./products-tracking.component.html",
-  styleUrls: ["./products-tracking.component.less"]
+  styleUrls: ["./products-tracking.component.less"],
+  animations: [
+    trigger("cardAnimation", [
+      state("moveDown", style({ transform: "translateY(100%)", opacity: 0 })),
+      transition("* => moveDown", animate("0.6s ease-in-out"))
+    ])
+  ]
 })
 export class ProductsTrackingComponent implements OnInit, AfterViewInit {
   @ViewChildren("productCards") productCards!: QueryList<ElementRef>;
+  cardStates: { [key: string]: string } = {};
   product = {} as Product;
   products: Product[] = [];
 
@@ -46,12 +54,6 @@ export class ProductsTrackingComponent implements OnInit, AfterViewInit {
         this.exitFunc = true;
 
         for (let index = 0; index < 3; index++) {
-          let prod = JSON.parse(JSON.stringify(this.products[index]));
-          let newProd = prod;
-          newProd.factory_code = index;
-          this.products.push(newProd);
-        }
-        for (let index = 0; index < 1; index++) {
           let prod = JSON.parse(JSON.stringify(this.products[index]));
           let newProd = prod;
           newProd.factory_code = index;
@@ -107,12 +109,9 @@ export class ProductsTrackingComponent implements OnInit, AfterViewInit {
 
   placeProductsOnTop(prodCards: ElementRef<any>[]) {
     for (const card of prodCards) {
-      let index = 1;
+      let index = 0;
       for (const product of card.nativeElement.children) {
-        if (index > 1) {
-          this.renderer.setStyle(product, "background", index % 2 == 0 ? "blue" : "green");
-          this.renderer.setStyle(product, "height", 110 - index * 10 + "%");
-        }
+        this.renderer.setStyle(product, "height", 100 - index * 10 + "%");
         index++;
       }
     }
@@ -120,5 +119,23 @@ export class ProductsTrackingComponent implements OnInit, AfterViewInit {
 
   callSidebar() {
     this.details = "sidebar_details";
+  }
+
+  swapCards(cardIndex: number) {
+    console.log("Animation started");
+    this.cardStates[cardIndex] = "moveDown";
+  }
+  onAnimationEnd(event: any, cardIndex: number) {
+    console.log("Animation ended", event);
+    if (event.toState === "moveDown") {
+      // After the moveDown animation ends, swap the firstChild with the lastChild
+      const card = this.productCards.toArray()[cardIndex];
+      const lastChild = card.nativeElement.lastElementChild;
+      const firstChild = card.nativeElement.firstElementChild;
+
+      card.nativeElement.insertBefore(lastChild, firstChild);
+      //Reset cards state
+      this.cardStates[cardIndex] = "";
+    }
   }
 }

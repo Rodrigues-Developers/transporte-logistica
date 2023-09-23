@@ -22,9 +22,9 @@ yarn-error.log
 
 # Visual Studio Code
 .vscode/*
+.vscode/launch.json
 !.vscode/settings.json
 !.vscode/tasks.json
-!.vscode/launch.json
 !.vscode/extensions.json
 .history/*
 
@@ -40,3 +40,4 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+
