@@ -1,3 +1,5 @@
+@import "../../shared/styles/colors.less";
+
 .home__container {
   width: 100vw;
   margin: 1rem;
@@ -32,14 +34,27 @@
         grid-template-columns: 1fr 1fr;
         margin: 1rem 0 1rem 0;
       }
-      div:nth-child(n + 2) {
+      div:nth-child(n + 1) {
         position: absolute;
-        z-index: 1;
         width: 100%;
       }
       .product {
         border-radius: 1rem;
       }
+
+      .cards-backgrounds() {
+        background-0: @background-product-card-0;
+        background-1: @background-product-card-1;
+        background-2: @background-product-card-2;
+        background-3: @background-product-card-3;
+        background-4: @background-product-card-4;
+      }
+
+      each(.cards-backgrounds(), {
+        .product:nth-child(@{index}) {
+          background: @value;
+        }
+      });
     }
   }
 }
