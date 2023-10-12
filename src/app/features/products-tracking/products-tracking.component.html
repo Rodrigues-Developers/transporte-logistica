@@ -1,7 +1,7 @@
 <div class="home__container">
     <h2>Deck Card</h2>
     <div class="cards__container">
-        <div class="card" *ngFor="let products of productsArray; let i = index" #productCards (click)="swapCards(i)">
+        <div class="card" *ngFor="let products of productsArray; let i = index" #productCards (click)="setNameAnimation(i)">
             <div class="product" *ngFor="let product of products; let lastChild = last;"
                 [@cardAnimation]="lastChild ? cardStates[i] : ''" (@cardAnimation.done)="onAnimationEnd($event, i)">
                 <p><strong>NFE: </strong> {{product.factory_code}}</p>
