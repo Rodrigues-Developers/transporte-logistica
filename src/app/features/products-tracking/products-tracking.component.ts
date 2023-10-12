@@ -12,8 +12,12 @@ import { animate, state, style, transition, trigger } from "@angular/animations"
   styleUrls: ["./products-tracking.component.less"],
   animations: [
     trigger("cardAnimation", [
-      state("moveDown", style({ transform: "translateY(100%)", opacity: 0 })),
-      transition("* => moveDown", animate("0.6s ease-in-out"))
+      state("fadeOutDown", style({ transform: "translateY(100%)", opacity: 0 })),
+      state("moveTop", style({ transform: "translateY(-100%)" })),
+      state("fadeInDown", style({ transform: "translateY(0)", opacity: 1 })),
+      transition("* => fadeOutDown", animate("0.6s ease-in-out")),
+      transition("fadeOutDown => moveTop", animate("0s")),
+      transition("moveTop => fadeInDown", animate("0.6s ease-in-out"))
     ])
   ]
 })
@@ -50,40 +54,6 @@ export class ProductsTrackingComponent implements OnInit, AfterViewInit {
   async getProducts() {
     (await this.productService.getAllProducts()).subscribe((products: Product[]) => {
       this.products = products;
-      if (this.exitFunc === false) {
-        this.exitFunc = true;
-
-        for (let index = 0; index < 3; index++) {
-          let prod = JSON.parse(JSON.stringify(this.products[index]));
-          let newProd = prod;
-          newProd.factory_code = index;
-          this.products.push(newProd);
-        }
-        for (let index = 0; index < 1; index++) {
-          let prod = JSON.parse(JSON.stringify(this.products[index]));
-          let newProd = prod;
-          newProd.factory_code = index;
-          this.products.push(newProd);
-        }
-        for (let index = 0; index < 2; index++) {
-          let prod = JSON.parse(JSON.stringify(this.products[index]));
-          let newProd = prod;
-          newProd.factory_code = index;
-          this.products.push(newProd);
-        }
-        for (let index = 0; index < 7; index++) {
-          let prod = JSON.parse(JSON.stringify(this.products[index]));
-          let newProd = prod;
-          newProd.factory_code = index;
-          this.products.push(newProd);
-        }
-        for (let index = 0; index < 7; index++) {
-          let prod = JSON.parse(JSON.stringify(this.products[index]));
-          let newProd = prod;
-          newProd.factory_code = index;
-          this.products.push(newProd);
-        }
-      }
       this.groupProductsByCode();
     });
   }
@@ -104,7 +74,6 @@ export class ProductsTrackingComponent implements OnInit, AfterViewInit {
     }, {} as GroupedProducts);
 
     this.productsArray = objectValuesToArray(groupedProducts);
-    console.log(groupedProducts);
   }
 
   placeProductsOnTop(prodCards: ElementRef<any>[]) {
@@ -117,25 +86,40 @@ export class ProductsTrackingComponent implements OnInit, AfterViewInit {
     }
   }
 
+  setProdCardPosition(card: ElementRef<any>) {
+    const productsCard = card.nativeElement.children;
+    let index = 0;
+    for (const product of productsCard) {
+      this.renderer.setStyle(product, "height", 100 - index * 10 + "%");
+      index++;
+    }
+  }
+
   callSidebar() {
     this.details = "sidebar_details";
   }
 
-  swapCards(cardIndex: number) {
-    console.log("Animation started");
-    this.cardStates[cardIndex] = "moveDown";
+  setNameAnimation(cardIndex: number) {
+    this.cardStates[cardIndex] = "fadeOutDown";
   }
+
   onAnimationEnd(event: any, cardIndex: number) {
-    console.log("Animation ended", event);
-    if (event.toState === "moveDown") {
-      // After the moveDown animation ends, swap the firstChild with the lastChild
+    if (event.toState === "fadeOutDown") {
+      // After the fadeOutDown animation ends, swap the firstChild with the lastChild
       const card = this.productCards.toArray()[cardIndex];
       const lastChild = card.nativeElement.lastElementChild;
       const firstChild = card.nativeElement.firstElementChild;
 
       card.nativeElement.insertBefore(lastChild, firstChild);
-      //Reset cards state
-      this.cardStates[cardIndex] = "";
+      this.setProdCardPosition(card);
+
+      //Advance card state
+      this.cardStates[cardIndex] = "moveTop";
+
+      //Keep the color of the card
+    }
+    if (event.toState === "moveTop") {
+      this.cardStates[cardIndex] = "fadeInDown";
     }
   }
 }
