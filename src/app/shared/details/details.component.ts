@@ -38,7 +38,6 @@ export class DetailsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    // Lembre-se de cancelar a inscrição ao destruir o componente
     if (this.logisticObservableSubscription) {
       this.logisticObservableSubscription.unsubscribe();
     }

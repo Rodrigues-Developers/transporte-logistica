@@ -1,12 +1,12 @@
 import { Logistic } from 'src/app/core/interfaces/logistic.interface';
 import { Component, OnInit } from '@angular/core';
 import { DataShareService } from './../../core/services/data-share.service';
-import { DetailsComponent } from './../../shared/details/details.component';
 import { Product } from '../../core/interfaces/product.interface';
 import { LogisticService } from 'src/app/core/services/logistic.service';
 import { ProductService } from 'src/app/core/services/product.service';
 import { Router } from '@angular/router';
 import { ObjectId } from 'mongodb';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-tracking',
@@ -20,8 +20,8 @@ export class TrackingComponent implements OnInit {
   logistic = {} as Logistic;
   logistics: Logistic[] = [];
   selectedLogistics: Logistic[] = [];
+  productServiceObservable: Subscription = new Subscription();
 
-  // showDetails = false;
   details = 'sidebar';
   backgrond = 'hide_backgrond';
 
@@ -50,12 +50,13 @@ export class TrackingComponent implements OnInit {
 
   //Get all products from database.
   async getProducts() {
-    (await this.productService.getAllProducts()).subscribe(
-      (products: Product[]) => {
-        this.products = products;
-      }
-    );
+    this.productServiceObservable = (
+      await this.productService.getAllProducts()
+    ).subscribe((products: Product[]) => {
+      this.products = products;
+    });
   }
+
   getProduct(id: ObjectId) {
     this.productService.getProductById(id).subscribe((product: Product) => {
       this.product = product;
@@ -114,5 +115,9 @@ export class TrackingComponent implements OnInit {
         }
       }
     }
+  }
+
+  ngOndestroy(): void {
+    this.productServiceObservable.unsubscribe();
   }
 }
