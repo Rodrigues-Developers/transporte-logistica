@@ -1,0 +1,10 @@
+{
+  "configurations": [
+    {
+      "type": "msedge",
+      "name": "Launch edge",
+      "request": "launch",
+      "url": "http://localhost:4200/productsTracking"
+    }
+  ]
+}
