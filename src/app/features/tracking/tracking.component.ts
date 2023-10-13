@@ -68,7 +68,6 @@ export class TrackingComponent implements OnInit {
 
     const data = logis; // Data to be sent
     this.dataShareService.setDataLogistic(data);
-    // this.router.navigate(['/details'], { queryParams: data });
   }
   closeSidebar() {
     this.details = 'sidebar';
