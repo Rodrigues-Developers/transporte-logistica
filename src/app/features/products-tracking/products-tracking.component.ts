@@ -30,7 +30,6 @@ export class ProductsTrackingComponent implements OnInit, AfterViewInit {
   logistic = {} as Logistic;
   logistics: Logistic[] = [];
 
-  details = "sidebar";
 
   exitFunc = false;
   productsArray = [] as any[];
