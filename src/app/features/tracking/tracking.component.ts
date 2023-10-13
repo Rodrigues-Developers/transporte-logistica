@@ -21,7 +21,6 @@ export class TrackingComponent implements OnInit {
   logistics: Logistic[] = [];
   selectedLogistics: Logistic[] = [];
 
-  // showDetails = false;
   details = 'sidebar';
   backgrond = 'hide_backgrond';
 
