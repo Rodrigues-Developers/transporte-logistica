@@ -30,7 +30,6 @@ export class ProductsTrackingComponent implements OnInit, AfterViewInit {
   logistic = {} as Logistic;
   logistics: Logistic[] = [];
 
-
   exitFunc = false;
   productsArray = [] as any[];
   constructor(
@@ -41,7 +40,6 @@ export class ProductsTrackingComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.getProducts();
-    this.details = "sidebar";
   }
 
   ngAfterViewInit() {
@@ -92,10 +90,6 @@ export class ProductsTrackingComponent implements OnInit, AfterViewInit {
       this.renderer.setStyle(product, "height", 100 - index * 10 + "%");
       index++;
     }
-  }
-
-  callSidebar() {
-    this.details = "sidebar_details";
   }
 
   setNameAnimation(cardIndex: number) {
