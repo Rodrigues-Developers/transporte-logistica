@@ -1,26 +1,27 @@
 import { Component, OnInit } from '@angular/core';
 import { DataShareService } from './../../core/services/data-share.service';
-import { DetailsComponent } from './../../shared/details/details.component';
 import { Product } from '../../core/interfaces/product.interface';
 import { Logistic } from '../../core/interfaces/logistic.interface';
 import { LogisticService } from 'src/app/core/services/logistic.service';
 import { ProductService } from 'src/app/core/services/product.service';
 import { Router } from '@angular/router';
 import { ObjectId } from 'mongodb';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-delivered',
   templateUrl: './delivered.component.html',
   styleUrls: ['./delivered.component.less'],
 })
-export class DeliveredComponent {
+export class DeliveredComponent implements OnInit {
   product = {} as Product;
   products: Product[] = [];
 
   logistic = {} as Logistic;
   logistics: Logistic[] = [];
-
-  showDetails = false;
+  selectedLogistics: Logistic[] = [];
+  productServiceObservable: Subscription = new Subscription();
+  
   details = 'sidebar';
   backgrond = 'hide_backgrond';
 
@@ -53,11 +54,11 @@ export class DeliveredComponent {
    * Get all products from database.
    */
   async getProducts() {
-    (await this.productService.getAllProducts()).subscribe(
-      (products: Product[]) => {
-        this.products = products;
-      }
-    );
+    this.productServiceObservable = (
+      await this.productService.getAllProducts()
+    ).subscribe((products: Product[]) => {
+      this.products = products;
+    });
   }
 
   /**
@@ -75,22 +76,60 @@ export class DeliveredComponent {
    * @param {Logistic} logis 
    */
   openSidebar(logis: Logistic) {
-    this.showDetails = true;
     this.details = 'sidebar_details';
     this.backgrond = 'show_backgrond';
 
-    const data = logis; // Data to be passed
-    this.dataShareService.setData(data);
-    
+    const data = logis; // Data to be sent
+    this.dataShareService.setDataLogistic(data);
   }
 
-  /**
-   * Close the sidebar information
-   */
   closeSidebar() {
-    this.showDetails = false;
     this.details = 'sidebar';
     this.backgrond = 'hide_backgrond';
   }
 
+  /**
+   *
+   * Include or remove in array selected or unselected item
+   * @param {Logistic} logis
+   */
+  toggleSelection(logis: Logistic): void {
+    if (this.isSelected(logis)) {
+      this.selectedLogistics = this.selectedLogistics.filter(
+        (selected) => selected !== logis
+      );
+    } else {
+      this.selectedLogistics.push(logis);
+    }
+  }
+
+  /**
+   *
+   * @param {Logistic} logis
+   * @returns verification if is selected
+   */
+  isSelected(logis: Logistic): boolean {
+    return this.selectedLogistics.includes(logis);
+  }
+
+  /**
+   *
+   */
+  async receive() {
+    for (const logis of this.selectedLogistics) {
+      if (logis._id) {
+        try {
+          const updatedLogistic: Logistic = logis;
+          logis.status = 'delivered';
+          this.logisticService.updateLogistic(updatedLogistic).subscribe();
+        } catch (error) {
+          console.error(`Error updating logistics ${logis._id}: ${error}`);
+        }
+      }
+    }
+  }
+
+  ngOndestroy(): void {
+    this.productServiceObservable.unsubscribe();
+  }
 }
