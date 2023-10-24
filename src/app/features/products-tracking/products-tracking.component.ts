@@ -5,21 +5,11 @@ import { ProductService } from "src/app/core/services/product.service";
 import { LogisticService } from "src/app/core/services/logistic.service";
 import { ObjectId } from "mongodb";
 import { objectValuesToArray } from "src/app/core/utils/objects";
-import { animate, state, style, transition, trigger } from "@angular/animations";
+import { AnimationBuilder, AnimationPlayer, animate, state, style, transition, trigger } from "@angular/animations";
 @Component({
   selector: "app-products-tracking",
   templateUrl: "./products-tracking.component.html",
-  styleUrls: ["./products-tracking.component.less"],
-  animations: [
-    trigger("cardAnimation", [
-      state("fadeOutDown", style({ transform: "translateY(100%)", opacity: 0 })),
-      state("moveTop", style({ transform: "translateY(-100%)" })),
-      state("fadeInDown", style({ transform: "translateY(0)", opacity: 1 })),
-      transition("* => fadeOutDown", animate("0.6s ease-in-out")),
-      transition("fadeOutDown => moveTop", animate("0s")),
-      transition("moveTop => fadeInDown", animate("0.6s ease-in-out"))
-    ])
-  ]
+  styleUrls: ["./products-tracking.component.less"]
 })
 export class ProductsTrackingComponent implements OnInit, AfterViewInit {
   @ViewChildren("productCards") productCards!: QueryList<ElementRef>;
@@ -34,7 +24,8 @@ export class ProductsTrackingComponent implements OnInit, AfterViewInit {
   constructor(
     private productService: ProductService,
     private logisticService: LogisticService,
-    private renderer: Renderer2
+    private renderer: Renderer2,
+    private animationBuilder: AnimationBuilder
   ) {}
 
   ngOnInit(): void {
@@ -91,27 +82,35 @@ export class ProductsTrackingComponent implements OnInit, AfterViewInit {
     }
   }
 
-  setNameAnimation(cardIndex: number) {
-    this.cardStates[cardIndex] = "fadeOutDown";
-  }
+  setAnimation(event: Event, cardIndex: number): void {
+    const element = event.currentTarget as HTMLElement;
+    if (element.children.length > 1) {
+      const metadata = [
+        animate("0.6s ease-in-out", style({ transform: "translateY(100%)", opacity: 0 })) // Transition for fadeOutDown
+      ];
 
-  onAnimationEnd(event: any, cardIndex: number) {
-    if (event.toState === "fadeOutDown") {
-      // After the fadeOutDown animation ends, swap the firstChild with the lastChild
-      const card = this.productCards.toArray()[cardIndex];
-      const lastChild = card.nativeElement.lastElementChild;
-      const firstChild = card.nativeElement.firstElementChild;
+      const factory = this.animationBuilder.build(metadata);
+      const player = factory.create(element.lastElementChild);
 
-      card.nativeElement.insertBefore(lastChild, firstChild);
-      this.setProdCardPosition(card);
+      player.play();
 
-      //Advance card state
-      this.cardStates[cardIndex] = "moveTop";
+      player.onDone(() => {
+        const metadata2 = [
+          style({ transform: "translateY(-100%)" }), // Move to top
+          animate("0.6s ease-in-out", style({ transform: "translateY(0)", opacity: 1 })) // Transition for fadeInDown
+        ];
 
-      //Keep the color of the card
-    }
-    if (event.toState === "moveTop") {
-      this.cardStates[cardIndex] = "fadeInDown";
+        const factory2 = this.animationBuilder.build(metadata2);
+        const player2 = factory2.create(element.lastElementChild);
+        player2.play();
+
+        const card = this.productCards.toArray()[cardIndex];
+        const lastChild = card.nativeElement.lastElementChild;
+        const firstChild = card.nativeElement.firstElementChild;
+
+        card.nativeElement.insertBefore(lastChild, firstChild);
+        this.setProdCardPosition(card);
+      });
     }
   }
 }

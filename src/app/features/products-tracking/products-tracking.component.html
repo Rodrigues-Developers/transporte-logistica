@@ -1,9 +1,8 @@
 <div class="home__container">
     <h2>Deck Card</h2>
     <div class="cards__container">
-        <div class="card" *ngFor="let products of productsArray; let i = index" #productCards (click)="setNameAnimation(i)">
-            <div class="product" *ngFor="let product of products; let lastChild = last;"
-                [@cardAnimation]="lastChild ? cardStates[i] : ''" (@cardAnimation.done)="onAnimationEnd($event, i)">
+        <div class="card" *ngFor="let products of productsArray; let i = index" #productCards (click)="setAnimation($event, i)">
+            <div class="product" *ngFor="let product of products;">
                 <p><strong>NFE: </strong> {{product.factory_code}}</p>
                 <p><strong>Marca: </strong> {{product.brand}}</p>
                 <p><strong>Qte: </strong> {{product.amount}}</p>
