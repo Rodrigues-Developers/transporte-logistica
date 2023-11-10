@@ -1,34 +1,54 @@
-import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { HttpClient } from "@angular/common/http";
+import { Component, OnInit } from "@angular/core";
+import * as xml2js from "xml2js";
+import * as $ from "jquery";
 
 @Component({
-  selector: 'app-registration',
-  templateUrl: './registration.component.html',
-  styleUrls: ['./registration.component.less'],
+  selector: "app-registration",
+  templateUrl: "./registration.component.html",
+  styleUrls: ["./registration.component.less"]
 })
 export class RegistrationComponent implements OnInit {
-  registrationForm: FormGroup;
+  show: string | undefined;
+  xmlData: any; 
+  nfHeader: any;
+  nfeProc: any;
+  ide: any;
+  cUF: any;
+  cNF: any;
 
-  constructor(private fb: FormBuilder) {
-    this.registrationForm = this.fb.group({
-      nfe: ['', Validators.required],
-      emissionDate: ['', Validators.required],
-      transport: ['', Validators.required],
-      departureDate: ['', Validators.required],
-      arrivalForecast: ['', Validators.required],
-      merchandise: ['', Validators.required],
-      amount: ['', [Validators.required, Validators.pattern('[0-9]+')]],
-      nfValue: [
-        '',
-        [Validators.required, Validators.pattern('[0-9]+(.[0-9]{1,2})?')],
-      ],
-      pinRelease: ['', Validators.required],
-      obs: [''],
-    });
-  }
-  onSubmit() {
-    //Send Changes
+  constructor(private http: HttpClient) {}
+
+  ngOnInit() {
+    
   }
 
-  ngOnInit() {}
+  /** 
+   * Receive the XML file
+   * @function inputFileChange
+   * @param event 
+   */
+  inputFileChange(event: any) {
+    if (event.target.files && event.target.files[0]) {
+      const xml = event.target.files[0];
+
+      const reader = new FileReader();
+
+      reader.onload = (e) => {
+        const xmlContent = e.target ? e.target.result as string : "";
+        this.parseXml(xmlContent);
+      };
+
+      reader.readAsText(xml);
+    }
+  }
+
+  parseXml(xml: string) {
+    const xmlDoc = $.parseXML(xml);
+    const $xml = $(xmlDoc);
+
+    this.ide = $xml.find("nNF").text();
+    console.log("cNF: " + this.cNF);
+
+  }
 }
