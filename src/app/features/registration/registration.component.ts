@@ -1,7 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { Component, OnInit } from "@angular/core";
 import * as xml2js from "xml2js";
-import * as $ from "jquery";
 
 @Component({
   selector: "app-registration",
@@ -29,6 +28,7 @@ export class RegistrationComponent implements OnInit {
   inputFileChange(event: any) {
     if (event.target.files && event.target.files[0]) {
       const xml = event.target.files[0];
+      const a = 2;
 
       const reader = new FileReader();
 
@@ -41,26 +41,19 @@ export class RegistrationComponent implements OnInit {
     }
   }
 
-  /** */
   parseXml(xml: string) {
-    //Jquery method
-    const xmlDoc = $.parseXML(xml);
-    const $xml = $(xmlDoc);
-
-    this.ide = $xml.find("nNF").text();
-    console.log("cNF: " + this.cNF);
-
     //xml2js method
     const parser = new xml2js.Parser({ strict: false, trim: true });
     parser.parseString(xml, (err, result) => {
       this.nfHeader = result;
+      
     });
+      this.nfeProc = this.findKey(this.nfHeader, "NFEPROC");
+      this.ide = this.findKey(this.nfHeader, "IDE");
+      this.cUF = this.findKey(this.nfHeader, "CUF");
+      this.cNF = this.findKey(this.nfHeader, "CNF");
 
-    this.nfHeader;
-    this.nfeProc = this.nfHeader.nfeProc;
-    this.ide;
-    this.cUF;
-    this.cNF = this.findKey(this.nfHeader, "CNF");
+    
   }
 
   /**
