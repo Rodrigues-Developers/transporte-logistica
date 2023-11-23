@@ -5,7 +5,7 @@ import { ProductService } from "src/app/core/services/product.service";
 import { LogisticService } from "src/app/core/services/logistic.service";
 import { ObjectId } from "mongodb";
 import { objectValuesToArray } from "src/app/core/utils/objects";
-import { AnimationBuilder, AnimationPlayer, animate, state, style, transition, trigger } from "@angular/animations";
+import { AnimationBuilder, animate, style } from "@angular/animations";
 @Component({
   selector: "app-products-tracking",
   templateUrl: "./products-tracking.component.html",
