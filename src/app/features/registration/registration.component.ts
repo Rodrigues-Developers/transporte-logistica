@@ -15,6 +15,7 @@ export class RegistrationComponent implements OnInit {
   ide: any;
   cUF: any;
   cNF: any;
+  nfNumber: any;
 
   constructor(private http: HttpClient) {}
 

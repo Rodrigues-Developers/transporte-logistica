@@ -1,7 +1,14 @@
 <input type="file" (change)="inputFileChange($event)"/> 
-
-<div *ngIf="ide">
-  <h1>{{ cNF }}</h1>
-  <h2>{{ cUF }}</h2>
-  <h2>{{ ide }}</h2>
+<div>
+  
+  <section>Cabeçalho da nota</section>
+  <section>Destinatário / Remetente</section>
+  <section>Calculo de imposto</section>
+  <section>Transportador / Volumes transportados</section>
+  <section>Dados dos produtos</section>
+  <div *ngIf="ide">
+    <h1>NF Nº: {{ nfNumber }}</h1>
+    <h2>{{ cUF }}</h2>
+    <h2>{{ ide }}</h2>
+  </div>
 </div>
