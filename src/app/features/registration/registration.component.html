@@ -1,14 +1,25 @@
-<input type="file" (change)="inputFileChange($event)"/> 
-<div>
-  
-  <section>Cabeçalho da nota</section>
-  <section>Destinatário / Remetente</section>
-  <section>Calculo de imposto</section>
-  <section>Transportador / Volumes transportados</section>
-  <section>Dados dos produtos</section>
-  <div *ngIf="ide">
-    <h1>NF Nº: {{ nfNumber }}</h1>
-    <h2>{{ cUF }}</h2>
-    <h2>{{ ide }}</h2>
-  </div>
+<input type="file" (change)="inputFileChange($event)" />
+<div *ngIf="xmlData">
+
+  <section>Cabeçalho da nota
+    <div>
+      <div>Fornecedor: {{provider}}</div>
+      <div>Dados NFs: {{nfNumber}}</div>
+      <div>Chave NFs: {{nature}}</div>
+    </div>
+    <div>Informações de natureza: {{receiver}}</div>
+  </section>
+  <section>Destinatário / Remetente
+
+  </section>
+  <section>Calculo de imposto
+
+  </section>
+  <section>Transportador / Volumes transportados
+
+  </section>
+  <section>Dados dos produtos
+
+  </section>
+
 </div>

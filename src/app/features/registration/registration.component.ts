@@ -7,19 +7,17 @@ import * as xml2js from "xml2js";
   templateUrl: "./registration.component.html",
   styleUrls: ["./registration.component.less"]
 })
-export class RegistrationComponent implements OnInit {
+export class RegistrationComponent {
   show: string | undefined;
   xmlData: any;
-  nfHeader: any;
-  nfeProc: any;
-  ide: any;
+  nfNumber: any;
+  provider: any;
+  nature: any;
+  receiver: any;
   cUF: any;
   cNF: any;
-  nfNumber: any;
 
   constructor(private http: HttpClient) {}
-
-  ngOnInit() {}
 
   /**
    * Receive the XML file
@@ -29,7 +27,6 @@ export class RegistrationComponent implements OnInit {
   inputFileChange(event: any) {
     if (event.target.files && event.target.files[0]) {
       const xml = event.target.files[0];
-      const a = 2;
 
       const reader = new FileReader();
 
@@ -43,18 +40,17 @@ export class RegistrationComponent implements OnInit {
   }
 
   parseXml(xml: string) {
-    //xml2js method
     const parser = new xml2js.Parser({ strict: false, trim: true });
     parser.parseString(xml, (err, result) => {
-      this.nfHeader = result;
-      
+      this.xmlData = result;
     });
-      this.nfeProc = this.findKey(this.nfHeader, "NFEPROC");
-      this.ide = this.findKey(this.nfHeader, "IDE");
-      this.cUF = this.findKey(this.nfHeader, "CUF");
-      this.cNF = this.findKey(this.nfHeader, "CNF");
 
-    
+    this.nfNumber = this.findKey(this.xmlData, "NNF");
+    this.provider = this.findKey(this.xmlData, "XNOME");
+    this.nature = this.findKey(this.xmlData, "NATOP");
+    var emit = this.findKey(this.xmlData, "DEST");
+    this.receiver = this.findKey(emit, "XNOME");
+    // this.receiver = this.findKey(this.xmlData, "CNF");
   }
 
   /**
