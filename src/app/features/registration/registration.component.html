@@ -1,25 +1,49 @@
 <input type="file" (change)="inputFileChange($event)" />
 <div *ngIf="xmlData">
 
-  <section>Cabeçalho da nota
-    <div>
-      <div>Fornecedor: {{provider}}</div>
-      <div>Dados NFs: {{nfNumber}}</div>
-      <div>Chave NFs: {{nature}}</div>
+  <section>
+    <div class="treeColls">
+      <div> NF-e: {{nfNumber}}</div>
+      <div>Natureza da Operação: {{nature}}</div>
+      <div>Data de emissão: {{issueDate | date: 'dd/MM/yyyy'}}</div>
     </div>
-    <div>Informações de natureza: {{receiver}}</div>
+    <div class="treeColls">
+      <div>Fornecedor: {{provider}}</div>
+      <div>UF: {{ufProvider}}</div>
+      <div>CNPJ: {{cnpjProvider}}</div>
+    </div>
+    <div class="treeColls">
+      <div>Destinatário: {{receiver}}</div>
+      <div>UF: {{ufReceiver}}</div>
+      <div>CNPJ: {{cnpjReceiver}}</div>
+    </div>
   </section>
-  <section>Destinatário / Remetente
-
+  <section class="fourColls">
+    <div>Frete: {{freightValue}}</div>
+    <div>Desconto: {{discount}}</div>
+    <div>Valor total dos produtos: {{totalProdValue}}</div>
+    <div>Valor total da nota: {{totalNf}}</div>
   </section>
-  <section>Calculo de imposto
-
+  <section class="treeColls">
+    <div>Transportador: {{conveyor}}</div>
+    <div>Volumes: {{packages}}</div>
+    <div>Frete por conta: {{freightPaidBy}}</div>
   </section>
-  <section>Transportador / Volumes transportados
-
+  <section>Dados dos produtos:
+    <div class="products">
+        <div>Código</div>
+        <div>Descrição: </div>
+        <div>Qtd.:</div>
+        <div>Valor unit.:</div>
+        <div>Valor total:</div>
+      </div>
+    <div *ngFor="let prod of products" class="products">
+      <div>{{findKey(prod,"CPROD")}}</div>
+      <div>{{findKey(prod, "XPROD")}}</div>
+      <div>{{findKey(prod, "QCOM")}}</div>
+      <div>{{findKey(prod, "VUNCOM")}}</div>
+      <div>{{findKey(prod, "VPROD")}}</div>
+    </div>
   </section>
-  <section>Dados dos produtos
-
-  </section>
-
+  <button>Salvar</button>
 </div>

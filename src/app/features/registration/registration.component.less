@@ -1,24 +1,40 @@
 @import "../../shared/styles/colors.less";
 
-.div_form {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+section {
+  display: grid;
+  border: 1px solid black;
 
-  .form_nfe {
-    display: flex;
-    flex-direction: column;
+}
 
-    width: 20rem;
+.towColls {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  border: 1px solid black;
+}
 
-    margin: 1rem;
+.treeColls {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border: 1px solid black;
+}
 
-    label,
-    button {
-      margin-top: 0.7rem;
-    }
-    .validation_input {
-      color: @validation-message;
-    }
+.fourColls {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border: 1px solid black;
+}
+
+.products {
+  display: grid;
+  grid-template-columns: 1fr 4fr 1fr 2fr 2fr;
+  
+  border: 1px solid black;
+
+  div{
+    border-right: 1px solid black;
+    padding: 7px;
+  }
+  div:last-child{
+    border-right: none;
   }
 }

@@ -9,13 +9,14 @@ import * as xml2js from "xml2js";
 })
 export class RegistrationComponent {
   show: string | undefined;
-  xmlData: any;
-  nfNumber: any;
-  provider: any;
-  nature: any;
-  receiver: any;
-  cUF: any;
-  cNF: any;
+  xmlData: any; 
+  nfNumber: any; nature: any; issueDate:any;
+  provider: any; ufProvider:any; cnpjProvider:any; 
+  receiver: any; ufReceiver:any; cnpjReceiver:any
+  freightValue:any; discount:any; totalProdValue: any; totalNf:any;
+  conveyor: any; packages:any; freightPaidBy:any;
+  products: any[] = [];
+  
 
   constructor(private http: HttpClient) {}
 
@@ -45,12 +46,27 @@ export class RegistrationComponent {
       this.xmlData = result;
     });
 
+    var emit = this.findKey(this.xmlData, "EMIT");
+    var dest = this.findKey(this.xmlData, "DEST");
+    var transp = this.findKey(this.xmlData, "TRANSP");
+
     this.nfNumber = this.findKey(this.xmlData, "NNF");
-    this.provider = this.findKey(this.xmlData, "XNOME");
     this.nature = this.findKey(this.xmlData, "NATOP");
-    var emit = this.findKey(this.xmlData, "DEST");
-    this.receiver = this.findKey(emit, "XNOME");
-    // this.receiver = this.findKey(this.xmlData, "CNF");
+    this.issueDate = this.findKey(this.xmlData, "DHEMI");
+    this.provider = this.findKey(emit, "XNOME");
+    this.ufProvider = this.findKey(emit, "UF");
+    this.cnpjProvider = this.findKey(emit, "CNPJ");
+    this.receiver = this.findKey(dest, "XNOME");
+    this.ufReceiver = this.findKey(dest, "UF");
+    this.cnpjReceiver = this.findKey(dest, "CNPJ");
+    this.conveyor = this.findKey(transp, "XNOME");
+    this.packages = this.findKey(transp, "QVOL");
+    this.freightPaidBy = this.findKey(transp, "MODFRETE");
+    this.freightValue = this.findKey(this.xmlData, "VFRETE");
+    this.discount = this.findKey(this.xmlData, "VDESC");
+    this.totalProdValue = this.findKey(this.xmlData, "VPROD");
+    this.totalNf = this.findKey(this.xmlData, "VNF");
+    this.products = this.findKey(this.xmlData, "DET");
   }
 
   /**
@@ -62,7 +78,7 @@ export class RegistrationComponent {
   findKey(object: Record<string, any>, keyWanted: String): any {
     for (let key in object) {
       if (object.hasOwnProperty(key)) {
-        if (key === keyWanted) {
+        if (key === keyWanted) { 
           return object[key];
         } else if (typeof object[key] === "object") {
           const result = this.findKey(object[key], keyWanted);
