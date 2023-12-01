@@ -1,5 +1,50 @@
 @import "../../shared/styles/colors.less";
 
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 80vw;
+}
+
+.input-container {
+  display: flex;
+  height: 20rem;
+  width: 40rem;
+  margin: 1rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 1.5rem;
+  border: 2px dashed black;
+
+  label{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    span{
+      margin: .7rem;
+      font-size: x-large;
+    }
+    span:nth-child(3){
+      color: @background-sidebar-body;
+      background-color: @background-sidebar-header;
+      padding: .7rem;
+      border-radius: .3rem;
+      cursor: pointer;
+    }
+  }
+  input {
+    display: none;
+  }
+}
+.input-container--over{
+  border-style: solid;
+}
+
+
+
 section {
   display: grid;
   border: 1px solid black;
@@ -27,14 +72,15 @@ section {
 .products {
   display: grid;
   grid-template-columns: 1fr 4fr 1fr 2fr 2fr;
-  
+
   border: 1px solid black;
 
-  div{
+  div {
     border-right: 1px solid black;
     padding: 7px;
   }
-  div:last-child{
+
+  div:last-child {
     border-right: none;
   }
 }
