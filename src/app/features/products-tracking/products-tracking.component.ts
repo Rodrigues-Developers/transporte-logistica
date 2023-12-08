@@ -21,6 +21,8 @@ export class ProductsTrackingComponent implements OnInit, AfterViewInit {
   logistics: Logistic[] = [];
 
   productsArray = [] as any[];
+
+  runningCardAnimation = false;
   constructor(
     private productService: ProductService,
     private logisticService: LogisticService,
@@ -83,34 +85,42 @@ export class ProductsTrackingComponent implements OnInit, AfterViewInit {
   }
 
   setAnimation(event: Event, cardIndex: number): void {
-    const element = event.currentTarget as HTMLElement;
-    if (element.children.length > 1) {
-      const metadata = [
-        animate("0.6s ease-in-out", style({ transform: "translateY(100%)", opacity: 0 })) // Transition for fadeOutDown
-      ];
+    if (!this.runningCardAnimation) {
+      this.runningCardAnimation = true;
 
-      const factory = this.animationBuilder.build(metadata);
-      const player = factory.create(element.lastElementChild);
-
-      player.play();
-
-      player.onDone(() => {
-        const metadata2 = [
-          style({ transform: "translateY(-100%)" }), // Move to top
-          animate("0.6s ease-in-out", style({ transform: "translateY(0)", opacity: 1 })) // Transition for fadeInDown
+      const element = event.currentTarget as HTMLElement;
+      if (element.children.length > 1) {
+        const metadata = [
+          animate("0.6s ease-in-out", style({ transform: "translateY(100%)", opacity: 0 })) // Transition for fadeDown
         ];
 
-        const factory2 = this.animationBuilder.build(metadata2);
-        const player2 = factory2.create(element.lastElementChild);
-        player2.play();
+        const factory = this.animationBuilder.build(metadata);
+        const player = factory.create(element.lastElementChild);
 
-        const card = this.productCards.toArray()[cardIndex];
-        const lastChild = card.nativeElement.lastElementChild;
-        const firstChild = card.nativeElement.firstElementChild;
+        player.play();
 
-        card.nativeElement.insertBefore(lastChild, firstChild);
-        this.setProdCardPosition(card);
-      });
+        player.onDone(() => {
+          const metadata2 = [
+            style({ transform: "translateY(-100%)" }), // Move to top
+            animate("0.6s ease-in-out", style({ transform: "translateY(0)", opacity: 1 })) // Transition for fadeUpDown
+          ];
+
+          const factory2 = this.animationBuilder.build(metadata2);
+          const player2 = factory2.create(element.lastElementChild);
+          player2.play();
+
+          const card = this.productCards.toArray()[cardIndex];
+          const lastChild = card.nativeElement.lastElementChild;
+          const firstChild = card.nativeElement.firstElementChild;
+
+          card.nativeElement.insertBefore(lastChild, firstChild);
+          this.setProdCardPosition(card);
+
+          player2.onDone(() => {
+            this.runningCardAnimation = false;
+          });
+        });
+      }
     }
   }
 }
