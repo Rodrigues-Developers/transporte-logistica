@@ -13,6 +13,7 @@ import { LogisticService } from "src/app/core/services/logistic.service";
 import { DetailsComponent } from "./shared/details/details.component";
 import { DeliveredComponent } from "./features/delivered/delivered.component";
 import { AngularMaterialModule } from "./core/modules/angular-material-module/angular-material-module";
+import { TransportDetailTableComponent } from './features/transport-detail-table/transport-detail-table.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import { AngularMaterialModule } from "./core/modules/angular-material-module/an
     RegistrationComponent,
     ProductsTrackingComponent,
     DetailsComponent,
-    DeliveredComponent
+    DeliveredComponent,
+    TransportDetailTableComponent
   ],
 
   imports: [
