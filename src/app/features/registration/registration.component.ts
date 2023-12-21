@@ -1,5 +1,5 @@
 import { HttpClient } from "@angular/common/http";
-import { Component, OnInit } from "@angular/core";
+import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
 import * as xml2js from "xml2js";
 
 @Component({
@@ -7,53 +7,79 @@ import * as xml2js from "xml2js";
   templateUrl: "./registration.component.html",
   styleUrls: ["./registration.component.less"]
 })
-export class RegistrationComponent implements OnInit {
+
+export class RegistrationComponent {
   show: string | undefined;
-  xmlData: any;
-  nfHeader: any;
-  nfeProc: any;
-  ide: any;
-  cUF: any;
-  cNF: any;
-
+  xmlData: any; 
+  nfNumber: any; nature: any; issueDate:any;
+  provider: any; ufProvider:any; cnpjProvider:any; 
+  receiver: any; ufReceiver:any; cnpjReceiver:any
+  freightValue:any; discount:any; totalProdValue: any; totalNf:any;
+  conveyor: any; packages:any; freightPaidBy:any;
+  products: any[] = [];
+  
   constructor(private http: HttpClient) {}
+  @ViewChild('inputContainer') inputContainerRef!: ElementRef;
+  
+  onDragOver(event: Event): void {
+    event.preventDefault();
+    event.stopPropagation();
+    this.inputContainerRef.nativeElement.classList.add('input-container--over');
+  }
 
-  ngOnInit() {}
+  onDragLeave(event: Event): void {
+    event.preventDefault();
+    event.stopPropagation();
+    this.inputContainerRef.nativeElement.classList.remove('input-container--over');
+  }
 
-  /**
-   * Receive the XML file
-   * @function inputFileChange
-   * @param event
-   */
-  inputFileChange(event: any) {
-    if (event.target.files && event.target.files[0]) {
-      const xml = event.target.files[0];
-      const a = 2;
-
+  onFileChangeOrDrop(event: any): void {
+    event.preventDefault();
+    event.stopPropagation();
+  
+    const files: File[] = event.type === 'change' ? event.target.files : event.dataTransfer?.files || [];
+  
+    if (files.length > 0) {
+      const file = files[0];
+  
       const reader = new FileReader();
-
-      reader.onload = e => {
-        const xmlContent = e.target ? (e.target.result as string) : "";
-        this.parseXml(xmlContent);
+  
+      reader.onload = (e) => {
+        const fileContent = e.target ? (e.target.result as string) : "";
+        this.parseXml(fileContent);
       };
-
-      reader.readAsText(xml);
+  
+      reader.readAsText(file);
     }
   }
 
   parseXml(xml: string) {
-    //xml2js method
     const parser = new xml2js.Parser({ strict: false, trim: true });
     parser.parseString(xml, (err, result) => {
-      this.nfHeader = result;
-      
+      this.xmlData = result;
     });
-      this.nfeProc = this.findKey(this.nfHeader, "NFEPROC");
-      this.ide = this.findKey(this.nfHeader, "IDE");
-      this.cUF = this.findKey(this.nfHeader, "CUF");
-      this.cNF = this.findKey(this.nfHeader, "CNF");
 
-    
+    var emit = this.findKey(this.xmlData, "EMIT");
+    var dest = this.findKey(this.xmlData, "DEST");
+    var transp = this.findKey(this.xmlData, "TRANSP");
+
+    this.nfNumber = this.findKey(this.xmlData, "NNF");
+    this.nature = this.findKey(this.xmlData, "NATOP");
+    this.issueDate = this.findKey(this.xmlData, "DHEMI");
+    this.provider = this.findKey(emit, "XNOME");
+    this.ufProvider = this.findKey(emit, "UF");
+    this.cnpjProvider = this.findKey(emit, "CNPJ");
+    this.receiver = this.findKey(dest, "XNOME");
+    this.ufReceiver = this.findKey(dest, "UF");
+    this.cnpjReceiver = this.findKey(dest, "CNPJ");
+    this.conveyor = this.findKey(transp, "XNOME");
+    this.packages = this.findKey(transp, "QVOL");
+    this.freightPaidBy = this.findKey(transp, "MODFRETE");
+    this.freightValue = this.findKey(this.xmlData, "VFRETE");
+    this.discount = this.findKey(this.xmlData, "VDESC");
+    this.totalProdValue = this.findKey(this.xmlData, "VPROD");
+    this.totalNf = this.findKey(this.xmlData, "VNF");
+    this.products = this.findKey(this.xmlData, "DET");
   }
 
   /**
@@ -65,7 +91,7 @@ export class RegistrationComponent implements OnInit {
   findKey(object: Record<string, any>, keyWanted: String): any {
     for (let key in object) {
       if (object.hasOwnProperty(key)) {
-        if (key === keyWanted) {
+        if (key === keyWanted) { 
           return object[key];
         } else if (typeof object[key] === "object") {
           const result = this.findKey(object[key], keyWanted);

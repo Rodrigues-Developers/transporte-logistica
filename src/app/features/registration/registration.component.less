@@ -1,24 +1,169 @@
 @import "../../shared/styles/colors.less";
 
-.div_form {
+.container {
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 80vw;
 
-  .form_nfe {
+  .input-container {
     display: flex;
-    flex-direction: column;
-
-    width: 20rem;
-
+    height: 20rem;
+    width: 40rem;
     margin: 1rem;
+    align-items: center;
+    justify-content: center;
+    border-radius: 1.5rem;
+    border: 2px dashed black;
 
-    label,
-    button {
-      margin-top: 0.7rem;
+    label {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      span {
+        margin: .7rem;
+        font-size: x-large;
+      }
+
+      span:nth-child(3) {
+        color: @background-sidebar-body;
+        background-color: @background-sidebar-header;
+        padding: .7rem;
+        border-radius: .3rem;
+        cursor: pointer;
+      }
     }
-    .validation_input {
-      color: @validation-message;
+
+    input {
+      display: none;
     }
+  }
+
+  .input-container--over {
+    border-style: solid;
+  }
+}
+
+.xml-data {
+  display: flex;
+  flex-direction: column;
+  margin: 2rem;
+
+  .infor-nf {
+    border-radius: 5px;
+    border: 1px solid black;
+
+    .treeColls {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+
+      div:not(:last-child) {
+        border-right: 1px solid black;
+      }
+
+      div {
+        display: flex;
+        align-items: center;
+        padding: 5px;
+      }
+    }
+
+    .treeColls:not(:last-child) {
+      border-bottom: 1px solid black;
+
+      div:not(:last-child) {
+        border-right: 1px solid black;
+      }
+
+      div {
+        display: flex;
+        align-items: center;
+        padding: 5px;
+      }
+    }
+
+    .fourColls {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      border-top: 1px solid black;
+      border-bottom: 1px solid black;
+
+      div:not(:last-child) {
+        border-right: 1px solid black;
+      }
+
+      div {
+        display: flex;
+        align-items: center;
+        padding: 5px;
+      }
+    }
+
+    .products:first-child {
+      border-top: 1px solid black;
+    }
+
+    .products {
+      display: grid;
+      grid-template-columns: 1fr 4fr 1fr 2fr 2fr;
+
+      div {
+        padding: 7px;
+      }
+
+      div:not(:last-child) {
+        border-right: 1px solid black;
+      }
+    }
+
+    .products:not(:last-child) {
+      border-bottom: 1px solid black;
+    }
+  }
+
+  .save-button {
+    justify-self: center;
+    margin: 1rem 0;
+
+    appearance: none;
+    background-color: transparent;
+    border: 2px solid #1A1A1A;
+    border-radius: 15px;
+    box-sizing: border-box;
+    color: #3B3B3B;
+    cursor: pointer;
+    font-family: Roobert, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    font-size: 16px;
+    font-weight: 600;
+    line-height: normal;
+    min-width: 0;
+    outline: none;
+    padding: 16px 24px;
+    text-align: center;
+    text-decoration: none;
+    transition: all 300ms cubic-bezier(.23, 1, 0.32, 1);
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    width: 100%;
+    will-change: transform;
+  }
+
+  .save-button:disabled {
+    pointer-events: none;
+  }
+
+  .save-button:hover {
+    color: #fff;
+    background-color: #1A1A1A;
+    box-shadow: rgba(0, 0, 0, 0.25) 0 8px 15px;
+    transform: translateY(-2px);
+  }
+
+  .save-button:active {
+    box-shadow: none;
+    transform: translateY(0);
   }
 }
