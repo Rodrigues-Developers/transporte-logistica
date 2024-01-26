@@ -1,3 +1,6 @@
+@import "../../shared/styles/slideEffect.less";
+@import "../../shared/styles/colors.less";
+
 .main_details {
   display: flex;
   flex-direction: column;
@@ -29,6 +32,20 @@
     align-content: center;
     justify-content: center;
 
+    .pin {
+      flex-direction: row;
+      p {
+        margin-right: 1.1rem;
+      }
+
+      input {
+        margin-right: 0.6rem;
+      }
+      mat-icon {
+        cursor: pointer;
+      }
+    }
+
     div {
       display: flex;
       align-items: center;
@@ -48,6 +65,16 @@
 
   .dates_details {
     grid-template-columns: 1fr 1fr;
+  }
+
+  .submit {
+    margin-inline-start: 77%;
+    margin-top: 0.5rem;
+    cursor: pointer;
+    color: #000000;
+    background: transparent;
+    .slide_right(@color: @font-default-black, @background-color: @background-default-black, @hover-color: @font-default-white);
+    padding: 1%;
   }
 
   .product_details {

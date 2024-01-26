@@ -1,60 +1,77 @@
 <div class="main_details" *ngIf="logistic">
     <h1>Detalhes</h1>
-    <section class="header_details">
-        <div class="supplier">INTELBRAS</div>
+    <form [formGroup]="detailsForm" (ngSubmit)="onSubmit()">
+        <section class="header_details">
+            <div class="supplier">INTELBRAS</div>
+            <!-- TODO Fix this when correct the interface -->
+            <div class="nfe">
+                <P>Nº: {{logistic.nfe}}</P>
+                <P>Série: 01</P>
+                <!-- // TODO Fix this when correct the interface -->
+            </div>
+            <div class="date">
+                <p>Emissão: {{logistic.emissionNf | date: 'dd/MM/yyyy'}}</p>
+                <div class="pin">
+                    <p *ngIf="!editing">PIN: {{logistic.pin_release | date:'dd/MM/yyyy'}}</p>
+                    <input *ngIf="editing" type="date" formControlName="pinRelease">
+                    <mat-icon (click)="editField()">edit</mat-icon>
+
+                </div>
+            </div>
+        </section>
+        <div class="line"></div>
+
+        <section class="dates_details">
+            <div class="departure">
+                <p>Data de saída</p>
+                <div class="pin">
+                    <p *ngIf="!editing">{{logistic.date_out | date:'dd/MM/yyyy'}}</p>
+                    <input *ngIf="editing" type="date" formControlName="dateOut">
+                    <mat-icon (click)="editField()">edit</mat-icon>
+                </div>
+            </div>
+            <div class="estimated_arrival">
+                <p>Previsão de Chegada</p>
+                <div class="pin">
+                    <p *ngIf="!editing">{{logistic.arrival_forecast | date: 'dd/MM/yyyy'}}</p>
+                    <input *ngIf="editing" type="date" formControlName="arrivalForecast">
+                    <mat-icon (click)="editField()">edit</mat-icon>
+                </div>
+            </div>
+
+        </section>
+        <div class="line"></div>
+        <button *ngIf="editing" class="submit" type="submit" [disabled]="!detailsForm.valid">Salvar Alterações</button>
+
+        <h2 class="nfe_type">Compra ZFM</h2>
         <!-- TODO Fix this when correct the interface -->
-        <div class="nfe">
-            <P>Nº: {{logistic.nfe}}</P>
-            <P>Série: 01</P>
-            <!-- // TODO Fix this when correct the interface -->
-        </div>
-        <div class="date">
-            <p>Emissão: {{logistic.emissionNf | date: 'dd/MM/yyyy'}}</p>
-            <p>PIN: {{logistic.pin_release | date:'dd/MM/yyyy'}}</p>
-        </div>
-    </section>
-    <div class="line"></div>
+        <div class="line"></div>
 
-    <section class="dates_details">
-        <div class="departure">
-            <p>Data de saída</p>
-            <p>{{logistic.date_out | date:'dd/MM/yyyy'}}</p>
-        </div>
-        <div class="estimated_arrival">
-            <p>Previsão de Chegada</p>
-            <p>{{logistic.arrival_forecast | date: 'dd/MM/yyyy'}}</p>
-        </div>
-    </section>
-    <div class="line"></div>
+        <section>
+            <p class="itens_title">Itens:</p>
+            <table class="product_details">
+                <thead>
+                    <tr>
+                        <th>Código</th>
+                        <th>Descrição</th>
+                        <th>Qtd.</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let prod of productsNfe">
+                        <th>{{prod.factory_code}}</th>
+                        <th>{{prod.description}}</th>
+                        <th>{{prod.amount}}</th>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
 
-    <h2 class="nfe_type">Compra ZFM</h2>
-    <!-- TODO Fix this when correct the interface -->
-    <div class="line"></div>
+        <div class="line"></div>
 
-    <section>
-        <p class="itens_title">Itens:</p>
-        <table class="product_details">
-            <thead>
-                <tr>
-                    <th>Código</th>
-                    <th>Descrição</th>
-                    <th>Qtd.</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let prod of productsNfe">
-                    <th>{{prod.factory_code}}</th>
-                    <th>{{prod.description}}</th>
-                    <th>{{prod.amount}}</th>
-                </tr>
-            </tbody>
-        </table>
-    </section>
-
-    <div class="line"></div>
-
-    <section class="observations">
-        <h2>Observações</h2>
-        <div></div>
-    </section>
+        <section class="observations">
+            <h2>Observações</h2>
+            <div></div>
+        </section>
+    </form>
 </div>
