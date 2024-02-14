@@ -7,48 +7,58 @@ import * as xml2js from "xml2js";
   templateUrl: "./registration.component.html",
   styleUrls: ["./registration.component.less"]
 })
-
 export class RegistrationComponent {
   show: string | undefined;
-  xmlData: any; 
-  nfNumber: any; nature: any; issueDate:any;
-  provider: any; ufProvider:any; cnpjProvider:any; 
-  receiver: any; ufReceiver:any; cnpjReceiver:any
-  freightValue:any; discount:any; totalProdValue: any; totalNf:any;
-  conveyor: any; packages:any; freightPaidBy:any;
+  xmlData: any;
+  nfNumber: any;
+  nature: any;
+  issueDate: any;
+  provider: any;
+  ufProvider: any;
+  cnpjProvider: any;
+  receiver: any;
+  ufReceiver: any;
+  cnpjReceiver: any;
+  freightValue: any;
+  discount: any;
+  totalProdValue: any;
+  totalNf: any;
+  conveyor: any;
+  packages: any;
+  freightPaidBy: any;
   products: any[] = [];
-  
+
   constructor(private http: HttpClient) {}
-  @ViewChild('inputContainer') inputContainerRef!: ElementRef;
-  
+  @ViewChild("inputContainer") inputContainerRef!: ElementRef;
+
   onDragOver(event: Event): void {
     event.preventDefault();
     event.stopPropagation();
-    this.inputContainerRef.nativeElement.classList.add('input-container--over');
+    this.inputContainerRef.nativeElement.classList.add("input-container--over");
   }
 
   onDragLeave(event: Event): void {
     event.preventDefault();
     event.stopPropagation();
-    this.inputContainerRef.nativeElement.classList.remove('input-container--over');
+    this.inputContainerRef.nativeElement.classList.remove("input-container--over");
   }
 
   onFileChangeOrDrop(event: any): void {
     event.preventDefault();
     event.stopPropagation();
-  
-    const files: File[] = event.type === 'change' ? event.target.files : event.dataTransfer?.files || [];
-  
+
+    const files: File[] = event.type === "change" ? event.target.files : event.dataTransfer?.files || [];
+
     if (files.length > 0) {
       const file = files[0];
-  
+
       const reader = new FileReader();
-  
-      reader.onload = (e) => {
+
+      reader.onload = e => {
         const fileContent = e.target ? (e.target.result as string) : "";
         this.parseXml(fileContent);
       };
-  
+
       reader.readAsText(file);
     }
   }
@@ -91,7 +101,7 @@ export class RegistrationComponent {
   findKey(object: Record<string, any>, keyWanted: String): any {
     for (let key in object) {
       if (object.hasOwnProperty(key)) {
-        if (key === keyWanted) { 
+        if (key === keyWanted) {
           return object[key];
         } else if (typeof object[key] === "object") {
           const result = this.findKey(object[key], keyWanted);
@@ -103,4 +113,18 @@ export class RegistrationComponent {
     }
     return undefined;
   }
+
+  // async receive() {
+  //   for (const logis of this.receivedLogistics) {
+  //     if (logis._id) {
+  //       try {
+  //         const updatedLogistic: Logistic = logis;
+  //         logis.status = "delivered";
+  //         this.logisticService.updateLogistic(updatedLogistic).subscribe(() => this.refreshTransportTable());
+  //       } catch (error) {
+  //         console.error(`Error updating logistics ${logis._id}: ${error}`);
+  //       }
+  //     }
+  //   }
+  // }
 }
