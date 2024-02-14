@@ -38,4 +38,5 @@ export class LogisticService {
     const apiurl = `${this.url}logistics/${logistic._id}`;
     return this.http.put<Logistic>(apiurl, logistic, httpOptions);
   }
+
 }
