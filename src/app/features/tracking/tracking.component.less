@@ -1,10 +1,18 @@
 @import "../../shared/styles/colors.less";
+@import "../../shared/styles/slideEffect.less";
 
+.tracking {
+  background: @background-default-white;
+  padding: 2%;
+  padding-left: 3%;
+  margin-left: 3rem;
+  border-radius: 2%;
+}
 .receive__div {
+  display: flex;
+  justify-content: right;
   .receive__button {
-    font-size: large;
-
-    background-color: #ebebeb;
+    background-color: transparent;
     box-shadow: inherit;
 
     border: 1px solid black;
@@ -13,10 +21,7 @@
     padding: 0.5rem;
     margin: 1rem 0;
 
-    &:hover {
-      cursor: pointer;
-      background-color: @background-default-black;
-      color: #fff;
-    }
+    cursor: pointer;
+    .slide_right(@color: @font-default-black, @background-color: @background-default-black, @hover-color: @font-default-white);
   }
 }

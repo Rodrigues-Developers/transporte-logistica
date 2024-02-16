@@ -1,6 +1,8 @@
-<app-transport-detail-table (logisticsSelected)="onLogisticsSelected($event)" [updateTable]="updateTable">
-</app-transport-detail-table>
+<main class="tracking">
+    <app-transport-detail-table (logisticsSelected)="onLogisticsSelected($event)" [updateTable]="updateTable">
+    </app-transport-detail-table>
+</main>
 
-<div class="recive__div">
-    <button class="recive__button" (click)="receive()">Receber</button>
+<div class="receive__div">
+    <button class="receive__button" (click)="receive()">Receber</button>
 </div>

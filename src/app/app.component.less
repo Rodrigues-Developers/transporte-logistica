@@ -1,6 +1,7 @@
 @import "./shared/styles/slideEffect.less";
 @import "./shared/styles/colors.less";
 @import "./shared/styles/mediaQuery.less";
+@import "~ngx-toastr/toastr";
 
 .app_container {
   max-width: 100%;
@@ -18,7 +19,6 @@
         align-items: center;
         width: 7rem;
         height: 1.7rem;
-        border: 1px solid;
         border-radius: 5px;
         margin: 1rem 2rem 0;
         cursor: pointer;
@@ -58,7 +58,7 @@
 
       .navbar__menu {
         flex-direction: column;
-        transform: translateX(120%);
+        transform: translateX(210%);
         position: fixed;
         width: 70%;
         height: 100%;
@@ -98,7 +98,7 @@
     }
 
     #navbarMenu.slide-from-right {
-      transform: translateX(0%);
+      transform: translateX(15%);
       transition: 0.5s;
       z-index: 2;
     }
