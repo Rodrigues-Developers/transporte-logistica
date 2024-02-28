@@ -1,5 +1,6 @@
 @import "../../shared/styles/colors.less";
 @import "../../shared/styles/sideMenu.less";
+@import "../../shared/styles/animations.less";
 
 .transport__table {
   width: 950px;
@@ -49,6 +50,8 @@
       &:nth-child(even) {
         background-color: #ebebeb;
       }
+
+      .fade-in-animation(500ms);
 
       th,
       td {
