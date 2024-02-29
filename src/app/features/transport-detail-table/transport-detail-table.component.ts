@@ -50,6 +50,8 @@ export class TransportDetailTableComponent implements OnInit {
     for (let i = 0; i < this.checkedLogisticsElements.length; i++) {
       if (this.selectedLogistics[i].status === "delivered") {
         this.setAnimation(this.checkedLogisticsElements[i]);
+      } else if (this.delivered) {
+        this.setAnimation(this.checkedLogisticsElements[i], true);
       }
     }
   }
@@ -137,9 +139,9 @@ export class TransportDetailTableComponent implements OnInit {
     }
   }
 
-  setAnimation(element: HTMLElement): void {
+  setAnimation(element: HTMLElement, moveLeft?: boolean): void {
     const metadata = [
-      animate("2s ease-in-out", style({ transform: "translateX(100%)", opacity: 0 })) // Transition for fadeOutRight
+      animate("2s ease-in-out", style({ transform: moveLeft ? "translateX(-100%)" : "translateX(100%)", opacity: 0 })) // Transition for fadeOutRight
     ];
 
     const factory = this.animationBuilder.build(metadata);

@@ -8,3 +8,21 @@
   margin-left: 3rem;
   border-radius: 2%;
 }
+
+.return__div {
+  display: flex;
+  justify-content: right;
+  .return__button {
+    background-color: transparent;
+    box-shadow: inherit;
+
+    border: 1px solid black;
+    border-radius: 5px;
+
+    padding: 0.5rem;
+    margin: 1rem 0;
+
+    cursor: pointer;
+    .slide_right(@color: @font-default-black, @background-color: @background-default-black, @hover-color: @font-default-white);
+  }
+}
