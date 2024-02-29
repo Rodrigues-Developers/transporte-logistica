@@ -9,6 +9,7 @@ import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { isEqual } from "../../core/utils/objects";
 import { LogisticService } from "src/app/core/services/logistic.service";
 import { ToastrService } from "ngx-toastr";
+import { stringToDate } from "src/app/core/utils/dates";
 @Component({
   selector: "app-details",
   templateUrl: "./details.component.html",
@@ -104,9 +105,10 @@ export class DetailsComponent implements OnInit, OnDestroy {
 
     if (this.detailsForm.valid && !isEqual(this.datesFormated, currentFormValues)) {
       const logisticTosave = this.logistic;
-      logisticTosave.pin_release = new Date(currentFormValues.pin_release).toLocaleDateString();
-      logisticTosave.date_out = new Date(currentFormValues.date_out);
-      logisticTosave.arrival_forecast = new Date(currentFormValues.arrival_forecast).toString();
+
+      logisticTosave.pin_release = stringToDate(currentFormValues.pin_release).toISOString();
+      logisticTosave.date_out = stringToDate(currentFormValues.date_out);
+      logisticTosave.arrival_forecast = stringToDate(currentFormValues.arrival_forecast).toISOString();
 
       // Save changes or update data
       this.logisticService.updateLogistic(logisticTosave).subscribe(e => {
