@@ -623,8 +623,8 @@ export class TrackingComponent implements OnInit {
 
             &lt;th&gt;&lt;input type&#x3D;&quot;checkbox&quot; id&#x3D;&quot;{{logis.id}}&quot;&gt;&lt;/th&gt;
             &lt;td&gt;{{logis.nfe}}&lt;/td&gt;
-            &lt;td&gt;{{logis.emissionNf | date: &#x27;dd/MM/yyyy&#x27;}}&lt;/td&gt;
-            &lt;td&gt;{{logis.shipping_company}}&lt;/td&gt;
+            &lt;td&gt;{{logis.emission_date | date: &#x27;dd/MM/yyyy&#x27;}}&lt;/td&gt;
+            &lt;td&gt;{{logis.transporter}}&lt;/td&gt;
             &lt;td&gt;{{logis.arrival_forecast | date: &#x27;dd/MM/yyyy&#x27;}}&lt;/td&gt;
             &lt;td&gt;{{logis.date_out | date: &#x27;dd/MM/yyyy&#x27;}}&lt;/td&gt;            
             &lt;td&gt;{{logis.pin_release | date: &#x27;dd/MM/yyyy&#x27;}}&lt;/td&gt;
@@ -756,7 +756,7 @@ export class TrackingComponent implements OnInit {
 <script src="../js/libs/htmlparser.js"></script>
 <script src="../js/libs/deep-iterator.js"></script>
 <script>
-        var COMPONENT_TEMPLATE = '<div><table class="tracking__table">    <thead>        <tr>            <th><input type="checkbox" class="check__all"></th>            <th>NFe</th>            <th>Emissão da NF</th>            <th>Transportadora</th>            <th>Data de Saída</th>            <th>Previsão de Chegada</th>                        <th>Data da Liberação do PIN</th>            <th>Status</th>        </tr>    </thead>    <tbody>        <tr *ngFor="let logis of logistics">            <th><input type="checkbox" id="{{logis.id}}"></th>            <td>{{logis.nfe}}</td>            <td>{{logis.emissionNf | date: \'dd/MM/yyyy\'}}</td>            <td>{{logis.shipping_company}}</td>            <td>{{logis.arrival_forecast | date: \'dd/MM/yyyy\'}}</td>            <td>{{logis.date_out | date: \'dd/MM/yyyy\'}}</td>                        <td>{{logis.pin_release | date: \'dd/MM/yyyy\'}}</td>            <td>{{logis.status}}</td>        </tr>    </tbody></table></div>'
+            var COMPONENT_TEMPLATE = '<div><table class="tracking__table">    <thead>        <tr>            <th><input type="checkbox" class="check__all"></th>            <th>NFe</th>            <th>Emissão da NF</th>            <th>Transportadora</th>            <th>Data de Saída</th>            <th>Previsão de Chegada</th>                        <th>Data da Liberação do PIN</th>            <th>Status</th>        </tr>    </thead>    <tbody>        <tr *ngFor="let logis of logistics">            <th><input type="checkbox" id="{{logis.id}}"></th>            <td>{{logis.nfe}}</td>            <td>{{logis.emission_date | date: \'dd/MM/yyyy\'}}</td>            <td>{{logis.transporter}}</td>            <td>{{logis.arrival_forecast | date: \'dd/MM/yyyy\'}}</td>            <td>{{logis.date_out | date: \'dd/MM/yyyy\'}}</td>                        <td>{{logis.pin_release | date: \'dd/MM/yyyy\'}}</td>            <td>{{logis.status}}</td>        </tr>    </tbody></table></div>'
     var COMPONENTS = [{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'RegistrationComponent', 'selector': 'app-registration'},{'name': 'TrackingComponent', 'selector': 'app-tracking'}];
     var DIRECTIVES = [];
     var ACTUAL_COMPONENT = {'name': 'TrackingComponent'};
