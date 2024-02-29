@@ -10,9 +10,11 @@
                 <!-- // TODO Fix this when correct the interface -->
             </div>
             <div class="date">
+
                 <p>Emissão: {{logistic.emissionNf | date: 'dd/MM/yyyy' : 'UTC-00'}}</p>
                 <div class="pin">
                     <p *ngIf="!editing">PIN: {{logistic.pin_release | date:'dd/MM/yyyy' : 'UTC-00'}}</p>
+
                     <input *ngIf="editing" type="date" formControlName="pinRelease">
                     <mat-icon (click)="editField()">edit</mat-icon>
 
@@ -24,16 +26,20 @@
         <section class="dates_details">
             <div class="departure">
                 <p>Data de saída</p>
+
                 <div class="pin">
                     <p *ngIf="!editing">{{logistic.date_out | date:'dd/MM/yyyy' : 'UTC-00'}}</p>
+
                     <input *ngIf="editing" type="date" formControlName="dateOut">
                     <mat-icon (click)="editField()">edit</mat-icon>
                 </div>
             </div>
             <div class="estimated_arrival">
                 <p>Previsão de Chegada</p>
+
                 <div class="pin">
                     <p *ngIf="!editing">{{logistic.arrival_forecast | date: 'dd/MM/yyyy' : 'UTC-00'}}</p>
+
                     <input *ngIf="editing" type="date" formControlName="arrivalForecast">
                     <mat-icon (click)="editField()">edit</mat-icon>
                 </div>

@@ -15,6 +15,7 @@ import { DeliveredComponent } from "./features/delivered/delivered.component";
 import { AngularMaterialModule } from "./core/modules/angular-material-module/angular-material-module";
 import { TransportDetailTableComponent } from "./features/transport-detail-table/transport-detail-table.component";
 import { ToastrModule } from "ngx-toastr";
+import { PopupComponent } from "./shared/popup/popup.component";
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { ToastrModule } from "ngx-toastr";
     ProductsTrackingComponent,
     DetailsComponent,
     DeliveredComponent,
-    TransportDetailTableComponent
+    TransportDetailTableComponent,
+    PopupComponent
   ],
 
   imports: [

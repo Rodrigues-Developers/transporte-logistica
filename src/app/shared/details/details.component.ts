@@ -112,13 +112,12 @@ export class DetailsComponent implements OnInit, OnDestroy {
 
       // Save changes or update data
       this.logisticService.updateLogistic(logisticTosave).subscribe(e => {
-        console.log(e);
         this.toastr.success("Dados atualizados", "Sucesso!");
       });
       this.editing = !this.editing;
     } else {
       // Handle invalid form
-      console.log("Invalid form");
+      this.toastr.error("Não foi possível salvar as informações", "Falha!");
     }
   }
 }

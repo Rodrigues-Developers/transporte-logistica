@@ -1,0 +1,10 @@
+<div #popUpElement class="popup" [class.hidden]="!isVisible">
+  <div class="popup-content">
+    <!-- <mat-icon class="close" (click)="setAnimation(popUpElement,false)">close</mat-icon> -->
+    <h2>Confirmar recebimento?</h2>
+    <div class="buttons">
+      <button (click)="setAnimation(popUpElement,false)">Voltar</button>
+      <button (click)="confirm()">Receber</button>
+    </div>
+  </div>
+</div>
