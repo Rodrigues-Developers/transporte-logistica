@@ -34,6 +34,11 @@ export class TransportDetailTableComponent implements OnInit {
 
   checkAll: boolean = false;
 
+  displayedLogistics: Logistic[] = [];
+  initialItemsToDisplay = 3; // Number of items to display initially
+  itemsToLoad = 2; // Number of items to load when user scrolls to the bottom
+  loadingData = true;
+
   constructor(
     private productService: ProductService,
     private logisticService: LogisticService,
@@ -56,12 +61,35 @@ export class TransportDetailTableComponent implements OnInit {
     }
   }
 
+  onScroll(): void {
+    if (this.isScrolledToBottom()) {
+      this.loadMoreLogistics();
+    }
+  }
+
+  isScrolledToBottom(): boolean {
+    const scrollPosition = window.scrollY;
+    const windowHeight = window.innerHeight;
+    const bodyHeight = document.body.scrollHeight;
+
+    return scrollPosition > bodyHeight - windowHeight - 20; // Add some buffer to trigger earlier
+  }
+
+  loadMoreLogistics(): void {
+    this.initialItemsToDisplay += this.itemsToLoad;
+
+    // Update the displayedLogistics array with more items
+    this.displayedLogistics = this.logistics.slice(0, this.initialItemsToDisplay);
+  }
+
   /**
    * Get all delivered logistics from data base
    */
   async getLogistics() {
     this.logisticService.getAllLogistics(this.delivered).subscribe((logistics: Logistic[]) => {
       this.logistics = logistics;
+      this.loadMoreLogistics();
+      this.loadingData = false;
     });
   }
 
