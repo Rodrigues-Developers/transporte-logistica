@@ -17,11 +17,11 @@
       <tr *ngFor="let logis of displayedLogistics">
         <th><input type="checkbox" (click)="toggleSelection(logis, $event)" id="{{logis._id}}" #checkBoxes></th>
         <td (click)="openSidebar(logis)">{{logis.nfe}}</td>
-        <td (click)="openSidebar(logis)">{{logis.emissionNf | date: 'dd/MM/yyyy'}}</td>
+        <td (click)="openSidebar(logis)">{{logis.emissionNf | date:'dd/MM/yyyy' : 'UTC-00'}}</td>
         <td (click)="openSidebar(logis)">{{logis.shipping_company}}</td>
-        <td (click)="openSidebar(logis)">{{logis.arrival_forecast | date: 'dd/MM/yyyy'}}</td>
-        <td (click)="openSidebar(logis)">{{logis.date_out | date: 'dd/MM/yyyy'}}</td>
-        <td (click)="openSidebar(logis)">{{logis.pin_release | date: 'dd/MM/yyyy'}}</td>
+        <td (click)="openSidebar(logis)">{{logis.date_out | date:'dd/MM/yyyy' : 'UTC-00'}}</td>
+        <td (click)="openSidebar(logis)">{{logis.arrival_forecast | date:'dd/MM/yyyy' : 'UTC-00'}}</td>
+        <td (click)="openSidebar(logis)">{{logis.pin_release | date:'dd/MM/yyyy' : 'UTC-00'}}</td>
         <td (click)="openSidebar(logis)">{{logis.status}}</td>
       </tr>
       <tr *ngIf="loadingData">
@@ -34,6 +34,7 @@
     </tbody>
   </table>
 </div>
+
 
 <div>
   <div class="side__menu">

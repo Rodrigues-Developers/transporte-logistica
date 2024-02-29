@@ -4,5 +4,8 @@
 </main>
 
 <div class="receive__div">
-    <button class="receive__button" (click)="receive()">Receber</button>
+    <button class="receive__button" (click)="togglePopup()" [disabled]="receivedLogistics.length <= 0">Receber</button>
 </div>
+
+
+<app-popup [isVisible]="isPopUpVisible" (isVisibleEmitter)="togglePopup($event)" (confirmEmitter)="sendNF($event)"></app-popup>

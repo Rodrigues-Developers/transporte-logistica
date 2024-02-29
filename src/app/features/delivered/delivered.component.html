@@ -1,3 +1,8 @@
 <main class="delivered">
-  <app-transport-detail-table [delivered]="true"></app-transport-detail-table>
+  <app-transport-detail-table (logisticsSelected)="onLogisticsSelected($event)" [delivered]="true"
+    [updateTable]="updateTable"></app-transport-detail-table>
 </main>
+
+<div class="return__div">
+  <button class="return__button" (click)="returnNFE()">Retornar</button>
+</div>

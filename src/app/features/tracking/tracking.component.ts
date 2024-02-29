@@ -8,6 +8,7 @@ import { LogisticService } from "src/app/core/services/logistic.service";
   styleUrls: ["./tracking.component.less"]
 })
 export class TrackingComponent implements OnInit {
+  isPopUpVisible: boolean = false;
   receivedLogistics: Logistic[] = [];
   updateTable: boolean = false;
 
@@ -31,6 +32,16 @@ export class TrackingComponent implements OnInit {
         }
       }
     }
+  }
+
+  togglePopup(isVisible?: boolean) {
+    this.isPopUpVisible = isVisible !== undefined ? isVisible : !this.isPopUpVisible;
+  }
+
+  sendNF(isPopupConfirmed: boolean) {
+    if (isPopupConfirmed) {
+      this.receive();
+    } else this.togglePopup();
   }
 
   refreshTransportTable(): void {
