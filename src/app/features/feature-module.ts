@@ -10,10 +10,12 @@ import { ProductsTrackingComponent } from "./products-tracking/products-tracking
 import { RegistrationComponent } from "./registration/registration.component";
 import { TrackingComponent } from "./tracking/tracking.component";
 import { TransportDetailTableComponent } from "./transport-detail-table/transport-detail-table.component";
+import { PopupComponent } from "../shared/popup/popup.component";
 
 @NgModule({
   declarations: [
     DetailsComponent,
+    PopupComponent,
     DeliveredComponent,
     ProductsTrackingComponent,
     RegistrationComponent,
