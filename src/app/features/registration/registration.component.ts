@@ -1,6 +1,11 @@
-import { HttpClient } from "@angular/common/http";
 import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
+import { HttpClient } from "@angular/common/http";
+// import { ObjectId } from "mongodb";
+import { Logistic } from "src/app/core/interfaces/logistic.interface";
 import * as xml2js from "xml2js";
+import { Company } from "src/app/core/interfaces/company.interface";
+import { Product } from "src/app/core/interfaces/product.interface";
+import { arrayBuffer } from "stream/consumers";
 
 @Component({
   selector: "app-registration",
@@ -8,6 +13,8 @@ import * as xml2js from "xml2js";
   styleUrls: ["./registration.component.less"]
 })
 export class RegistrationComponent {
+  
+  
   show: string | undefined;
   xmlData: any;
   nfNumber: any;
@@ -16,7 +23,6 @@ export class RegistrationComponent {
   provider: any;
   ufProvider: any;
   cnpjProvider: any;
-  receiver: any;
   ufReceiver: any;
   cnpjReceiver: any;
   freightValue: any;
@@ -26,7 +32,16 @@ export class RegistrationComponent {
   conveyor: any;
   packages: any;
   freightPaidBy: any;
-  products: any[] = [];
+
+  logistic = {} as Logistic;
+  logistics: Logistic[] = [];
+
+  products: Product[] = [];
+
+  supplier = {} as Company;
+  receiver = {} as Company;
+  transporter = {} as Company;
+
 
   constructor(private http: HttpClient) {}
   @ViewChild("inputContainer") inputContainerRef!: ElementRef;
@@ -58,38 +73,76 @@ export class RegistrationComponent {
         const fileContent = e.target ? (e.target.result as string) : "";
         this.parseXml(fileContent);
       };
-
+      
       reader.readAsText(file);
     }
   }
-
+  
   parseXml(xml: string) {
     const parser = new xml2js.Parser({ strict: false, trim: true });
     parser.parseString(xml, (err, result) => {
       this.xmlData = result;
     });
+    
+    const { ObjectId } = require('bson')
+    const nfeId = new ObjectId();
+    const receiverId = new ObjectId(); //TODO Verify if receiver has create on database.
+    const supplierId = new ObjectId(); //TODO Verify if receiver has create on database.
+    const transporterId = new ObjectId(); //TODO Verify if receiver has create on database.
 
     var emit = this.findKey(this.xmlData, "EMIT");
     var dest = this.findKey(this.xmlData, "DEST");
     var transp = this.findKey(this.xmlData, "TRANSP");
 
-    this.nfNumber = this.findKey(this.xmlData, "NNF");
-    this.nature = this.findKey(this.xmlData, "NATOP");
-    this.issueDate = this.findKey(this.xmlData, "DHEMI");
-    this.provider = this.findKey(emit, "XNOME");
-    this.ufProvider = this.findKey(emit, "UF");
-    this.cnpjProvider = this.findKey(emit, "CNPJ");
-    this.receiver = this.findKey(dest, "XNOME");
-    this.ufReceiver = this.findKey(dest, "UF");
-    this.cnpjReceiver = this.findKey(dest, "CNPJ");
-    this.conveyor = this.findKey(transp, "XNOME");
-    this.packages = this.findKey(transp, "QVOL");
-    this.freightPaidBy = this.findKey(transp, "MODFRETE");
-    this.freightValue = this.findKey(this.xmlData, "VFRETE");
-    this.discount = this.findKey(this.xmlData, "VDESC");
-    this.totalProdValue = this.findKey(this.xmlData, "VPROD");
-    this.totalNf = this.findKey(this.xmlData, "VNF");
-    this.products = this.findKey(this.xmlData, "DET");
+    this.logistic._id = nfeId;
+    this.logistic.nfe = this.findKey(this.xmlData, "NNF");
+    this.logistic.operation = this.findKey(this.xmlData, "NATOP");
+    this.logistic.emission_date = this.findKey(this.xmlData, "DHEMI");
+    this.logistic.supplier = supplierId;
+    this.logistic.receiver = receiverId;
+    this.logistic.transporter = transporterId;
+    this.logistic.freight = this.findKey(this.xmlData, "VFRETE");
+    this.logistic.discount = this.findKey(this.xmlData, "VDESC");
+    this.logistic.total_product_value = this.findKey(this.xmlData, "VPROD");
+    this.logistic.total_note_value = this.findKey(this.xmlData, "VNF");
+    this.logistic.bulk = this.findKey(transp, "QVOL");
+    this.logistic.shipping_on_account = this.findKey(transp, "MODFRETE");
+    this.logistic.merchandise = this.findKey(this.xmlData, "NNF");
+
+    this.supplier._id = supplierId;
+    this.supplier.cnpj = this.findKey(emit, "CNPJ");;
+    this.supplier.name = this.findKey(emit, "XNOME");;
+    this.supplier.uf = this.findKey(emit, "UF");
+    this.supplier.type = "supplier";
+
+    this.receiver._id = receiverId;
+    this.receiver.cnpj = this.findKey(dest, "CNPJ");
+    this.receiver.name = this.findKey(dest, "XNOME");
+    this.receiver.uf = this.findKey(dest, "UF");
+    this.receiver.type = "receiver";
+
+    this.transporter._id = transporterId;
+    this.transporter.cnpj = "transporterId";
+    this.transporter.name = this.findKey(transp, "XNOME");
+    this.transporter.uf = "ZZ";
+    this.transporter.type = "transporter";
+
+    const arrayProduct = this.findKey(this.xmlData, "DET");
+    
+    arrayProduct.forEach((prod: any) => {
+      const productId = new ObjectId();
+
+      const newProduct = {
+        _id: productId,
+        factory_code: this.findKey(prod, "CPROD"),
+        description: this.findKey(prod, "XPROD"),
+        amount: this.findKey(prod, "QCOM"),
+        price: this.findKey(prod, "VUNCOM"),
+        total_price: this.findKey(prod, "VPROD")
+      } as Product;
+      
+      this.products.push(newProduct);
+    });
   }
 
   /**
