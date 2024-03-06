@@ -5,6 +5,7 @@ export interface Product {
   description: string;
   amount: number;
   price: number;
+  total_price: number;
   group: string;
   brand: string;
   factory_code: number;
