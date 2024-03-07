@@ -16,7 +16,7 @@ export interface Logistic {
   date_out: Date;
   bulk: number;
   shipping_on_account: boolean;
-  merchandise: [ObjectId];
+  merchandise: Array<ObjectId>;
   note: String;
   pin_release: Date;
   status: String;

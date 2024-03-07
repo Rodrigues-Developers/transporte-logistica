@@ -13,6 +13,9 @@ var httpOptions = {
   providedIn: "root"
 })
 export class LogisticService {
+  // static createLogistic(logistic: Logistic) {
+  //   throw new Error('Method not implemented.');
+  // }
   constructor(private http: HttpClient) {}
 
   url = "http://localhost:3000/";
@@ -38,5 +41,10 @@ export class LogisticService {
     const apiurl = `${this.url}logistics/${logistic._id}`;
     return this.http.put<Logistic>(apiurl, logistic, httpOptions);
   }
+
+  createLogistic(logistic: Logistic): Observable<Logistic> {
+    return this.http.post<Logistic>(`${this.url}logistics/`, logistic, httpOptions);
+  }
+  
 
 }

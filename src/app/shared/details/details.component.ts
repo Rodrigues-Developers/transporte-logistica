@@ -45,7 +45,7 @@ export class DetailsComponent implements OnInit, OnDestroy {
 
   async getProduct(nfe: any) {
     try {
-      this.productsNfe = []; // Limpar o array antes de adicionar novos produtos
+      this.productsNfe = []; // Clear the array before add new products.
       for (let i = 0; i < nfe.merchandise.length; i++) {
         await this.productService
           .getProductById(nfe.merchandise[i])
