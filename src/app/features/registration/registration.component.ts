@@ -1,3 +1,4 @@
+import { LogisticService } from "src/app/core/services/logistic.service";
 import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 // import { ObjectId } from "mongodb";
@@ -5,7 +6,6 @@ import { Logistic } from "src/app/core/interfaces/logistic.interface";
 import * as xml2js from "xml2js";
 import { Company } from "src/app/core/interfaces/company.interface";
 import { Product } from "src/app/core/interfaces/product.interface";
-import { arrayBuffer } from "stream/consumers";
 
 @Component({
   selector: "app-registration",
@@ -13,8 +13,6 @@ import { arrayBuffer } from "stream/consumers";
   styleUrls: ["./registration.component.less"]
 })
 export class RegistrationComponent {
-  
-  
   show: string | undefined;
   xmlData: any;
   nfNumber: any;
@@ -42,8 +40,7 @@ export class RegistrationComponent {
   receiver = {} as Company;
   transporter = {} as Company;
 
-
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private logisticService: LogisticService) {}
   @ViewChild("inputContainer") inputContainerRef!: ElementRef;
 
   onDragOver(event: Event): void {
@@ -73,18 +70,18 @@ export class RegistrationComponent {
         const fileContent = e.target ? (e.target.result as string) : "";
         this.parseXml(fileContent);
       };
-      
+
       reader.readAsText(file);
     }
   }
-  
+
   parseXml(xml: string) {
     const parser = new xml2js.Parser({ strict: false, trim: true });
     parser.parseString(xml, (err, result) => {
       this.xmlData = result;
     });
-    
-    const { ObjectId } = require('bson')
+
+    const { ObjectId } = require("bson");
     const nfeId = new ObjectId();
     const receiverId = new ObjectId(); //TODO Verify if receiver has create on database.
     const supplierId = new ObjectId(); //TODO Verify if receiver has create on database.
@@ -107,11 +104,11 @@ export class RegistrationComponent {
     this.logistic.total_note_value = this.findKey(this.xmlData, "VNF");
     this.logistic.bulk = this.findKey(transp, "QVOL");
     this.logistic.shipping_on_account = this.findKey(transp, "MODFRETE");
-    this.logistic.merchandise = this.findKey(this.xmlData, "NNF");
+    this.logistic.merchandise = [];
 
     this.supplier._id = supplierId;
-    this.supplier.cnpj = this.findKey(emit, "CNPJ");;
-    this.supplier.name = this.findKey(emit, "XNOME");;
+    this.supplier.cnpj = this.findKey(emit, "CNPJ");
+    this.supplier.name = this.findKey(emit, "XNOME");
     this.supplier.uf = this.findKey(emit, "UF");
     this.supplier.type = "supplier";
 
@@ -128,7 +125,7 @@ export class RegistrationComponent {
     this.transporter.type = "transporter";
 
     const arrayProduct = this.findKey(this.xmlData, "DET");
-    
+
     arrayProduct.forEach((prod: any) => {
       const productId = new ObjectId();
 
@@ -140,7 +137,7 @@ export class RegistrationComponent {
         price: this.findKey(prod, "VUNCOM"),
         total_price: this.findKey(prod, "VPROD")
       } as Product;
-      
+
       this.products.push(newProduct);
     });
   }
@@ -167,17 +164,24 @@ export class RegistrationComponent {
     return undefined;
   }
 
-  // async receive() {
-  //   for (const logis of this.receivedLogistics) {
-  //     if (logis._id) {
-  //       try {
-  //         const updatedLogistic: Logistic = logis;
-  //         logis.status = "delivered";
-  //         this.logisticService.updateLogistic(updatedLogistic).subscribe(() => this.refreshTransportTable());
-  //       } catch (error) {
-  //         console.error(`Error updating logistics ${logis._id}: ${error}`);
-  //       }
-  //     }
-  //   }
-  // }
+  async saveLogistic() {
+    this.products.forEach(prod => {
+      if (prod._id) {
+        console.log("Demonstrativo merchandise -->  ", this.logistic.merchandise);
+        this.logistic.merchandise.push(prod._id);
+      }
+    });
+
+    try {
+      await this.logisticService.createLogistic(this.logistic).subscribe(
+        (resultado) => {
+          console.log('Logistic criado:', resultado);
+        },
+        (erro) => {
+          console.error('Erro ao criar logistic:', erro);
+        });
+    } catch (error) {
+      console.error("Details error", error);
+    }
+  }
 }
