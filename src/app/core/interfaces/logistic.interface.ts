@@ -8,13 +8,13 @@ export interface Logistic {
   supplier: ObjectId;
   receiver: ObjectId;
   transporter: ObjectId;
-  freight: number;
-  discount: number;
-  total_product_value: number;
-  total_note_value: number;
+  freight: Number;
+  discount: Number;
+  total_product_value: Number;
+  total_note_value: Number;
   arrival_forecast: Date;
   date_out: Date;
-  bulk: number;
+  bulk: Number;
   shipping_on_account: boolean;
   merchandise: Array<ObjectId>;
   note: String;

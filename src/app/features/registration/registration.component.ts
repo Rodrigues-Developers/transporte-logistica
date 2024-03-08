@@ -31,6 +31,7 @@ export class RegistrationComponent {
   packages: any;
   freightPaidBy: any;
 
+
   logistic = {} as Logistic;
   logistics: Logistic[] = [];
 
@@ -82,6 +83,8 @@ export class RegistrationComponent {
     });
 
     const { ObjectId } = require("bson");
+    // produsctsIds: Array<ObjectId> ;
+
     const nfeId = new ObjectId();
     const receiverId = new ObjectId(); //TODO Verify if receiver has create on database.
     const supplierId = new ObjectId(); //TODO Verify if receiver has create on database.
@@ -92,18 +95,18 @@ export class RegistrationComponent {
     var transp = this.findKey(this.xmlData, "TRANSP");
 
     this.logistic._id = nfeId;
-    this.logistic.nfe = this.findKey(this.xmlData, "NNF");
-    this.logistic.operation = this.findKey(this.xmlData, "NATOP");
-    this.logistic.emission_date = this.findKey(this.xmlData, "DHEMI");
+    this.logistic.nfe = this.toArrayIfNeeded(this.findKey(this.xmlData, "NNF"));
+    this.logistic.operation = this.toArrayIfNeeded(this.findKey(this.xmlData, "NATOP"));
+    this.logistic.emission_date = this.toArrayIfNeeded(this.findKey(this.xmlData, "DHEMI"));
     this.logistic.supplier = supplierId;
     this.logistic.receiver = receiverId;
     this.logistic.transporter = transporterId;
-    this.logistic.freight = this.findKey(this.xmlData, "VFRETE");
-    this.logistic.discount = this.findKey(this.xmlData, "VDESC");
-    this.logistic.total_product_value = this.findKey(this.xmlData, "VPROD");
-    this.logistic.total_note_value = this.findKey(this.xmlData, "VNF");
-    this.logistic.bulk = this.findKey(transp, "QVOL");
-    this.logistic.shipping_on_account = this.findKey(transp, "MODFRETE");
+    this.logistic.freight = this.toArrayIfNeeded(this.findKey(this.xmlData, "VFRETE"));
+    this.logistic.discount = this.toArrayIfNeeded(this.findKey(this.xmlData, "VDESC"));
+    this.logistic.total_product_value = this.toArrayIfNeeded(this.findKey(this.xmlData, "VPROD"));
+    this.logistic.total_note_value = this.toArrayIfNeeded(this.findKey(this.xmlData, "VNF"));
+    this.logistic.bulk = this.toArrayIfNeeded(this.findKey(transp, "QVOL"));
+    this.logistic.shipping_on_account = this.toArrayIfNeeded(this.findKey(transp, "MODFRETE"));
     this.logistic.merchandise = [];
 
     this.supplier._id = supplierId;
@@ -113,32 +116,35 @@ export class RegistrationComponent {
     this.supplier.type = "supplier";
 
     this.receiver._id = receiverId;
-    this.receiver.cnpj = this.findKey(dest, "CNPJ");
-    this.receiver.name = this.findKey(dest, "XNOME");
-    this.receiver.uf = this.findKey(dest, "UF");
+    this.receiver.cnpj = this.toArrayIfNeeded(this.findKey(dest, "CNPJ"));
+    this.receiver.name = this.toArrayIfNeeded(this.findKey(dest, "XNOME"));
+    this.receiver.uf = this.toArrayIfNeeded(this.findKey(dest, "UF"));
     this.receiver.type = "receiver";
 
     this.transporter._id = transporterId;
     this.transporter.cnpj = "transporterId";
-    this.transporter.name = this.findKey(transp, "XNOME");
+    this.transporter.name = this.toArrayIfNeeded(this.findKey(transp, "XNOME"));
     this.transporter.uf = "ZZ";
     this.transporter.type = "transporter";
 
-    const arrayProduct = this.findKey(this.xmlData, "DET");
+    const arrayProduct = this.toArrayIfNeeded(this.findKey(this.xmlData, "DET"));
 
     arrayProduct.forEach((prod: any) => {
       const productId = new ObjectId();
 
       const newProduct = {
         _id: productId,
-        factory_code: this.findKey(prod, "CPROD"),
-        description: this.findKey(prod, "XPROD"),
-        amount: this.findKey(prod, "QCOM"),
-        price: this.findKey(prod, "VUNCOM"),
-        total_price: this.findKey(prod, "VPROD")
+        factory_code: this.toArrayIfNeeded(this.findKey(prod, "CPROD")),
+        description: this.toArrayIfNeeded(this.findKey(prod, "XPROD")),
+        amount: this.toArrayIfNeeded(this.findKey(prod, "QCOM")),
+        price: this.toArrayIfNeeded(this.findKey(prod, "VUNCOM")),
+        total_price: this.toArrayIfNeeded(this.findKey(prod, "VPROD"))
       } as Product;
 
       this.products.push(newProduct);
+    // produsctsIds.push(productId) ;
+
+      // this.logistic.merchandise.push(productId) 
     });
   }
 
@@ -164,6 +170,13 @@ export class RegistrationComponent {
     return undefined;
   }
 
+  toArrayIfNeeded(value: any) {
+    if (Array.isArray(value)) {
+      return value[0];
+    }
+    return value;
+  }
+
   async saveLogistic() {
     this.products.forEach(prod => {
       if (prod._id) {
@@ -174,12 +187,13 @@ export class RegistrationComponent {
 
     try {
       await this.logisticService.createLogistic(this.logistic).subscribe(
-        (resultado) => {
-          console.log('Logistic criado:', resultado);
+        resultado => {
+          console.log("Logistic criado: ", resultado);
         },
-        (erro) => {
-          console.error('Erro ao criar logistic:', erro);
-        });
+        erro => {
+          console.error("Erro ao criar logistic: ", erro);
+        }
+      );
     } catch (error) {
       console.error("Details error", error);
     }
