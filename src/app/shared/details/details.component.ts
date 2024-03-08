@@ -25,6 +25,8 @@ export class DetailsComponent implements OnInit, OnDestroy {
 
   datesFormated: any = {};
   editing = false;
+  currentDate: Date = new Date();
+  showArea = false;
 
   private logisticObservableSubscription: Subscription = new Subscription();
   detailsForm!: FormGroup;
@@ -94,6 +96,10 @@ export class DetailsComponent implements OnInit, OnDestroy {
 
   editField() {
     this.editing = !this.editing;
+  }
+
+  toggleNewNote() {
+    this.showArea = !this.showArea;
   }
 
   onSubmit() {

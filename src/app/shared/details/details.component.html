@@ -3,17 +3,15 @@
     <form [formGroup]="detailsForm" (ngSubmit)="onSubmit()">
         <section class="header_details">
             <div class="supplier">INTELBRAS</div>
-            <!-- TODO Fix this when correct the interface -->
             <div class="nfe">
                 <P>Nº: {{logistic.nfe}}</P>
                 <P>Série: 01</P>
-                <!-- // TODO Fix this when correct the interface -->
             </div>
             <div class="date">
 
-                <p>Emissão: {{logistic.emissionNf | date: 'dd/MM/yyyy' : 'UTC-00'}}</p>
-                <div class="pin">
-                    <p *ngIf="!editing">PIN: {{logistic.pin_release | date:'dd/MM/yyyy' : 'UTC-00'}}</p>
+                <p>Emissão: {{logistic.emissionNf | date: 'dd/MM/yyyy' : 'UTC-04'}}</p>
+                <div class="dates_edit_row">
+                    <p *ngIf="!editing">PIN: {{logistic.pin_release | date:'dd/MM/yyyy' : 'UTC-04'}}</p>
 
                     <input *ngIf="editing" type="date" formControlName="pinRelease">
                     <mat-icon (click)="editField()">edit</mat-icon>
@@ -27,8 +25,8 @@
             <div class="departure">
                 <p>Data de saída</p>
 
-                <div class="pin">
-                    <p *ngIf="!editing">{{logistic.date_out | date:'dd/MM/yyyy' : 'UTC-00'}}</p>
+                <div class="dates_edit_row">
+                    <p *ngIf="!editing">{{logistic.date_out | date:'dd/MM/yyyy' : 'UTC-04'}}</p>
 
                     <input *ngIf="editing" type="date" formControlName="dateOut">
                     <mat-icon (click)="editField()">edit</mat-icon>
@@ -37,8 +35,8 @@
             <div class="estimated_arrival">
                 <p>Previsão de Chegada</p>
 
-                <div class="pin">
-                    <p *ngIf="!editing">{{logistic.arrival_forecast | date: 'dd/MM/yyyy' : 'UTC-00'}}</p>
+                <div class="dates_edit_row">
+                    <p *ngIf="!editing">{{logistic.arrival_forecast | date: 'dd/MM/yyyy' : 'UTC-04'}}</p>
 
                     <input *ngIf="editing" type="date" formControlName="arrivalForecast">
                     <mat-icon (click)="editField()">edit</mat-icon>
@@ -50,7 +48,6 @@
         <button *ngIf="editing" class="submit" type="submit" [disabled]="!detailsForm.valid">Salvar Alterações</button>
 
         <h2 class="nfe_type">Compra ZFM</h2>
-        <!-- TODO Fix this when correct the interface -->
         <div class="line"></div>
 
         <section>
@@ -77,7 +74,31 @@
 
         <section class="observations">
             <h2>Observações</h2>
-            <div></div>
+            <div class="table_container">
+                <!-- Header Row -->
+                <div class="table_row header">
+                    <div>Data</div>
+                    <div>Nota</div>
+                    <div>Ações</div>
+                </div>
+
+                <!-- Note Row -->
+                <div class="table_row">
+                    <div>{{ currentDate | date: 'dd/MM/yyyy' : 'UTC-04'}}</div>
+                    <div>This is a sample note.</div>
+                    <div>
+                        <mat-icon class="action_button">edit</mat-icon>
+                        <mat-icon class="action_button">delete</mat-icon>
+                    </div>
+                </div>
+            </div>
+            <div class="add_container">
+                <mat-icon (click)="toggleNewNote()">{{showArea? "remove_circle_outline":"add_circle_outline"}}</mat-icon>
+                <div class="add_note" [class.hidden]="!showArea">
+                    <textarea></textarea>
+                    <button>Adicionar</button>
+                </div>
+            </div>
         </section>
     </form>
 </div>
