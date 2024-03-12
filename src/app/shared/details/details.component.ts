@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from "@angular/core";
 import { ProductService } from "src/app/core/services/product.service";
 import { Product } from "src/app/core/interfaces/product.interface";
 import { ActivatedRoute } from "@angular/router";
-import { Logistic } from "src/app/core/interfaces/logistic.interface";
+import { Logistic, UserNote } from "src/app/core/interfaces/logistic.interface";
 import { DataShareService } from "./../../core/services/data-share.service";
 import { Subscription } from "rxjs";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
@@ -10,6 +10,7 @@ import { isEqual } from "../../core/utils/objects";
 import { LogisticService } from "src/app/core/services/logistic.service";
 import { ToastrService } from "ngx-toastr";
 import { stringToDate } from "src/app/core/utils/dates";
+import { ObjectId } from "mongodb";
 @Component({
   selector: "app-details",
   templateUrl: "./details.component.html",
@@ -30,6 +31,7 @@ export class DetailsComponent implements OnInit, OnDestroy {
 
   private logisticObservableSubscription: Subscription = new Subscription();
   detailsForm!: FormGroup;
+  observationForm!: FormGroup;
 
   constructor(
     private route: ActivatedRoute,
@@ -67,6 +69,10 @@ export class DetailsComponent implements OnInit, OnDestroy {
       dateOut: [Validators.required],
       arrivalForecast: []
     });
+
+    this.observationForm = this.fb.group({
+      userNote: ["", Validators.required]
+    });
   }
 
   setInitialFormValues() {
@@ -83,7 +89,7 @@ export class DetailsComponent implements OnInit, OnDestroy {
 
   async getProduct(nfe: any) {
     try {
-      this.productsNfe = []; // Limpar o array antes de adicionar novos produtos
+      this.productsNfe = []; // Clear array before adding new products
       for (let i = 0; i < nfe.merchandise.length; i++) {
         await this.productService.getProductById(nfe.merchandise[i]).subscribe((product: Product) => {
           this.productsNfe.push(product);
@@ -100,6 +106,22 @@ export class DetailsComponent implements OnInit, OnDestroy {
 
   toggleNewNote() {
     this.showArea = !this.showArea;
+  }
+
+  deleteNote(noteID: ObjectId | undefined) {
+    //Get current logistic
+    const logisticTosave = this.logistic;
+    //Filter deleted note
+    logisticTosave.note = this.logistic.note.filter((note: UserNote) => note._id != noteID);
+
+    try {
+      //Update logistic
+      this.logisticService.updateLogistic(logisticTosave).subscribe(e => {
+        this.toastr.success("Nota adicionada", "Sucesso!");
+      });
+    } catch (error) {
+      this.toastr.error("Não foi possível adicionar a nota", "Falha!");
+    }
   }
 
   onSubmit() {
@@ -124,6 +146,35 @@ export class DetailsComponent implements OnInit, OnDestroy {
     } else {
       // Handle invalid form
       this.toastr.error("Não foi possível salvar as informações", "Falha!");
+    }
+  }
+
+  onObsSubmit() {
+    if (this.observationForm.valid) {
+      //Get form Values
+      const currentFormValues = {
+        userNote: this.observationForm.get("userNote")?.value
+      };
+
+      //Get current logistic
+      const logisticTosave = this.logistic;
+
+      // Update and save data
+      const userNote: UserNote = {
+        date: new Date(),
+        note: currentFormValues.userNote
+      };
+
+      logisticTosave.note.push(userNote);
+
+      this.logisticService.updateLogistic(logisticTosave).subscribe(e => {
+        this.observationForm.get("userNote")?.setValue(""); //Clear text area
+
+        this.toastr.success("Nota adicionada", "Sucesso!");
+      });
+    } else {
+      // Handle invalid form
+      this.toastr.error("Não foi possível adicionar a nota", "Falha!");
     }
   }
 }

@@ -9,9 +9,9 @@
             </div>
             <div class="date">
 
-                <p>Emissão: {{logistic.emissionNf | date: 'dd/MM/yyyy' : 'UTC-04'}}</p>
+                <p>Emissão: {{logistic.emissionNf | date: 'dd/MM/yyyy' : 'UTC-00'}}</p>
                 <div class="dates_edit_row">
-                    <p *ngIf="!editing">PIN: {{logistic.pin_release | date:'dd/MM/yyyy' : 'UTC-04'}}</p>
+                    <p *ngIf="!editing">PIN: {{logistic.pin_release | date:'dd/MM/yyyy' : 'UTC-00'}}</p>
 
                     <input *ngIf="editing" type="date" formControlName="pinRelease">
                     <mat-icon (click)="editField()">edit</mat-icon>
@@ -26,7 +26,7 @@
                 <p>Data de saída</p>
 
                 <div class="dates_edit_row">
-                    <p *ngIf="!editing">{{logistic.date_out | date:'dd/MM/yyyy' : 'UTC-04'}}</p>
+                    <p *ngIf="!editing">{{logistic.date_out | date:'dd/MM/yyyy' : 'UTC-00'}}</p>
 
                     <input *ngIf="editing" type="date" formControlName="dateOut">
                     <mat-icon (click)="editField()">edit</mat-icon>
@@ -36,7 +36,7 @@
                 <p>Previsão de Chegada</p>
 
                 <div class="dates_edit_row">
-                    <p *ngIf="!editing">{{logistic.arrival_forecast | date: 'dd/MM/yyyy' : 'UTC-04'}}</p>
+                    <p *ngIf="!editing">{{logistic.arrival_forecast | date: 'dd/MM/yyyy' : 'UTC-00'}}</p>
 
                     <input *ngIf="editing" type="date" formControlName="arrivalForecast">
                     <mat-icon (click)="editField()">edit</mat-icon>
@@ -71,8 +71,9 @@
         </section>
 
         <div class="line"></div>
-
-        <section class="observations">
+    </form>
+    <section class="observations">
+        <form [formGroup]="observationForm" (ngSubmit)="onObsSubmit()">
             <h2>Observações</h2>
             <div class="table_container">
                 <!-- Header Row -->
@@ -83,22 +84,22 @@
                 </div>
 
                 <!-- Note Row -->
-                <div class="table_row">
-                    <div>{{ currentDate | date: 'dd/MM/yyyy' : 'UTC-04'}}</div>
-                    <div>This is a sample note.</div>
+                <div *ngFor="let userNote of logistic.note" class="table_row">
+                    <div>{{ userNote.date | date: 'dd/MM/yyyy' : 'UTC-00'}}</div>
+                    <div>{{userNote.note}}</div>
                     <div>
                         <mat-icon class="action_button">edit</mat-icon>
-                        <mat-icon class="action_button">delete</mat-icon>
+                        <mat-icon class="action_button" (click)="deleteNote(userNote._id)">delete</mat-icon>
                     </div>
                 </div>
             </div>
             <div class="add_container">
                 <mat-icon (click)="toggleNewNote()">{{showArea? "remove_circle_outline":"add_circle_outline"}}</mat-icon>
                 <div class="add_note" [class.hidden]="!showArea">
-                    <textarea></textarea>
-                    <button>Adicionar</button>
+                    <textarea title="userNote" name="userNote" formControlName="userNote"></textarea>
+                    <button type="submit">Adicionar</button>
                 </div>
             </div>
-        </section>
-    </form>
+        </form>
+    </section>
 </div>
