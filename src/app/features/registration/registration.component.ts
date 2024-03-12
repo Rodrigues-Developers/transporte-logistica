@@ -1,4 +1,5 @@
 import { LogisticService } from "src/app/core/services/logistic.service";
+import { ProductService } from "src/app/core/services/product.service";
 import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 // import { ObjectId } from "mongodb";
@@ -31,7 +32,6 @@ export class RegistrationComponent {
   packages: any;
   freightPaidBy: any;
 
-
   logistic = {} as Logistic;
   logistics: Logistic[] = [];
 
@@ -41,7 +41,11 @@ export class RegistrationComponent {
   receiver = {} as Company;
   transporter = {} as Company;
 
-  constructor(private http: HttpClient, private logisticService: LogisticService) {}
+  constructor(
+    private http: HttpClient,
+    private logisticService: LogisticService,
+    private productsService: ProductService
+  ) {}
   @ViewChild("inputContainer") inputContainerRef!: ElementRef;
 
   onDragOver(event: Event): void {
@@ -127,7 +131,7 @@ export class RegistrationComponent {
     this.transporter.uf = "ZZ";
     this.transporter.type = "transporter";
 
-    const arrayProduct = this.toArrayIfNeeded(this.findKey(this.xmlData, "DET"));
+    const arrayProduct = this.findKey(this.xmlData, "DET");
 
     arrayProduct.forEach((prod: any) => {
       const productId = new ObjectId();
@@ -142,9 +146,9 @@ export class RegistrationComponent {
       } as Product;
 
       this.products.push(newProduct);
-    // produsctsIds.push(productId) ;
 
-      // this.logistic.merchandise.push(productId) 
+      this.logistic.merchandise.push(productId);
+      console.log("Aqui está logistic merchandise:  ", this.logistic.merchandise);
     });
   }
 
@@ -178,24 +182,32 @@ export class RegistrationComponent {
   }
 
   async saveLogistic() {
-    this.products.forEach(prod => {
-      if (prod._id) {
-        console.log("Demonstrativo merchandise -->  ", this.logistic.merchandise);
-        this.logistic.merchandise.push(prod._id);
-      }
-    });
-
     try {
       await this.logisticService.createLogistic(this.logistic).subscribe(
-        resultado => {
-          console.log("Logistic criado: ", resultado);
+        result => {
+          console.log("Logistic criado: ", result);
         },
-        erro => {
-          console.error("Erro ao criar logistic: ", erro);
+        error => {
+          console.error("Erro ao criar logistic: ", error);
         }
       );
     } catch (error) {
       console.error("Details error", error);
     }
   }
+
+  async saveProducts() {
+    for (const product of this.products) {
+      try {
+        const result = await this.productsService.createProduct(product).toPromise();
+        console.log("Products criado: ", result);
+      } catch (error) {
+        console.error("Erro ao criar products: ", error);
+      }
+    }
+  }
+  
+
+  async saveCompany() {}
+
 }
