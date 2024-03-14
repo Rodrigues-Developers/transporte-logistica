@@ -1,10 +1,10 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
+import { Component, OnInit, OnDestroy, AfterViewChecked } from "@angular/core";
 import { ProductService } from "src/app/core/services/product.service";
 import { Product } from "src/app/core/interfaces/product.interface";
 import { ActivatedRoute } from "@angular/router";
 import { Logistic, UserNote } from "src/app/core/interfaces/logistic.interface";
 import { DataShareService } from "./../../core/services/data-share.service";
-import { Subscription } from "rxjs";
+import { Observable, Subscription, of } from "rxjs";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { isEqual } from "../../core/utils/objects";
 import { LogisticService } from "src/app/core/services/logistic.service";
@@ -16,7 +16,7 @@ import { ObjectId } from "mongodb";
   templateUrl: "./details.component.html",
   styleUrls: ["./details.component.less"]
 })
-export class DetailsComponent implements OnInit, OnDestroy {
+export class DetailsComponent implements OnInit, OnDestroy, AfterViewChecked {
   product = {} as Product;
   products: Product[] = [];
   productsNfe: Product[] = [];
@@ -28,10 +28,13 @@ export class DetailsComponent implements OnInit, OnDestroy {
   editing = false;
   currentDate: Date = new Date();
   showArea = false;
+  editingNote = false;
 
   private logisticObservableSubscription: Subscription = new Subscription();
   detailsForm!: FormGroup;
   observationForm!: FormGroup;
+  currentAreaIndex!: number;
+  currentNote!: UserNote;
 
   constructor(
     private route: ActivatedRoute,
@@ -53,6 +56,13 @@ export class DetailsComponent implements OnInit, OnDestroy {
       });
 
     this.createForm();
+  }
+
+  ngAfterViewChecked() {
+    if (this.editingNote) {
+      const selectedTextArea = document.getElementById("textarea_" + this.currentAreaIndex) as HTMLTextAreaElement;
+      selectedTextArea.value = this.currentNote.note;
+    }
   }
 
   formatLogisticsDates() {
@@ -108,6 +118,41 @@ export class DetailsComponent implements OnInit, OnDestroy {
     this.showArea = !this.showArea;
   }
 
+  updateNote(note: UserNote, TextAreaIndex: number) {
+    this.editingNote = !this.editingNote;
+
+    if (this.currentNote === note && !this.editingNote) {
+      //Get current logistic
+      const logisticTosave = this.logistic;
+
+      //Update the note value
+      for (let originalNote of logisticTosave.note) {
+        if (originalNote._id === note._id) {
+          const noteElement = document.getElementById("textarea_" + this.currentAreaIndex) as HTMLTextAreaElement;
+
+          // if the note is the same then exit the function
+          if (originalNote.note === noteElement.value) return;
+
+          originalNote.note = noteElement.value;
+          break;
+        }
+      }
+
+      try {
+        //Call the PUT method to update logistic
+        this.logisticService.updateLogistic(logisticTosave).subscribe(e => {
+          this.toastr.success("Nota atualizada", "Sucesso!");
+        });
+      } catch (error) {
+        this.toastr.error("Não foi possível atualizar a nota", "Falha!");
+      }
+    }
+
+    //Update the note and text area selected
+    this.currentNote = note;
+    this.currentAreaIndex = TextAreaIndex;
+  }
+
   deleteNote(noteID: ObjectId | undefined) {
     //Get current logistic
     const logisticTosave = this.logistic;
@@ -117,10 +162,10 @@ export class DetailsComponent implements OnInit, OnDestroy {
     try {
       //Update logistic
       this.logisticService.updateLogistic(logisticTosave).subscribe(e => {
-        this.toastr.success("Nota adicionada", "Sucesso!");
+        this.toastr.success("Nota removida", "Sucesso!");
       });
     } catch (error) {
-      this.toastr.error("Não foi possível adicionar a nota", "Falha!");
+      this.toastr.error("Não foi possível remover a nota", "Falha!");
     }
   }
 
@@ -167,9 +212,8 @@ export class DetailsComponent implements OnInit, OnDestroy {
 
       logisticTosave.note.push(userNote);
 
+      this.observationForm.get("userNote")?.setValue(""); //Clear text area
       this.logisticService.updateLogistic(logisticTosave).subscribe(e => {
-        this.observationForm.get("userNote")?.setValue(""); //Clear text area
-
         this.toastr.success("Nota adicionada", "Sucesso!");
       });
     } else {

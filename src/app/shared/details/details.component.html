@@ -84,11 +84,16 @@
                 </div>
 
                 <!-- Note Row -->
-                <div *ngFor="let userNote of logistic.note" class="table_row">
-                    <div>{{ userNote.date | date: 'dd/MM/yyyy' : 'UTC-00'}}</div>
-                    <div>{{userNote.note}}</div>
+                <div *ngFor="let userNote of logistic.note; let i = index" class="table_row">
+                    <div>{{userNote.date | date: 'dd/MM/yyyy' : 'UTC-00'}}</div>
+                    <div class="note">
+                        <div *ngIf="!editingNote || userNote !== currentNote">{{userNote.note}}</div>
+                        <textarea *ngIf="editingNote && userNote === currentNote" [id]="'textarea_' + i"></textarea>
+                    </div>
                     <div>
-                        <mat-icon class="action_button">edit</mat-icon>
+                        <mat-icon class="action_button" (click)="updateNote(userNote, i)">
+                            {{ editingNote && userNote ===currentNote ? 'save' : 'edit'}}
+                        </mat-icon>
                         <mat-icon class="action_button" (click)="deleteNote(userNote._id)">delete</mat-icon>
                     </div>
                 </div>
