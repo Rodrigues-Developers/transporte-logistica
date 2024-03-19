@@ -102,9 +102,6 @@ export class RegistrationComponent {
     this.logistic.nfe = this.toArrayIfNeeded(this.findKey(this.xmlData, "NNF"));
     this.logistic.operation = this.toArrayIfNeeded(this.findKey(this.xmlData, "NATOP"));
     this.logistic.emission_date = this.toArrayIfNeeded(this.findKey(this.xmlData, "DHEMI"));
-    this.logistic.supplier = supplierId;
-    this.logistic.receiver = receiverId;
-    this.logistic.transporter = transporterId;
     this.logistic.freight = this.toArrayIfNeeded(this.findKey(this.xmlData, "VFRETE"));
     this.logistic.discount = this.toArrayIfNeeded(this.findKey(this.xmlData, "VDESC"));
     this.logistic.total_product_value = this.toArrayIfNeeded(this.findKey(this.xmlData, "VPROD"));
@@ -114,23 +111,26 @@ export class RegistrationComponent {
     this.logistic.merchandise = [];
 
     this.supplier._id = supplierId;
-    this.supplier.cnpj = this.findKey(emit, "CNPJ");
-    this.supplier.name = this.findKey(emit, "XNOME");
-    this.supplier.uf = this.findKey(emit, "UF");
+    this.supplier.cnpj = this.toArrayIfNeeded(this.findKey(emit, "CNPJ"));
+    this.supplier.name = this.toArrayIfNeeded(this.findKey(emit, "XNOME"));
+    this.supplier.uf = this.toArrayIfNeeded(this.findKey(emit, "UF"));
     this.supplier.type = "supplier";
+    this.logistic.supplier = this.supplier;
 
     this.receiver._id = receiverId;
     this.receiver.cnpj = this.toArrayIfNeeded(this.findKey(dest, "CNPJ"));
     this.receiver.name = this.toArrayIfNeeded(this.findKey(dest, "XNOME"));
     this.receiver.uf = this.toArrayIfNeeded(this.findKey(dest, "UF"));
     this.receiver.type = "receiver";
+    this.logistic.receiver = this.receiver;
 
     this.transporter._id = transporterId;
-    this.transporter.cnpj = "transporterId";
+    this.transporter.cnpj = this.toArrayIfNeeded(this.findKey(transp, "CNPJ"));
     this.transporter.name = this.toArrayIfNeeded(this.findKey(transp, "XNOME"));
-    this.transporter.uf = "ZZ";
+    this.transporter.uf = this.toArrayIfNeeded(this.findKey(transp, "UF"));
     this.transporter.type = "transporter";
-
+    this.logistic.transporter = this.transporter;
+    console.log(this.logistic.transporter);
     const arrayProduct = this.findKey(this.xmlData, "DET");
 
     arrayProduct.forEach((prod: any) => {
@@ -138,6 +138,7 @@ export class RegistrationComponent {
 
       const newProduct = {
         _id: productId,
+        nfeId: nfeId,
         factory_code: this.toArrayIfNeeded(this.findKey(prod, "CPROD")),
         description: this.toArrayIfNeeded(this.findKey(prod, "XPROD")),
         amount: this.toArrayIfNeeded(this.findKey(prod, "QCOM")),
@@ -146,9 +147,7 @@ export class RegistrationComponent {
       } as Product;
 
       this.products.push(newProduct);
-
       this.logistic.merchandise.push(productId);
-      console.log("Aqui está logistic merchandise:  ", this.logistic.merchandise);
     });
   }
 
@@ -206,8 +205,6 @@ export class RegistrationComponent {
       }
     }
   }
-  
 
   async saveCompany() {}
-
 }

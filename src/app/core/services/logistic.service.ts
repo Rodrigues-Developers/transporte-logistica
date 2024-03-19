@@ -46,5 +46,4 @@ export class LogisticService {
     return this.http.post<Logistic>(`${this.url}logistics/`, logistic, httpOptions);
   }
   
-
 }
