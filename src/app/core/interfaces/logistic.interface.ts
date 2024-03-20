@@ -1,4 +1,4 @@
-import { Double, ObjectId } from "mongodb";
+import { ObjectId } from "mongodb";
 import { Company } from "src/app/core/interfaces/company.interface";
 
 export interface Logistic {
@@ -17,8 +17,8 @@ export interface Logistic {
   date_out?: Date;
   bulk: Number;
   shipping_on_account: boolean;
-  merchandise: Array<ObjectId>;
-  note?: String;
+  merchandise: ObjectId[];
+  note?: UserNote[];
   pin_release?: Date;
   status: String;
 }

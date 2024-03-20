@@ -67,9 +67,9 @@ export class DetailsComponent implements OnInit, OnDestroy, AfterViewChecked {
 
   formatLogisticsDates() {
     this.datesFormated = {
-      pin_release: new Date(this.logistic.pin_release).toISOString().split("T")[0],
-      date_out: new Date(this.logistic.date_out).toISOString().split("T")[0],
-      arrival_forecast: new Date(this.logistic.arrival_forecast).toISOString().split("T")[0]
+      pin_release: this.logistic.pin_release!.toISOString().split("T")[0],
+      date_out: this.logistic.date_out!.toISOString().split("T")[0],
+      arrival_forecast: this.logistic.arrival_forecast!.toISOString().split("T")[0]
     };
   }
 
@@ -124,20 +124,21 @@ export class DetailsComponent implements OnInit, OnDestroy, AfterViewChecked {
     if (this.currentNote === note && !this.editingNote) {
       //Get current logistic
       const logisticTosave = this.logistic;
+      if (logisticTosave.note) {
+        //Update the note value
 
-      //Update the note value
-      for (let originalNote of logisticTosave.note) {
-        if (originalNote._id === note._id) {
-          const noteElement = document.getElementById("textarea_" + this.currentAreaIndex) as HTMLTextAreaElement;
+        for (let originalNote of logisticTosave.note) {
+          if (originalNote._id === note._id) {
+            const noteElement = document.getElementById("textarea_" + this.currentAreaIndex) as HTMLTextAreaElement;
 
-          // if the note is the same then exit the function
-          if (originalNote.note === noteElement.value) return;
+            // if the note is the same then exit the function
+            if (originalNote.note === noteElement.value) return;
 
-          originalNote.note = noteElement.value;
-          break;
+            originalNote.note = noteElement.value;
+            break;
+          }
         }
       }
-
       try {
         //Call the PUT method to update logistic
         this.logisticService.updateLogistic(logisticTosave).subscribe(e => {
@@ -156,9 +157,10 @@ export class DetailsComponent implements OnInit, OnDestroy, AfterViewChecked {
   deleteNote(noteID: ObjectId | undefined) {
     //Get current logistic
     const logisticTosave = this.logistic;
-    //Filter deleted note
-    logisticTosave.note = this.logistic.note.filter((note: UserNote) => note._id != noteID);
-
+    if (this.logistic.note) {
+      //Filter deleted note
+      logisticTosave.note = this.logistic.note.filter((note: UserNote) => note._id != noteID);
+    }
     try {
       //Update logistic
       this.logisticService.updateLogistic(logisticTosave).subscribe(e => {
@@ -179,9 +181,9 @@ export class DetailsComponent implements OnInit, OnDestroy, AfterViewChecked {
     if (this.detailsForm.valid && !isEqual(this.datesFormated, currentFormValues)) {
       const logisticTosave = this.logistic;
 
-      logisticTosave.pin_release = stringToDate(currentFormValues.pin_release).toISOString();
+      logisticTosave.pin_release = stringToDate(currentFormValues.pin_release);
       logisticTosave.date_out = stringToDate(currentFormValues.date_out);
-      logisticTosave.arrival_forecast = stringToDate(currentFormValues.arrival_forecast).toISOString();
+      logisticTosave.arrival_forecast = stringToDate(currentFormValues.arrival_forecast);
 
       // Save changes or update data
       this.logisticService.updateLogistic(logisticTosave).subscribe(e => {
@@ -210,8 +212,9 @@ export class DetailsComponent implements OnInit, OnDestroy, AfterViewChecked {
         note: currentFormValues.userNote
       };
 
-      logisticTosave.note.push(userNote);
-
+      if (logisticTosave.note) {
+        logisticTosave.note.push(userNote);
+      }
       this.observationForm.get("userNote")?.setValue(""); //Clear text area
       this.logisticService.updateLogistic(logisticTosave).subscribe(e => {
         this.toastr.success("Nota adicionada", "Sucesso!");
