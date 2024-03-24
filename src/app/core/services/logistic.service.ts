@@ -12,9 +12,6 @@ var httpOptions = {
   providedIn: "root"
 })
 export class LogisticService {
-  // static createLogistic(logistic: Logistic) {
-  //   throw new Error('Method not implemented.');
-  // }
   constructor(private http: HttpClient) {}
 
   url = "http://localhost:3000/";
