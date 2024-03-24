@@ -118,7 +118,7 @@ export class DetailsComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.showArea = !this.showArea;
   }
 
-  async updateNote(note: UserNote, TextAreaIndex: number) {
+  updateNote(note: UserNote, TextAreaIndex: number) {
     this.editingNote = !this.editingNote;
 
     if (this.currentNote === note && !this.editingNote) {
