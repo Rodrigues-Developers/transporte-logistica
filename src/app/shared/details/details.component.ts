@@ -66,11 +66,12 @@ export class DetailsComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   formatLogisticsDates() {
-    this.datesFormated = {
-      pin_release: this.logistic.pin_release!.toISOString().split("T")[0],
-      date_out: this.logistic.date_out!.toISOString().split("T")[0],
-      arrival_forecast: this.logistic.arrival_forecast!.toISOString().split("T")[0]
-    };
+
+      this.datesFormated = {
+        pin_release: this.logistic.pin_release?.toISOString().split("T")[0],
+        date_out: this.logistic.date_out?.toISOString().split("T")[0],
+        arrival_forecast: this.logistic.arrival_forecast?.toISOString().split("T")[0]
+      };
   }
 
   createForm() {

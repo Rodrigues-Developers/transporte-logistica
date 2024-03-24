@@ -206,5 +206,8 @@ export class RegistrationComponent {
     }
   }
 
-  async saveCompany() {}
+  async saveRegistration() {
+    this.saveLogistic();
+    this.saveProducts();
+  }
 }
