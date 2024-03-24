@@ -24,7 +24,7 @@ export interface Logistic {
 }
 
 export interface UserNote {
-  readonly _id?: ObjectId;
+  _id?: ObjectId;
   date: Date;
   note: string;
 }
