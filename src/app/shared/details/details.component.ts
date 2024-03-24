@@ -118,7 +118,7 @@ export class DetailsComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.showArea = !this.showArea;
   }
 
-  updateNote(note: UserNote, TextAreaIndex: number) {
+  async updateNote(note: UserNote, TextAreaIndex: number) {
     this.editingNote = !this.editingNote;
 
     if (this.currentNote === note && !this.editingNote) {
@@ -128,6 +128,7 @@ export class DetailsComponent implements OnInit, OnDestroy, AfterViewChecked {
         //Update the note value
 
         for (let originalNote of logisticTosave.note) {
+          
           if (originalNote._id === note._id) {
             const noteElement = document.getElementById("textarea_" + this.currentAreaIndex) as HTMLTextAreaElement;
 
@@ -140,6 +141,7 @@ export class DetailsComponent implements OnInit, OnDestroy, AfterViewChecked {
         }
       }
       try {
+
         //Call the PUT method to update logistic
         this.logisticService.updateLogistic(logisticTosave).subscribe(e => {
           this.toastr.success("Nota atualizada", "Sucesso!");
@@ -200,6 +202,8 @@ export class DetailsComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   onObsSubmit() {
+    const { ObjectId } = require("bson");
+
     if (this.observationForm.valid) {
       //Get form Values
       const currentFormValues = {
@@ -211,6 +215,7 @@ export class DetailsComponent implements OnInit, OnDestroy, AfterViewChecked {
 
       // Update and save data
       const userNote: UserNote = {
+        _id: new ObjectId(),
         date: new Date(),
         note: currentFormValues.userNote
       };
