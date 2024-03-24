@@ -51,11 +51,11 @@ export class DetailsComponent implements OnInit, OnDestroy, AfterViewChecked {
       .subscribe((newLogistic: Logistic) => {
         this.logistic = newLogistic;
         this.getProduct(this.logistic);
-        this.formatLogisticsDates();
-        this.setInitialFormValues();
       });
 
     this.createForm();
+    this.formatLogisticsDates();
+    this.setInitialFormValues();
   }
 
   ngAfterViewChecked() {
@@ -182,13 +182,15 @@ export class DetailsComponent implements OnInit, OnDestroy, AfterViewChecked {
     if (this.detailsForm.valid && !isEqual(this.datesFormated, currentFormValues)) {
       const logisticTosave = this.logistic;
 
-      logisticTosave.pin_release = stringToDate(currentFormValues.pin_release);
-      logisticTosave.date_out = stringToDate(currentFormValues.date_out);
-      logisticTosave.arrival_forecast = stringToDate(currentFormValues.arrival_forecast);
+      logisticTosave.pin_release = stringToDate(currentFormValues.pin_release) ?? logisticTosave.pin_release;
+      logisticTosave.date_out = stringToDate(currentFormValues.date_out) ?? logisticTosave.date_out;
+      //prettier-ignore
+      logisticTosave.arrival_forecast = stringToDate(currentFormValues.arrival_forecast) ?? logisticTosave.arrival_forecast;
 
       // Save changes or update data
       this.logisticService.updateLogistic(logisticTosave).subscribe(e => {
         this.toastr.success("Dados atualizados", "Sucesso!");
+        this.detailsForm.reset();
       });
       this.editing = !this.editing;
     } else {
