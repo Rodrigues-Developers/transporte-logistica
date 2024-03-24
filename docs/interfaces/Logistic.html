@@ -96,9 +96,9 @@
                                         </a>
                                 </li>
                                 <li>
-                                        <a href="#emissionNf" 
+                                        <a href="#emission_date"
 >
-                                            emissionNf
+emission_date
                                         </a>
                                 </li>
                                 <li>
@@ -121,9 +121,9 @@
                                         </a>
                                 </li>
                                 <li>
-                                        <a href="#nfe_value" 
+                                        <a href="#total_note_value"
 >
-                                            nfe_value
+                                            total_note_value
                                         </a>
                                 </li>
                                 <li>
@@ -139,9 +139,9 @@
                                         </a>
                                 </li>
                                 <li>
-                                        <a href="#shipping_company" 
+                                        <a href="#transporter"
 >
-                                            shipping_company
+                                            transporter
                                         </a>
                                 </li>
                                 <li>
@@ -231,9 +231,9 @@
                         <tbody>
                                 <tr>
                                     <td class="col-md-4">
-                                        <a name="emissionNf"></a>
-                                        <span class="name "><b>emissionNf</b>
-                                            <a href="#emissionNf">
+                                        <a name="emission_date"></a>
+                                        <span class="name "><b>emission_date</b>
+                                            <a href="#emission_date">
                                                 <span class="icon ion-ios-link"></span>
                                             </a>
                                         </span>
@@ -241,7 +241,7 @@
                                 </tr>
                                 <tr>
                                     <td class="col-md-4">
-                                        <code>emissionNf:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date" target="_blank" >Date</a></code>
+                                        <code>emission_date:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date" target="_blank" >Date</a></code>
 </code>
                                     </td>
                                 </tr>
@@ -368,9 +368,9 @@
                         <tbody>
                                 <tr>
                                     <td class="col-md-4">
-                                        <a name="nfe_value"></a>
-                                        <span class="name "><b>nfe_value</b>
-                                            <a href="#nfe_value">
+                                        <a name="total_note_value"></a>
+                                        <span class="name "><b>total_note_value</b>
+                                            <a href="#total_note_value">
                                                 <span class="icon ion-ios-link"></span>
                                             </a>
                                         </span>
@@ -378,7 +378,7 @@
                                 </tr>
                                 <tr>
                                     <td class="col-md-4">
-                                        <code>nfe_value:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                        <code>total_note_value:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
 </code>
                                     </td>
                                 </tr>
@@ -467,9 +467,9 @@
                         <tbody>
                                 <tr>
                                     <td class="col-md-4">
-                                        <a name="shipping_company"></a>
-                                        <span class="name "><b>shipping_company</b>
-                                            <a href="#shipping_company">
+                                        <a name="transporter"></a>
+                                        <span class="name "><b>transporter</b>
+                                            <a href="#transporter">
                                                 <span class="icon ion-ios-link"></span>
                                             </a>
                                         </span>
@@ -477,7 +477,7 @@
                                 </tr>
                                 <tr>
                                     <td class="col-md-4">
-                                        <code>shipping_company:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                        <code>transporter:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
 </code>
                                     </td>
                                 </tr>
@@ -537,12 +537,12 @@
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">export interface Logistic {
     id?:string;
     nfe: string;
-    emissionNf: Date;
-    shipping_company: string;
+    emission_date: Date;
+    transporter: string;
     arrival_forecast: string;
     date_out: Date;
     merchandise: [string];
-    nfe_value: number;
+    total_note_value: number;
     note: string;
     pin_release: string;
     status: string;

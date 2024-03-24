@@ -1,7 +1,6 @@
 import { HttpHeaders } from "@angular/common/http";
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { ObjectId } from "mongodb";
 import { Observable, map } from "rxjs";
 import { Logistic } from "src/app/core/interfaces/logistic.interface";
 
@@ -38,4 +37,9 @@ export class LogisticService {
     const apiurl = `${this.url}logistics/${logistic._id}`;
     return this.http.put<Logistic>(apiurl, logistic, httpOptions);
   }
+
+  createLogistic(logistic: Logistic): Observable<Logistic> {
+    return this.http.post<Logistic>(`${this.url}logistics/`, logistic, httpOptions);
+  }
+  
 }
