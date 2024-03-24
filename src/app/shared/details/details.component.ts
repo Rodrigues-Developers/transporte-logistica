@@ -158,7 +158,10 @@ export class DetailsComponent implements OnInit, OnDestroy, AfterViewChecked {
     //Get current logistic
     const logisticTosave = this.logistic;
     //Filter deleted note
-    logisticTosave.note = this.logistic.note?.filter((note: UserNote) => note._id != noteID);
+    if (this.logistic.note) {
+      //Filter deleted note
+      logisticTosave.note = this.logistic.note.filter((note: UserNote) => note._id != noteID);
+    }
     try {
       //Update logistic
       this.logisticService.updateLogistic(logisticTosave).subscribe(e => {
@@ -210,7 +213,9 @@ export class DetailsComponent implements OnInit, OnDestroy, AfterViewChecked {
         note: currentFormValues.userNote
       };
 
-      logisticTosave.note?.push(userNote);
+      if (logisticTosave.note) {
+        logisticTosave.note.push(userNote);
+      }
       this.observationForm.get("userNote")?.setValue(""); //Clear text area
       this.logisticService.updateLogistic(logisticTosave).subscribe(e => {
         this.toastr.success("Nota adicionada", "Sucesso!");
