@@ -37,9 +37,6 @@ export class ProductService {
     return this.http.post<Product>(`${this.url}products`, Product, httpOptions);
   }
 
-  // createLogistic(logistic: Logistic): Observable<Logistic> {
-  //   return this.http.post<Logistic>(`${this.url}logistics/`, logistic, httpOptions);
-  // }
 
   updateProduct(Productid: string, Product: Product): Observable<Product> {
     const apiurl = `${this.url}/${Productid}`;
