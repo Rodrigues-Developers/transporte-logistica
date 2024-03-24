@@ -61,4 +61,13 @@
     </section>
   </div>
   <button class="save-button" role="button" (click)="saveRegistration()">Salvar</button>
+  
+  <div *ngIf="loadingData && xmlData" class="page-spinner" >
+    <div [attr.colspan]="8" class="loading-spinner">
+      <div  class="spinner"></div>
+      <div class="loading">Carregando...</div>
+  
+    </div>
+  </div>
 </div>
+
