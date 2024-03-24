@@ -2,11 +2,11 @@ import { LogisticService } from "src/app/core/services/logistic.service";
 import { ProductService } from "src/app/core/services/product.service";
 import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
-// import { ObjectId } from "mongodb";
 import { Logistic } from "src/app/core/interfaces/logistic.interface";
 import * as xml2js from "xml2js";
 import { Company } from "src/app/core/interfaces/company.interface";
 import { Product } from "src/app/core/interfaces/product.interface";
+import { ToastrService } from "ngx-toastr";
 
 @Component({
   selector: "app-registration",
@@ -14,23 +14,7 @@ import { Product } from "src/app/core/interfaces/product.interface";
   styleUrls: ["./registration.component.less"]
 })
 export class RegistrationComponent {
-  show: string | undefined;
   xmlData: any;
-  nfNumber: any;
-  nature: any;
-  issueDate: any;
-  provider: any;
-  ufProvider: any;
-  cnpjProvider: any;
-  ufReceiver: any;
-  cnpjReceiver: any;
-  freightValue: any;
-  discount: any;
-  totalProdValue: any;
-  totalNf: any;
-  conveyor: any;
-  packages: any;
-  freightPaidBy: any;
 
   logistic = {} as Logistic;
   logistics: Logistic[] = [];
@@ -41,10 +25,13 @@ export class RegistrationComponent {
   receiver = {} as Company;
   transporter = {} as Company;
 
+  loadingData = false;
+
   constructor(
     private http: HttpClient,
     private logisticService: LogisticService,
-    private productsService: ProductService
+    private productsService: ProductService,
+    private toastr: ToastrService
   ) {}
   @ViewChild("inputContainer") inputContainerRef!: ElementRef;
 
@@ -182,16 +169,14 @@ export class RegistrationComponent {
 
   async saveLogistic() {
     try {
-      await this.logisticService.createLogistic(this.logistic).subscribe(
-        result => {
-          console.log("Logistic criado: ", result);
-        },
-        error => {
-          console.error("Erro ao criar logistic: ", error);
-        }
-      );
+      await this.logisticService.createLogistic(this.logistic).subscribe(result => {
+        console.log("Logistic criado: ", result);
+        this.toastr.success("Nota Salva", "Sucesso!");
+        this.clearPage();
+      });
     } catch (error) {
-      console.error("Details error", error);
+      console.error("Creation error: ", error);
+      this.toastr.error("Não foi possivel salvar a nota!", "Falha!");
     }
   }
 
@@ -207,7 +192,22 @@ export class RegistrationComponent {
   }
 
   async saveRegistration() {
+    this.loadingData = true;
+
     this.saveLogistic();
     this.saveProducts();
+  }
+
+  clearPage() {
+    this.xmlData = false;
+    this.logistic = {} as Logistic;
+
+    this.products = [];
+
+    this.supplier = {} as Company;
+    this.receiver = {} as Company;
+    this.transporter = {} as Company;
+
+    this.loadingData = false;
   }
 }

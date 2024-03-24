@@ -1,5 +1,6 @@
 @import "../../shared/styles/colors.less";
 @import "../../shared/styles/slideEffect.less";
+@import "../../shared/styles/animations.less";
 
 .registration {
   background: @background-default-white;
@@ -176,5 +177,18 @@
   .save-button:active {
     box-shadow: none;
     transform: translateY(0);
+  }
+
+  .page-spinner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    width: 100%;
+    background: #30303044;
+    height: 100%;
+    top: 0;
+    right: 0;
+
   }
 }
