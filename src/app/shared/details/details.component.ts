@@ -66,12 +66,11 @@ export class DetailsComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   formatLogisticsDates() {
-
-      this.datesFormated = {
-        pin_release: this.logistic.pin_release?.toISOString().split("T")[0],
-        date_out: this.logistic.date_out?.toISOString().split("T")[0],
-        arrival_forecast: this.logistic.arrival_forecast?.toISOString().split("T")[0]
-      };
+    this.datesFormated = {
+      pin_release: this.logistic.pin_release?.toISOString().split("T")[0],
+      date_out: this.logistic.date_out?.toISOString().split("T")[0],
+      arrival_forecast: this.logistic.arrival_forecast?.toISOString().split("T")[0]
+    };
   }
 
   createForm() {
@@ -158,10 +157,8 @@ export class DetailsComponent implements OnInit, OnDestroy, AfterViewChecked {
   deleteNote(noteID: ObjectId | undefined) {
     //Get current logistic
     const logisticTosave = this.logistic;
-    if (this.logistic.note) {
-      //Filter deleted note
-      logisticTosave.note = this.logistic.note.filter((note: UserNote) => note._id != noteID);
-    }
+    //Filter deleted note
+    logisticTosave.note = this.logistic.note?.filter((note: UserNote) => note._id != noteID);
     try {
       //Update logistic
       this.logisticService.updateLogistic(logisticTosave).subscribe(e => {
@@ -213,9 +210,7 @@ export class DetailsComponent implements OnInit, OnDestroy, AfterViewChecked {
         note: currentFormValues.userNote
       };
 
-      if (logisticTosave.note) {
-        logisticTosave.note.push(userNote);
-      }
+      logisticTosave.note?.push(userNote);
       this.observationForm.get("userNote")?.setValue(""); //Clear text area
       this.logisticService.updateLogistic(logisticTosave).subscribe(e => {
         this.toastr.success("Nota adicionada", "Sucesso!");
