@@ -2,7 +2,6 @@ import { GroupedProducts, Product } from "../../core/interfaces/product.interfac
 import { Component, OnInit, ElementRef, Renderer2, AfterViewInit, ViewChildren, QueryList } from "@angular/core";
 import { Logistic } from "../../core/interfaces/logistic.interface";
 import { ProductService } from "src/app/core/services/product.service";
-import { LogisticService } from "src/app/core/services/logistic.service";
 import { ObjectId } from "mongodb";
 import { objectValuesToArray } from "src/app/core/utils/objects";
 import { AnimationBuilder, animate, style } from "@angular/animations";
@@ -25,7 +24,6 @@ export class ProductsTrackingComponent implements OnInit, AfterViewInit {
   runningCardAnimation = false;
   constructor(
     private productService: ProductService,
-    private logisticService: LogisticService,
     private renderer: Renderer2,
     private animationBuilder: AnimationBuilder
   ) {}

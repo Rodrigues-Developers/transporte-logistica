@@ -13,7 +13,7 @@ import { ToastrService } from "ngx-toastr";
   templateUrl: "./registration.component.html",
   styleUrls: ["./registration.component.less"]
 })
-export class RegistrationComponent {
+export class RegistrationComponent implements OnInit {
   xmlData: any;
 
   logistic = {} as Logistic;
@@ -34,6 +34,10 @@ export class RegistrationComponent {
     private toastr: ToastrService
   ) {}
   @ViewChild("inputContainer") inputContainerRef!: ElementRef;
+
+  ngOnInit(): void {
+    this.getLogistics();
+  }
 
   onDragOver(event: Event): void {
     event.preventDefault();
@@ -87,6 +91,7 @@ export class RegistrationComponent {
 
     this.logistic._id = nfeId;
     this.logistic.nfe = this.toArrayIfNeeded(this.findKey(this.xmlData, "NNF"));
+    this.logistic.key = this.toArrayIfNeeded(this.findKey(this.xmlData, "ID"));
     this.logistic.operation = this.toArrayIfNeeded(this.findKey(this.xmlData, "NATOP"));
     this.logistic.emission_date = this.toArrayIfNeeded(this.findKey(this.xmlData, "DHEMI"));
     this.logistic.freight = this.toArrayIfNeeded(this.findKey(this.xmlData, "VFRETE"));
@@ -117,7 +122,6 @@ export class RegistrationComponent {
     this.transporter.uf = this.toArrayIfNeeded(this.findKey(transp, "UF"));
     this.transporter.type = "transporter";
     this.logistic.transporter = this.transporter;
-    console.log(this.logistic.transporter);
     const arrayProduct = this.findKey(this.xmlData, "DET");
 
     arrayProduct.forEach((prod: any) => {
@@ -169,7 +173,7 @@ export class RegistrationComponent {
 
   async saveLogistic() {
     try {
-      await this.logisticService.createLogistic(this.logistic).subscribe(result => {
+      this.logisticService.createLogistic(this.logistic).subscribe(result => {
         console.log("Logistic criado: ", result);
         this.toastr.success("Nota Salva", "Sucesso!");
         this.clearPage();
@@ -193,9 +197,22 @@ export class RegistrationComponent {
 
   async saveRegistration() {
     this.loadingData = true;
+    let verify = this.logistics.some(log => log.key === this.logistic.key);
+    console.log(verify);
+    if (!verify) {
+      this.saveLogistic();
+      this.saveProducts();
+    } else {
+      console.log("A nota fiscal que esta tentando salvar já existe no banco de dados");
+      this.toastr.error("A nota fiscal já foi salva!", "Falha!");
+      this.clearPage();
+    }
+  }
 
-    this.saveLogistic();
-    this.saveProducts();
+  async getLogistics() {
+    this.logisticService.getAllLogistics().subscribe((logistics: Logistic[]) => {
+      this.logistics = logistics;
+    });
   }
 
   clearPage() {
