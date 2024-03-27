@@ -4,6 +4,7 @@ import { Company } from "src/app/core/interfaces/company.interface";
 export interface Logistic {
   _id?: ObjectId;
   nfe: String;
+  key: String;
   operation: String;
   emission_date: Date;
   supplier: Company;
