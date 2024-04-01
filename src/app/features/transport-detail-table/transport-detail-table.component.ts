@@ -90,6 +90,8 @@ export class TransportDetailTableComponent implements OnInit {
       this.logistics = logistics;
       this.loadMoreLogistics();
       this.loadingData = false;
+
+      this.updateStatus();
     });
   }
 
@@ -189,5 +191,33 @@ export class TransportDetailTableComponent implements OnInit {
 
   ngOndestroy(): void {
     this.productServiceObservable.unsubscribe();
+  }
+
+  /**
+   * @function
+   * @name updateStatus
+   * @description this function updates the status according to the arrival time and current date.
+   */
+  updateStatus() {
+    console.log("Iniciando a atualização de status.");
+    console.log("this.logistics:", this.logistics);
+
+    this.logistics.forEach(logi => {
+
+      const currentDate = new Date();
+      const arrivalForecastDate = logi.arrival_forecast ? new Date(logi.arrival_forecast) : undefined;
+
+      if (arrivalForecastDate) {
+        if (arrivalForecastDate >= currentDate) {
+          logi.status = "Em dia.";
+          this.logisticService.updateLogistic(logi);
+        } else if (arrivalForecastDate < currentDate) {
+          logi.status = "Atrasada";
+          this.logisticService.updateLogistic(logi);
+        }
+      } else {
+        logi.status = "Atualize a previsão de chegada.";
+      }
+    });
   }
 }
