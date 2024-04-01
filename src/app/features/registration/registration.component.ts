@@ -226,5 +226,6 @@ export class RegistrationComponent implements OnInit {
     this.transporter = {} as Company;
 
     this.loadingData = false;
+    this.getLogistics();
   }
 }
