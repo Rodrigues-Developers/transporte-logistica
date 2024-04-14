@@ -29,3 +29,9 @@ export interface UserNote {
   date: Date;
   note: string;
 }
+
+export interface GroupedLogistics {
+  initial: Date;
+  final: Date;
+  logistics: Logistic[];
+}
