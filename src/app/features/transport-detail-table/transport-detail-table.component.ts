@@ -272,7 +272,7 @@ export class TransportDetailTableComponent implements OnInit {
       initialDateNumber = currentFinDay.getDate() + 1;
     }
 
-    groupedLogistics.sort((a, b) => b.initial.getTime() - a.initial.getTime());
+    groupedLogistics.sort((a, b) => a.initial.getTime() - b.initial.getTime());
     return groupedLogistics;
   }
 

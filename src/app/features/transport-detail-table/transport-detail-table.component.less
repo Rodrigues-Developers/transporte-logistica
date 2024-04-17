@@ -27,8 +27,14 @@
   }
 
   tbody {
+    .week__range {
+      th {
+        padding: 0;
+      }
+    }
     h2 {
       white-space: nowrap;
+      margin: 0;
     }
     .td__products {
       overflow-wrap: break-word;
@@ -55,7 +61,7 @@
 
     tr {
       cursor: pointer;
-      &:nth-child(even) {
+      &:nth-of-type(odd) {
         background-color: #ebebeb;
       }
 
