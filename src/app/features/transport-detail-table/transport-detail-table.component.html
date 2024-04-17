@@ -1,4 +1,4 @@
-<div (window:scroll)="onScroll()">
+<div (scroll)="onScroll()" class="container">
   <table class="transport__table">
     <thead>
       <tr>
@@ -14,17 +14,25 @@
     </thead>
 
     <tbody>
-      <h2> 18/03/2024</h2>
-      <tr *ngFor="let logis of displayedLogistics">
-        <th><input type="checkbox" (click)="toggleSelection(logis, $event)" id="{{logis._id}}" #checkBoxes></th>
-        <td (click)="openSidebar(logis)">{{logis.nfe}}</td>
-        <td (click)="openSidebar(logis)">{{logis.emission_date | date:'dd/MM/yyyy' : 'UTC-00'}}</td>
-        <td (click)="openSidebar(logis)">{{logis.transporter.name}}</td>
-        <td (click)="openSidebar(logis)">{{logis.date_out | date:'dd/MM/yyyy' : 'UTC-00'}}</td>
-        <td (click)="openSidebar(logis)">{{logis.arrival_forecast | date:'dd/MM/yyyy' : 'UTC-00'}}</td>
-        <td (click)="openSidebar(logis)">{{logis.pin_release | date:'dd/MM/yyyy' : 'UTC-00'}}</td>
-        <td (click)="openSidebar(logis)">{{logis.status}}</td>
-      </tr>
+      <ng-container *ngFor="let group of displayedGroupedLogistics">
+        <!-- Change this div to tr after adding colors to each company -->
+        <div class="week__range" *ngIf="group.logistics.length > 0">
+          <th [colSpan]="3">
+            <h2> {{(group.initial | date:'dd/MM/yyyy' : 'UTC-00') + " ~ " + (group.final|
+              date:'dd/MM/yyyy' : 'UTC-00')}}</h2>
+          </th>
+        </div>
+        <tr *ngFor="let logis of group.logistics">
+          <th><input type="checkbox" (click)="toggleSelection(logis, $event)" id="{{logis._id}}" #checkBoxes></th>
+          <td (click)="openSidebar(logis)">{{logis.nfe}}</td>
+          <td (click)="openSidebar(logis)">{{logis.emission_date | date:'dd/MM/yyyy' : 'UTC-00'}}</td>
+          <td (click)="openSidebar(logis)">{{logis.transporter.name}}</td>
+          <td (click)="openSidebar(logis)">{{logis.date_out | date:'dd/MM/yyyy' : 'UTC-00'}}</td>
+          <td (click)="openSidebar(logis)">{{logis.arrival_forecast | date:'dd/MM/yyyy' : 'UTC-00'}}</td>
+          <td (click)="openSidebar(logis)">{{logis.pin_release | date:'dd/MM/yyyy' : 'UTC-00'}}</td>
+          <td (click)="openSidebar(logis)">{{logis.status}}</td>
+        </tr>
+      </ng-container>
       <tr *ngIf="loadingData">
         <td [attr.colspan]="8" class="loading-spinner">
           <div [attr.colspan]="8" class="spinner"></div>

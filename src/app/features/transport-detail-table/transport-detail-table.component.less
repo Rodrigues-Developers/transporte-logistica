@@ -2,6 +2,11 @@
 @import "../../shared/styles/sideMenu.less";
 @import "../../shared/styles/animations.less";
 
+.container {
+  max-height: 550px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
 .transport__table {
   width: 950px;
   margin-right: 5rem;
@@ -22,6 +27,15 @@
   }
 
   tbody {
+    .week__range {
+      th {
+        padding: 0;
+      }
+    }
+    h2 {
+      white-space: nowrap;
+      margin: 0;
+    }
     .td__products {
       overflow-wrap: break-word;
     }
@@ -47,7 +61,7 @@
 
     tr {
       cursor: pointer;
-      &:nth-child(even) {
+      &:nth-of-type(odd) {
         background-color: #ebebeb;
       }
 

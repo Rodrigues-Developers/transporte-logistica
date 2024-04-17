@@ -1,7 +1,7 @@
 import { Component, ElementRef, Input, OnInit, Output, QueryList, ViewChildren } from "@angular/core";
 import { DataShareService } from "./../../core/services/data-share.service";
 import { Product } from "../../core/interfaces/product.interface";
-import { Logistic } from "../../core/interfaces/logistic.interface";
+import { GroupedLogistics, Logistic } from "../../core/interfaces/logistic.interface";
 import { LogisticService } from "src/app/core/services/logistic.service";
 import { ProductService } from "src/app/core/services/product.service";
 import { ObjectId } from "mongodb";
@@ -34,9 +34,11 @@ export class TransportDetailTableComponent implements OnInit {
 
   checkAll: boolean = false;
 
-  displayedLogistics: Logistic[] = [];
+  logisticsGroups: Logistic[] = [];
+  groupedLogistics: GroupedLogistics[] = [];
+  displayedGroupedLogistics: GroupedLogistics[] = [];
   initialItemsToDisplay = 3; // Number of items to display initially
-  itemsToLoad = 2; // Number of items to load when user scrolls to the bottom
+  itemsToLoad = 1; // Number of items to load when user scrolls to the bottom
   loadingData = true;
 
   constructor(
@@ -78,8 +80,8 @@ export class TransportDetailTableComponent implements OnInit {
   loadMoreLogistics(): void {
     this.initialItemsToDisplay += this.itemsToLoad;
 
-    // Update the displayedLogistics array with more items
-    this.displayedLogistics = this.logistics.slice(0, this.initialItemsToDisplay);
+    // Update the displayedGroupedLogistics array with more items
+    this.displayedGroupedLogistics = this.groupedLogistics.slice(0, this.initialItemsToDisplay);
   }
 
   /**
@@ -88,6 +90,7 @@ export class TransportDetailTableComponent implements OnInit {
   async getLogistics() {
     this.logisticService.getAllLogistics(this.delivered).subscribe((logistics: Logistic[]) => {
       this.logistics = logistics;
+      this.groupedLogistics = this.groupLogisByDate();
       this.loadMoreLogistics();
       this.loadingData = false;
 
@@ -189,22 +192,15 @@ export class TransportDetailTableComponent implements OnInit {
     this.logisticsSelected.emit(this.selectedLogistics);
   }
 
-  ngOndestroy(): void {
-    this.productServiceObservable.unsubscribe();
-  }
-
   /**
    * @function
    * @name updateStatus
    * @description this function updates the status according to the arrival time and current date.
    */
   updateStatus() {
-    console.log("Iniciando a atualização de status.");
-    console.log("this.logistics:", this.logistics);
+    const currentDate = new Date();
 
     this.logistics.forEach(logi => {
-
-      const currentDate = new Date();
       const arrivalForecastDate = logi.arrival_forecast ? new Date(logi.arrival_forecast) : undefined;
 
       if (arrivalForecastDate) {
@@ -219,5 +215,68 @@ export class TransportDetailTableComponent implements OnInit {
         logi.status = "Atualize a previsão de chegada.";
       }
     });
+  }
+
+  groupLogisByDate() {
+    const groupedLogistics: GroupedLogistics[] = [];
+    // Sort logistics
+    this.logistics.sort((a, b) => {
+      if (!a.arrival_forecast || !b.arrival_forecast) {
+        return 0; // One of them are undefined or null, maintain the original order
+      } else {
+        return new Date(a.arrival_forecast).getTime() - new Date(b.arrival_forecast).getTime();
+      }
+    });
+
+    //Get last logistic with a validate arrival_forecast date
+    let lastIndex = 1;
+    while (!this.logistics[this.logistics.length - lastIndex].arrival_forecast) {
+      lastIndex++;
+    }
+
+    const initialDate = new Date(this.logistics[0].arrival_forecast ?? "");
+    const endDate = new Date(this.logistics[this.logistics.length - lastIndex].arrival_forecast ?? "");
+
+    let currentIniDay = new Date(initialDate);
+    let currentFinDay = new Date(initialDate);
+
+    let initialDateNumber = initialDate.getDate() - initialDate.getDay();
+    let finalDateNumber = initialDateNumber + 6;
+
+    let j = 0;
+    while (currentFinDay <= endDate) {
+      finalDateNumber = initialDateNumber + 6;
+
+      currentIniDay.setDate(initialDateNumber);
+      currentFinDay.setDate(finalDateNumber);
+
+      let tempGroup: Logistic[] = [];
+
+      while (j < this.logistics.length) {
+        const currentLogisDate = new Date(this.logistics[j].arrival_forecast ?? "");
+        if (currentLogisDate < currentFinDay) {
+          tempGroup.push(this.logistics[j]);
+        } else {
+          break;
+        }
+        j++;
+      }
+
+      groupedLogistics.push({
+        initial: new Date(currentIniDay),
+        final: new Date(currentFinDay),
+        logistics: tempGroup
+      });
+
+      // Go to next week
+      initialDateNumber = currentFinDay.getDate() + 1;
+    }
+
+    groupedLogistics.sort((a, b) => a.initial.getTime() - b.initial.getTime());
+    return groupedLogistics;
+  }
+
+  ngOndestroy(): void {
+    this.productServiceObservable.unsubscribe();
   }
 }
