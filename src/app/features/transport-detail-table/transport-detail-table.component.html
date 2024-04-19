@@ -17,9 +17,15 @@
       <ng-container *ngFor="let group of displayedGroupedLogistics">
         <!-- Change this div to tr after adding colors to each company -->
         <div class="week__range" *ngIf="group.logistics.length > 0">
-          <th [colSpan]="3">
-            <h2> {{(group.initial | date:'dd/MM/yyyy' : 'UTC-00') + " ~ " + (group.final|
+          <th [colSpan]="8">
+            <h2 *ngIf="group.initial !== group.final; else elseBlock"> {{(group.initial | date:'dd/MM/yyyy' : 'UTC-00')
+              +
+              " ~ " + (group.final|
               date:'dd/MM/yyyy' : 'UTC-00')}}</h2>
+
+            <ng-template #elseBlock>
+              <h2> Atualize a previsão de chegada</h2>
+            </ng-template>
           </th>
         </div>
         <tr *ngFor="let logis of group.logistics">
@@ -41,6 +47,7 @@
         </td>
       </tr>
     </tbody>
+
   </table>
 </div>
 

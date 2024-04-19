@@ -219,18 +219,33 @@ export class TransportDetailTableComponent implements OnInit {
 
   groupLogisByDate() {
     const groupedLogistics: GroupedLogistics[] = [];
+    const updateDataGroup: Logistic[] = [];
     // Sort logistics
     this.logistics.sort((a, b) => {
-      if (!a.arrival_forecast || !b.arrival_forecast) {
+      if (!a.arrival_forecast && !b.arrival_forecast) {
         return 0; // One of them are undefined or null, maintain the original order
+      } else if (!a.arrival_forecast) {
+        return 1;
+      } else if (!b.arrival_forecast) {
+        return -1;
       } else {
         return new Date(a.arrival_forecast).getTime() - new Date(b.arrival_forecast).getTime();
       }
     });
 
+    // Separating logistics with blank arrival_forecast date
+    for (const logistic of this.logistics) {
+      if (!logistic.arrival_forecast) {
+        updateDataGroup.push(logistic);
+      }
+    }
+
+    // Removing logistics with blank arrival_forecast date from the main array
+    this.logistics = this.logistics.filter(logistic => logistic.arrival_forecast);
+
     //Get last logistic with a validate arrival_forecast date
     let lastIndex = 1;
-    while (!this.logistics[this.logistics.length - lastIndex].arrival_forecast) {
+    while (lastIndex <= this.logistics.length && !this.logistics[this.logistics.length - lastIndex].arrival_forecast) {
       lastIndex++;
     }
 
@@ -254,7 +269,7 @@ export class TransportDetailTableComponent implements OnInit {
 
       while (j < this.logistics.length) {
         const currentLogisDate = new Date(this.logistics[j].arrival_forecast ?? "");
-        if (currentLogisDate < currentFinDay) {
+        if (currentLogisDate < currentFinDay || !this.logistics[j].arrival_forecast) {
           tempGroup.push(this.logistics[j]);
         } else {
           break;
@@ -272,11 +287,21 @@ export class TransportDetailTableComponent implements OnInit {
       initialDateNumber = currentFinDay.getDate() + 1;
     }
 
+    // Adding the group for logistics with blank arrival_forecast date
+    if (updateDataGroup.length > 0) {
+      const dd = new Date();
+      groupedLogistics.push({
+        initial: dd,
+        final: dd,
+        logistics: updateDataGroup
+      });
+    }
+
     groupedLogistics.sort((a, b) => a.initial.getTime() - b.initial.getTime());
     return groupedLogistics;
   }
 
-  ngOndestroy(): void {
+  ngOnDestroy(): void {
     this.productServiceObservable.unsubscribe();
   }
 }
