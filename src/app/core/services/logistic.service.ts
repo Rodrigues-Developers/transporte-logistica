@@ -14,8 +14,8 @@ var httpOptions = {
 export class LogisticService {
   constructor(private http: HttpClient) {}
 
-  urlLocal = "http://localhost:3000/";
-  url = "https://nodejs-api-logistica.onrender.com/";
+  url = "http://localhost:3000/";
+  urlOnline = "https://nodejs-api-logistica.onrender.com/";
   logistic = {} as Logistic;
 
   /**

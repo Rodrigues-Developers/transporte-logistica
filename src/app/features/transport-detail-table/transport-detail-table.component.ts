@@ -222,12 +222,8 @@ export class TransportDetailTableComponent implements OnInit {
     const updateDataGroup: Logistic[] = [];
     // Sort logistics
     this.logistics.sort((a, b) => {
-      if (!a.arrival_forecast && !b.arrival_forecast) {
+      if (!a.arrival_forecast || !b.arrival_forecast) {
         return 0; // One of them are undefined or null, maintain the original order
-      } else if (!a.arrival_forecast) {
-        return 1;
-      } else if (!b.arrival_forecast) {
-        return -1;
       } else {
         return new Date(a.arrival_forecast).getTime() - new Date(b.arrival_forecast).getTime();
       }
@@ -289,10 +285,10 @@ export class TransportDetailTableComponent implements OnInit {
 
     // Adding the group for logistics with blank arrival_forecast date
     if (updateDataGroup.length > 0) {
-      const dd = new Date();
+      const date = new Date();
       groupedLogistics.push({
-        initial: dd,
-        final: dd,
+        initial: date,
+        final: date,
         logistics: updateDataGroup
       });
     }
