@@ -219,6 +219,7 @@ export class TransportDetailTableComponent implements OnInit {
 
   groupLogisByDate() {
     const groupedLogistics: GroupedLogistics[] = [];
+    const updateDataGroup: Logistic[] = [];
     // Sort logistics
     this.logistics.sort((a, b) => {
       if (!a.arrival_forecast || !b.arrival_forecast) {
@@ -228,9 +229,19 @@ export class TransportDetailTableComponent implements OnInit {
       }
     });
 
+    // Separating logistics with blank arrival_forecast date
+    for (const logistic of this.logistics) {
+      if (!logistic.arrival_forecast) {
+        updateDataGroup.push(logistic);
+      }
+    }
+
+    // Removing logistics with blank arrival_forecast date from the main array
+    this.logistics = this.logistics.filter(logistic => logistic.arrival_forecast);
+
     //Get last logistic with a validate arrival_forecast date
     let lastIndex = 1;
-    while (!this.logistics[this.logistics.length - lastIndex].arrival_forecast) {
+    while (lastIndex <= this.logistics.length && !this.logistics[this.logistics.length - lastIndex].arrival_forecast) {
       lastIndex++;
     }
 
@@ -254,7 +265,7 @@ export class TransportDetailTableComponent implements OnInit {
 
       while (j < this.logistics.length) {
         const currentLogisDate = new Date(this.logistics[j].arrival_forecast ?? "");
-        if (currentLogisDate < currentFinDay) {
+        if (currentLogisDate < currentFinDay || !this.logistics[j].arrival_forecast) {
           tempGroup.push(this.logistics[j]);
         } else {
           break;
@@ -272,11 +283,21 @@ export class TransportDetailTableComponent implements OnInit {
       initialDateNumber = currentFinDay.getDate() + 1;
     }
 
+    // Adding the group for logistics with blank arrival_forecast date
+    if (updateDataGroup.length > 0) {
+      const date = new Date();
+      groupedLogistics.push({
+        initial: date,
+        final: date,
+        logistics: updateDataGroup
+      });
+    }
+
     groupedLogistics.sort((a, b) => a.initial.getTime() - b.initial.getTime());
     return groupedLogistics;
   }
 
-  ngOndestroy(): void {
+  ngOnDestroy(): void {
     this.productServiceObservable.unsubscribe();
   }
 }
