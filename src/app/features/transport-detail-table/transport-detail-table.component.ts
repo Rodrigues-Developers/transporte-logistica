@@ -220,8 +220,19 @@ export class TransportDetailTableComponent implements OnInit {
   groupLogisByDate() {
     const groupedLogistics: GroupedLogistics[] = [];
     const updateDataGroup: Logistic[] = [];
+    let tempLogistics: Logistic[] = [];
+
+    // Separating logistics with blank arrival_forecast date
+    for (const logistic of this.logistics) {
+      if (!logistic.arrival_forecast) {
+        updateDataGroup.push(logistic);
+      } else {
+        tempLogistics.push(logistic);
+      }
+    }
+
     // Sort logistics
-    this.logistics.sort((a, b) => {
+    tempLogistics.sort((a, b) => {
       if (!a.arrival_forecast || !b.arrival_forecast) {
         return 0; // One of them are undefined or null, maintain the original order
       } else {
@@ -229,24 +240,11 @@ export class TransportDetailTableComponent implements OnInit {
       }
     });
 
-    // Separating logistics with blank arrival_forecast date
-    for (const logistic of this.logistics) {
-      if (!logistic.arrival_forecast) {
-        updateDataGroup.push(logistic);
-      }
-    }
-
-    // Removing logistics with blank arrival_forecast date from the main array
-    this.logistics = this.logistics.filter(logistic => logistic.arrival_forecast);
-
     //Get last logistic with a validate arrival_forecast date
-    let lastIndex = 1;
-    while (lastIndex <= this.logistics.length && !this.logistics[this.logistics.length - lastIndex].arrival_forecast) {
-      lastIndex++;
-    }
+    let lastIndex = tempLogistics.length - 1;
 
-    const initialDate = new Date(this.logistics[0].arrival_forecast ?? "");
-    const endDate = new Date(this.logistics[this.logistics.length - lastIndex].arrival_forecast ?? "");
+    const initialDate = new Date(tempLogistics[0].arrival_forecast ?? "");
+    const endDate = new Date(tempLogistics[lastIndex].arrival_forecast ?? "");
 
     let currentIniDay = new Date(initialDate);
     let currentFinDay = new Date(initialDate);
@@ -263,25 +261,29 @@ export class TransportDetailTableComponent implements OnInit {
 
       let tempGroup: Logistic[] = [];
 
-      while (j < this.logistics.length) {
-        const currentLogisDate = new Date(this.logistics[j].arrival_forecast ?? "");
-        if (currentLogisDate < currentFinDay || !this.logistics[j].arrival_forecast) {
-          tempGroup.push(this.logistics[j]);
+      while (j < tempLogistics.length) {
+        const currentLogisDate = new Date(tempLogistics[j].arrival_forecast ?? "");
+        if (currentLogisDate < currentFinDay || !tempLogistics[j].arrival_forecast) {
+          tempGroup.push(tempLogistics[j]);
         } else {
           break;
         }
         j++;
       }
 
-      groupedLogistics.push({
-        initial: new Date(currentIniDay),
-        final: new Date(currentFinDay),
-        logistics: tempGroup
-      });
+      if (tempGroup.length > 0) {
+        groupedLogistics.push({
+          initial: new Date(currentIniDay),
+          final: new Date(currentFinDay),
+          logistics: tempGroup
+        });
+      }
 
       // Go to next week
       initialDateNumber = currentFinDay.getDate() + 1;
     }
+
+    groupedLogistics.sort((a, b) => a.initial.getTime() - b.initial.getTime());
 
     // Adding the group for logistics with blank arrival_forecast date
     if (updateDataGroup.length > 0) {
@@ -293,7 +295,6 @@ export class TransportDetailTableComponent implements OnInit {
       });
     }
 
-    groupedLogistics.sort((a, b) => a.initial.getTime() - b.initial.getTime());
     return groupedLogistics;
   }
 
