@@ -218,21 +218,21 @@ export class TransportDetailTableComponent implements OnInit {
   }
 
   groupLogisByDate() {
-    const groupedLogistics: GroupedLogistics[] = [];
-    const updateDataGroup: Logistic[] = [];
-    let tempLogistics: Logistic[] = [];
+    const logisticsGroup: GroupedLogistics[] = [];
+    const emptyArrivalList: Logistic[] = [];
+    let logisticsTemp: Logistic[] = [];
 
     // Separating logistics with blank arrival_forecast date
     for (const logistic of this.logistics) {
       if (!logistic.arrival_forecast) {
-        updateDataGroup.push(logistic);
+        emptyArrivalList.push(logistic);
       } else {
-        tempLogistics.push(logistic);
+        logisticsTemp.push(logistic);
       }
     }
 
     // Sort logistics
-    tempLogistics.sort((a, b) => {
+    logisticsTemp.sort((a, b) => {
       if (!a.arrival_forecast || !b.arrival_forecast) {
         return 0; // One of them are undefined or null, maintain the original order
       } else {
@@ -240,62 +240,51 @@ export class TransportDetailTableComponent implements OnInit {
       }
     });
 
-    //Get last logistic with a validate arrival_forecast date
-    let lastIndex = tempLogistics.length - 1;
+    for (const logis of logisticsTemp) {
+      //Get inital and final days of the week
+      const currentDate = new Date(logis.arrival_forecast ?? "");
+      const initialDate = new Date(currentDate);
+      const finalDate = new Date(currentDate);
 
-    const initialDate = new Date(tempLogistics[0].arrival_forecast ?? "");
-    const endDate = new Date(tempLogistics[lastIndex].arrival_forecast ?? "");
+      const mondayNumber = currentDate.getDate() - currentDate.getDay();
+      const saturdayNumber = mondayNumber + 6;
 
-    let currentIniDay = new Date(initialDate);
-    let currentFinDay = new Date(initialDate);
+      //Set Date types to the correct days
+      initialDate.setDate(mondayNumber);
+      finalDate.setDate(saturdayNumber);
 
-    let initialDateNumber = initialDate.getDate() - initialDate.getDay();
-    let finalDateNumber = initialDateNumber + 6;
+      //Look for the initialDate in the logisticsGroup
+      const weekIndex = logisticsGroup.findIndex(log => initialDate <= log.initial);
 
-    let j = 0;
-    while (currentFinDay <= endDate) {
-      finalDateNumber = initialDateNumber + 6;
-
-      currentIniDay.setDate(initialDateNumber);
-      currentFinDay.setDate(finalDateNumber);
-
-      let tempGroup: Logistic[] = [];
-
-      while (j < tempLogistics.length) {
-        const currentLogisDate = new Date(tempLogistics[j].arrival_forecast ?? "");
-        if (currentLogisDate < currentFinDay || !tempLogistics[j].arrival_forecast) {
-          tempGroup.push(tempLogistics[j]);
+      //If the group exists
+      if (weekIndex !== -1) {
+        if (initialDate.getTime() === logisticsGroup[weekIndex].initial.getTime()) {
+          logisticsGroup[weekIndex].logistics.push(logis);
         } else {
-          break;
+          // create a new week group on the correct position
+          logisticsGroup.splice(weekIndex, 0, {
+            initial: initialDate,
+            final: finalDate,
+            logistics: [logis]
+          });
         }
-        j++;
-      }
-
-      if (tempGroup.length > 0) {
-        groupedLogistics.push({
-          initial: new Date(currentIniDay),
-          final: new Date(currentFinDay),
-          logistics: tempGroup
+      } else {
+        logisticsGroup.push({
+          initial: initialDate,
+          final: finalDate,
+          logistics: [logis]
         });
       }
-
-      // Go to next week
-      initialDateNumber = currentFinDay.getDate() + 1;
     }
 
-    groupedLogistics.sort((a, b) => a.initial.getTime() - b.initial.getTime());
+    const today = new Date();
+    logisticsGroup.push({
+      initial: today,
+      final: today,
+      logistics: emptyArrivalList
+    });
 
-    // Adding the group for logistics with blank arrival_forecast date
-    if (updateDataGroup.length > 0) {
-      const date = new Date();
-      groupedLogistics.push({
-        initial: date,
-        final: date,
-        logistics: updateDataGroup
-      });
-    }
-
-    return groupedLogistics;
+    return logisticsGroup;
   }
 
   ngOnDestroy(): void {
