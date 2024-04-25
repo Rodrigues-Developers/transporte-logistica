@@ -30,6 +30,7 @@ export class TrackingComponent implements OnInit {
         } catch (error) {
           console.error(`Error updating logistics ${logis._id}: ${error}`);
         }
+        this.togglePopup();
       }
     }
   }

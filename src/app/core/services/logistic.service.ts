@@ -3,6 +3,7 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable, map } from "rxjs";
 import { Logistic } from "src/app/core/interfaces/logistic.interface";
+import { environment } from "../../../environments/environment";
 
 var httpOptions = {
   headers: new HttpHeaders({ "Content-Type": "application/json" })
@@ -14,8 +15,7 @@ var httpOptions = {
 export class LogisticService {
   constructor(private http: HttpClient) {}
 
-  urlLocal = "http://localhost:3000/";
-  url = "https://nodejs-api-logistica.onrender.com/";
+  url = environment.apiUrl;
   logistic = {} as Logistic;
 
   /**

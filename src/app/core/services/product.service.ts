@@ -4,6 +4,7 @@ import { HttpHeaders } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { Product } from "src/app/core/interfaces/product.interface";
 import { ObjectId } from "mongodb";
+import { environment } from "../../../environments/environment";
 
 var httpOptions = {
   headers: new HttpHeaders({ "Content-Type": "application/json" })
@@ -21,8 +22,7 @@ export class ProductService {
       .catch(error => {});
   }
 
-  urlLocal = "http://localhost:3000/";
-  url = "https://nodejs-api-logistica.onrender.com/";
+  url = environment.apiUrl;
 
   getAllProducts = async (): Promise<Observable<Product[]>> => {
     return this.http.get<Product[]>(this.url + "products");
