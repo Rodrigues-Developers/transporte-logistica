@@ -55,7 +55,7 @@ export class TransportDetailTableComponent implements OnInit {
   @Input()
   set updateTable(update: boolean) {
     for (let i = 0; i < this.checkedLogisticsElements.length; i++) {
-      if (this.selectedLogistics[i].status === "delivered") {
+      if (this.selectedLogistics[i].status === "Entregue") {
         this.setAnimation(this.checkedLogisticsElements[i]);
       } else if (this.delivered) {
         this.setAnimation(this.checkedLogisticsElements[i], true);
@@ -202,8 +202,9 @@ export class TransportDetailTableComponent implements OnInit {
 
     this.logistics.forEach(logi => {
       const arrivalForecastDate = logi.arrival_forecast ? new Date(logi.arrival_forecast) : undefined;
-
-      if (arrivalForecastDate) {
+      if (!arrivalForecastDate) {
+        logi.status = "Atualize a previsão de chegada.";
+      } else if (logi.status !== "Entregue") {
         if (arrivalForecastDate >= currentDate) {
           logi.status = "Em dia.";
           this.logisticService.updateLogistic(logi);
@@ -211,8 +212,6 @@ export class TransportDetailTableComponent implements OnInit {
           logi.status = "Atrasada";
           this.logisticService.updateLogistic(logi);
         }
-      } else {
-        logi.status = "Atualize a previsão de chegada.";
       }
     });
   }
@@ -247,7 +246,7 @@ export class TransportDetailTableComponent implements OnInit {
       const finalDate = new Date(currentDate);
 
       const mondayNumber = currentDate.getDate() - currentDate.getDay();
-      const saturdayNumber = mondayNumber + 6;
+      const saturdayNumber = mondayNumber + 5;
 
       //Set Date types to the correct days
       initialDate.setDate(mondayNumber);

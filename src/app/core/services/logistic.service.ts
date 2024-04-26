@@ -26,9 +26,9 @@ export class LogisticService {
     return this.http.get<Logistic[]>(this.url + "logistics").pipe(
       map((logistics: Logistic[]) => {
         if (filterByDelivered) {
-          return logistics.filter((log: Logistic) => log.status === "delivered");
+          return logistics.filter((log: Logistic) => log.status === "Entregue");
         }
-        return logistics.filter((log: Logistic) => log.status !== "delivered");
+        return logistics.filter((log: Logistic) => log.status !== "Entregue");
       })
     );
   }

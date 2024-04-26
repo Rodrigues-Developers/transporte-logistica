@@ -25,14 +25,14 @@ export class TrackingComponent implements OnInit {
       if (logis._id) {
         try {
           const updatedLogistic: Logistic = logis;
-          logis.status = "delivered";
+          logis.status = "Entregue";
           this.logisticService.updateLogistic(updatedLogistic).subscribe(() => this.refreshTransportTable());
         } catch (error) {
           console.error(`Error updating logistics ${logis._id}: ${error}`);
         }
-        this.togglePopup();
       }
     }
+    this.togglePopup();
   }
 
   togglePopup(isVisible?: boolean) {
