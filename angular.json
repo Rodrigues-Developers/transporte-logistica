@@ -44,7 +44,13 @@
                   "maximumError": "40kb"
                 }
               ],
-              "outputHashing": "all"
+              "outputHashing": "all",
+              "fileReplacements": [
+                {
+                  "replace": "./src/environments/environment.ts",
+                  "with": "./src/environments/environment.prod.ts"
+                }
+              ]
             },
             "development": {
               "buildOptimizer": false,
@@ -52,7 +58,13 @@
               "vendorChunk": true,
               "extractLicenses": false,
               "sourceMap": true,
-              "namedChunks": true
+              "namedChunks": true,
+              "fileReplacements": [
+                {
+                  "replace": "./src/environments/environment.ts",
+                  "with": "./src/environments/environment.local.ts"
+                }
+              ]
             }
           },
           "defaultConfiguration": "production"
@@ -61,10 +73,13 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "transporte-logistica:build:production"
+              "buildTarget": "transporte-logistica:build:production"
             },
             "development": {
-              "browserTarget": "transporte-logistica:build:development"
+              "buildTarget": "transporte-logistica:build:development"
+            },
+            "local": {
+              "buildTarget": "transporte-logistica:build:development"
             }
           },
           "defaultConfiguration": "development"

@@ -22,7 +22,7 @@ export class DeliveredComponent {
       if (logis._id) {
         try {
           const updatedLogistic: Logistic = logis;
-          logis.status = "in data";
+          logis.status = "";
           this.logisticService.updateLogistic(updatedLogistic).subscribe(() => this.refreshTransportTable());
         } catch (error) {
           console.error(`Error updating logistics ${logis._id}: ${error}`);

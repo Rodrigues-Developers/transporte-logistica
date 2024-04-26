@@ -55,7 +55,7 @@ export class TransportDetailTableComponent implements OnInit {
   @Input()
   set updateTable(update: boolean) {
     for (let i = 0; i < this.checkedLogisticsElements.length; i++) {
-      if (this.selectedLogistics[i].status === "delivered") {
+      if (this.selectedLogistics[i].status === "Entregue") {
         this.setAnimation(this.checkedLogisticsElements[i]);
       } else if (this.delivered) {
         this.setAnimation(this.checkedLogisticsElements[i], true);
@@ -202,8 +202,9 @@ export class TransportDetailTableComponent implements OnInit {
 
     this.logistics.forEach(logi => {
       const arrivalForecastDate = logi.arrival_forecast ? new Date(logi.arrival_forecast) : undefined;
-
-      if (arrivalForecastDate) {
+      if (!arrivalForecastDate) {
+        logi.status = "Atualize a previsão de chegada.";
+      } else if (logi.status !== "Entregue") {
         if (arrivalForecastDate >= currentDate) {
           logi.status = "Em dia.";
           this.logisticService.updateLogistic(logi);
@@ -211,17 +212,26 @@ export class TransportDetailTableComponent implements OnInit {
           logi.status = "Atrasada";
           this.logisticService.updateLogistic(logi);
         }
-      } else {
-        logi.status = "Atualize a previsão de chegada.";
       }
     });
   }
 
   groupLogisByDate() {
-    const groupedLogistics: GroupedLogistics[] = [];
-    const updateDataGroup: Logistic[] = [];
+    const logisticsGroup: GroupedLogistics[] = [];
+    const emptyArrivalList: Logistic[] = [];
+    let logisticsTemp: Logistic[] = [];
+
+    // Separating logistics with blank arrival_forecast date
+    for (const logistic of this.logistics) {
+      if (!logistic.arrival_forecast) {
+        emptyArrivalList.push(logistic);
+      } else {
+        logisticsTemp.push(logistic);
+      }
+    }
+
     // Sort logistics
-    this.logistics.sort((a, b) => {
+    logisticsTemp.sort((a, b) => {
       if (!a.arrival_forecast || !b.arrival_forecast) {
         return 0; // One of them are undefined or null, maintain the original order
       } else {
@@ -229,72 +239,51 @@ export class TransportDetailTableComponent implements OnInit {
       }
     });
 
-    // Separating logistics with blank arrival_forecast date
-    for (const logistic of this.logistics) {
-      if (!logistic.arrival_forecast) {
-        updateDataGroup.push(logistic);
-      }
-    }
+    for (const logis of logisticsTemp) {
+      //Get inital and final days of the week
+      const currentDate = new Date(logis.arrival_forecast ?? "");
+      const initialDate = new Date(currentDate);
+      const finalDate = new Date(currentDate);
 
-    // Removing logistics with blank arrival_forecast date from the main array
-    this.logistics = this.logistics.filter(logistic => logistic.arrival_forecast);
+      const mondayNumber = currentDate.getDate() - currentDate.getDay();
+      const saturdayNumber = mondayNumber + 5;
 
-    //Get last logistic with a validate arrival_forecast date
-    let lastIndex = 1;
-    while (lastIndex <= this.logistics.length && !this.logistics[this.logistics.length - lastIndex].arrival_forecast) {
-      lastIndex++;
-    }
+      //Set Date types to the correct days
+      initialDate.setDate(mondayNumber);
+      finalDate.setDate(saturdayNumber);
 
-    const initialDate = new Date(this.logistics[0].arrival_forecast ?? "");
-    const endDate = new Date(this.logistics[this.logistics.length - lastIndex].arrival_forecast ?? "");
+      //Look for the initialDate in the logisticsGroup
+      const weekIndex = logisticsGroup.findIndex(log => initialDate <= log.initial);
 
-    let currentIniDay = new Date(initialDate);
-    let currentFinDay = new Date(initialDate);
-
-    let initialDateNumber = initialDate.getDate() - initialDate.getDay();
-    let finalDateNumber = initialDateNumber + 6;
-
-    let j = 0;
-    while (currentFinDay <= endDate) {
-      finalDateNumber = initialDateNumber + 6;
-
-      currentIniDay.setDate(initialDateNumber);
-      currentFinDay.setDate(finalDateNumber);
-
-      let tempGroup: Logistic[] = [];
-
-      while (j < this.logistics.length) {
-        const currentLogisDate = new Date(this.logistics[j].arrival_forecast ?? "");
-        if (currentLogisDate < currentFinDay || !this.logistics[j].arrival_forecast) {
-          tempGroup.push(this.logistics[j]);
+      //If the group exists
+      if (weekIndex !== -1) {
+        if (initialDate.getTime() === logisticsGroup[weekIndex].initial.getTime()) {
+          logisticsGroup[weekIndex].logistics.push(logis);
         } else {
-          break;
+          // create a new week group on the correct position
+          logisticsGroup.splice(weekIndex, 0, {
+            initial: initialDate,
+            final: finalDate,
+            logistics: [logis]
+          });
         }
-        j++;
+      } else {
+        logisticsGroup.push({
+          initial: initialDate,
+          final: finalDate,
+          logistics: [logis]
+        });
       }
-
-      groupedLogistics.push({
-        initial: new Date(currentIniDay),
-        final: new Date(currentFinDay),
-        logistics: tempGroup
-      });
-
-      // Go to next week
-      initialDateNumber = currentFinDay.getDate() + 1;
     }
 
-    // Adding the group for logistics with blank arrival_forecast date
-    if (updateDataGroup.length > 0) {
-      const date = new Date();
-      groupedLogistics.push({
-        initial: date,
-        final: date,
-        logistics: updateDataGroup
-      });
-    }
+    const today = new Date();
+    logisticsGroup.push({
+      initial: today,
+      final: today,
+      logistics: emptyArrivalList
+    });
 
-    groupedLogistics.sort((a, b) => a.initial.getTime() - b.initial.getTime());
-    return groupedLogistics;
+    return logisticsGroup;
   }
 
   ngOnDestroy(): void {
