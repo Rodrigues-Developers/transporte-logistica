@@ -1,5 +1,6 @@
 import { Component, Input, Output, EventEmitter, ElementRef, ViewChild, AfterViewInit } from "@angular/core";
 import { AnimationBuilder, animate, style } from "@angular/animations";
+import { PopupStateService } from "src/app/core/services/popup-state.service";
 
 @Component({
   selector: "app-popup",
@@ -9,26 +10,34 @@ import { AnimationBuilder, animate, style } from "@angular/animations";
 export class PopupComponent {
   private _isVisible: boolean = false;
   player: any;
+  isVisible: boolean = false;
 
-  @Input()
-  set isVisible(value: boolean) {
-    this._isVisible = value;
+  // @Input()
+  // set isVisible(value: boolean) {
+  //   this._isVisible = value;
 
-    if (this.popUpElement) {
-      this.setAnimation(this.popUpElement.nativeElement as HTMLElement, this._isVisible);
-    }
-  }
+  //   if (this.popUpElement) {
+  //     this.setAnimation(this.popUpElement.nativeElement as HTMLElement, this._isVisible);
+  //   }
+  // }
 
-  get isVisible(): boolean {
-    return this._isVisible;
-  }
+  // get isVisible(): boolean {
+  //   return this._isVisible;
+  // }
 
   @Output() isVisibleEmitter = new EventEmitter<boolean>();
   @Output() confirmEmitter = new EventEmitter<boolean>();
 
   @ViewChild("popUpElement", { static: false }) popUpElement!: ElementRef;
 
-  constructor(private animationBuilder: AnimationBuilder) {}
+  constructor(private animationBuilder: AnimationBuilder, private popupStateService: PopupStateService) {
+    this.popupStateService.getDataObservable().subscribe((popState: boolean) => {
+      this.isVisible = popState;
+      if (this.popUpElement) {
+        this.setAnimation(this.popUpElement.nativeElement as HTMLElement, this._isVisible);
+      }
+    });
+  }
 
   close() {
     this._isVisible = false;

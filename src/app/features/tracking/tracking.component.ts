@@ -1,6 +1,7 @@
 import { Logistic } from "src/app/core/interfaces/logistic.interface";
 import { Component, OnInit } from "@angular/core";
 import { LogisticService } from "src/app/core/services/logistic.service";
+import { PopupStateService } from "src/app/core/services/popup-state.service";
 
 @Component({
   selector: "app-tracking",
@@ -12,7 +13,7 @@ export class TrackingComponent implements OnInit {
   receivedLogistics: Logistic[] = [];
   updateTable: boolean = false;
 
-  constructor(private logisticService: LogisticService) {}
+  constructor(private logisticService: LogisticService, private popupStateService: PopupStateService) {}
 
   ngOnInit(): void {}
 
@@ -32,17 +33,18 @@ export class TrackingComponent implements OnInit {
         }
       }
     }
-    this.togglePopup();
   }
 
   togglePopup(isVisible?: boolean) {
     this.isPopUpVisible = isVisible !== undefined ? isVisible : !this.isPopUpVisible;
+    this.popupStateService.setDataLogistic(this.isPopUpVisible);
   }
 
   sendNF(isPopupConfirmed: boolean) {
     if (isPopupConfirmed) {
       this.receive();
-    } else this.togglePopup();
+    }
+    this.togglePopup();
   }
 
   refreshTransportTable(): void {

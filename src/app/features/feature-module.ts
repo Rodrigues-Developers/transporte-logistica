@@ -11,7 +11,7 @@ import { RegistrationComponent } from "./registration/registration.component";
 import { TrackingComponent } from "./tracking/tracking.component";
 import { TransportDetailTableComponent } from "./transport-detail-table/transport-detail-table.component";
 import { PopupComponent } from "../shared/popup/popup.component";
-
+import { PopupStateService } from "../core/services/popup-state.service";
 @NgModule({
   declarations: [
     DetailsComponent,
@@ -32,6 +32,7 @@ import { PopupComponent } from "../shared/popup/popup.component";
       positionClass: "toast-bottom-right"
     })
   ],
+  providers: [PopupStateService],
   exports: [
     DetailsComponent,
     DeliveredComponent,
