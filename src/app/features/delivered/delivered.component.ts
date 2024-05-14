@@ -1,4 +1,5 @@
 import { Component } from "@angular/core";
+import { firstValueFrom } from "rxjs";
 import { Logistic } from "src/app/core/interfaces/logistic.interface";
 import { LogisticService } from "src/app/core/services/logistic.service";
 
@@ -18,16 +19,29 @@ export class DeliveredComponent {
   }
 
   async returnNFE() {
+    const updatePromises: Promise<any>[] = [];
+
     for (const logis of this.deliveredLogistics) {
       if (logis._id) {
         try {
           const updatedLogistic: Logistic = logis;
           logis.status = "";
-          this.logisticService.updateLogistic(updatedLogistic).subscribe(() => this.refreshTransportTable());
+          // Subscribe to the Observable returned by updateLogistic and push the promise into the array
+          updatePromises.push(firstValueFrom(this.logisticService.updateLogistic(updatedLogistic)));
         } catch (error) {
           console.error(`Error updating logistics ${logis._id}: ${error}`);
         }
       }
+    }
+
+    try {
+      // Wait for all update promises to resolve
+      await Promise.all(updatePromises);
+
+      // After all updates are done, invoke refreshTransportTable()
+      this.refreshTransportTable();
+    } catch (error) {
+      console.error(`Error updating logistics: ${error}`);
     }
   }
   refreshTransportTable(): void {

@@ -1,6 +1,7 @@
 import { Logistic } from "src/app/core/interfaces/logistic.interface";
 import { Component, OnInit } from "@angular/core";
 import { LogisticService } from "src/app/core/services/logistic.service";
+import { firstValueFrom } from "rxjs";
 
 @Component({
   selector: "app-tracking",
@@ -21,18 +22,31 @@ export class TrackingComponent implements OnInit {
   }
 
   async receive() {
+    const updatePromises: Promise<any>[] = [];
+
     for (const logis of this.receivedLogistics) {
       if (logis._id) {
         try {
           const updatedLogistic: Logistic = logis;
           logis.status = "Entregue";
-          this.logisticService.updateLogistic(updatedLogistic).subscribe(() => this.refreshTransportTable());
+          // Subscribe to the Observable returned by updateLogistic and push the promise into the array
+          updatePromises.push(firstValueFrom(this.logisticService.updateLogistic(updatedLogistic)));
         } catch (error) {
           console.error(`Error updating logistics ${logis._id}: ${error}`);
         }
       }
     }
     this.togglePopup();
+
+    try {
+      // Wait for all update promises to resolve
+      await Promise.all(updatePromises);
+
+      // After all updates are done, invoke refreshTransportTable()
+      this.refreshTransportTable();
+    } catch (error) {
+      console.error(`Error updating logistics: ${error}`);
+    }
   }
 
   togglePopup(isVisible?: boolean) {
