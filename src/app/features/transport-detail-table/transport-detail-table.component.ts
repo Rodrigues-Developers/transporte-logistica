@@ -54,11 +54,14 @@ export class TransportDetailTableComponent implements OnInit {
 
   @Input()
   set updateTable(update: boolean) {
+    let refreshTable = true;
+    const moveLeft = true;
     for (let i = 0; i < this.checkedLogisticsElements.length; i++) {
+      refreshTable = i + 1 === this.checkedLogisticsElements.length;
       if (this.selectedLogistics[i].status === "Entregue") {
-        this.setAnimation(this.checkedLogisticsElements[i]);
+        this.setAnimation(this.checkedLogisticsElements[i], !moveLeft, refreshTable);
       } else if (this.delivered) {
-        this.setAnimation(this.checkedLogisticsElements[i], true);
+        this.setAnimation(this.checkedLogisticsElements[i], moveLeft, refreshTable);
       }
     }
   }
@@ -172,7 +175,7 @@ export class TransportDetailTableComponent implements OnInit {
     }
   }
 
-  setAnimation(element: HTMLElement, moveLeft?: boolean): void {
+  setAnimation(element: HTMLElement, moveLeft: boolean, refreshTable: boolean): void {
     const metadata = [
       animate("2s ease-in-out", style({ transform: moveLeft ? "translateX(-100%)" : "translateX(100%)", opacity: 0 })) // Transition for fadeOutRight
     ];
@@ -183,7 +186,7 @@ export class TransportDetailTableComponent implements OnInit {
     player.play();
 
     player.onDone(() => {
-      this.getLogistics();
+      if (refreshTable) this.getLogistics();
     });
   }
 
