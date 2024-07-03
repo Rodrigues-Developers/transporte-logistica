@@ -1,6 +1,7 @@
 <div class="registration">
 
-  <div *ngIf="!xmlData" class="container">
+  @if (!xmlData) {
+  <div class="container">
     <div class="input-container" #inputContainer (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)"
       (drop)="onFileChangeOrDrop($event)">
       <label for="xmlFile">
@@ -11,15 +12,17 @@
       <input id="xmlFile" type="file" (change)="onFileChangeOrDrop($event)" text="Selecione" />
     </div>
   </div>
-
-  <div *ngIf="xmlData" class="xml-data">
+  }
+  
+  @if(xmlData){
+  <div class="xml-data">
     <div class="infor-nf">
 
       <section>
         <div class="treeColls">
           <div> NF-e: {{logistic.nfe}}</div>
           <div>Natureza da Operação: {{logistic.operation}}</div>
-          <div>Data de emissão: {{logistic.emission_date| date: 'dd/MM/yyyy'}}</div>
+          <!-- <div>Data de emissão: {{logistic.emission_date| date: 'dd/MM/yyyy'}}</div> -->
         </div>
         <div class="treeColls">
           <div>Fornecedor: {{supplier.name}}</div>
@@ -42,6 +45,8 @@
         <div>Transportador: {{transporter.name}}</div>
         <div>Volumes: {{logistic.bulk}}</div>
         <div>Frete por conta: {{logistic.shipping_on_account}}</div>
+        <input [(colorPicker)]="color" [style.background]="color" />
+
       </section>
       <section>Dados dos produtos:
         <div class="products">
@@ -60,6 +65,7 @@
         </div>
       </section>
     </div>
+  
     <button class="save-button" role="button" (click)="saveRegistration()">Salvar</button>
 
     <div *ngIf="loadingData && xmlData" class="page-spinner">
@@ -70,3 +76,4 @@
       </div>
     </div>
   </div>
+}

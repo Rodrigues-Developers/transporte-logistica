@@ -7,9 +7,9 @@ export interface Logistic {
   key: String;
   operation: String;
   emission_date: Date;
-  supplier: Company;
-  receiver: Company;
-  transporter: Company;
+  supplier: ObjectId;
+  receiver: ObjectId;
+  transporter: ObjectId;
   freight: Number;
   discount: Number;
   total_product_value: Number;
