@@ -33,7 +33,7 @@
           <td (click)="openSidebar(logis)">{{logis.date_out | date:'dd/MM/yyyy' : 'UTC-00'}}</td>
           <td (click)="openSidebar(logis)">{{logis.arrival_forecast | date:'dd/MM/yyyy' : 'UTC-00'}}</td>
           <td (click)="openSidebar(logis)">{{logis.pin_release | date:'dd/MM/yyyy' : 'UTC-00'}}</td>
-          <td (click)="openSidebar(logis)">{{logis.status}}</td>
+          <td (click)="openSidebar(logis)" [class.delayed]="logis.status === 'Atrasada'" [class.inDate]="logis.status !== 'Atrasada'">{{logis.status}}</td>
         </tr>
       </ng-container>
       <tr *ngIf="loadingData">

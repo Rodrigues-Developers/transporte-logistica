@@ -3,17 +3,21 @@
 @import "../../shared/styles/animations.less";
 
 .container {
-  max-height: 545px;
+  max-height: 80vh;
   overflow-y: scroll;
   overflow-x: hidden;
+  border-radius: 11px;
 }
 .transport__table {
-  width: 950px;
+  width: 80vw;
   margin-right: 3.5rem;
   max-width: 80vw;
 
   thead {
     height: 2.5rem;
+    position: sticky;
+    top: 0;
+    z-index: 1;
 
     tr,
     th {
@@ -94,6 +98,16 @@
           bottom: 0px;
         }
       }
+
+      td:last-child{
+      &.delayed {
+        background: rgb(229 255 0 / 34%);
+      }
+
+      &.inDate {
+        background: rgba(85, 255, 0, 0.34);
+      }
+    }
 
       &:hover {
         th,
