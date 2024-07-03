@@ -1,5 +1,4 @@
-import { HttpHeaders } from "@angular/common/http";
-import { HttpClient } from "@angular/common/http";
+import { HttpHeaders, HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable, map } from "rxjs";
 import { Logistic } from "src/app/core/interfaces/logistic.interface";
@@ -19,7 +18,8 @@ export class LogisticService {
   logistic = {} as Logistic;
 
   /**
-   *
+   * @name getAllLogistics
+   * @description get all logistics on database
    * @returns All logistics
    */
   getAllLogistics(filterByDelivered?: boolean): Observable<Logistic[]> {

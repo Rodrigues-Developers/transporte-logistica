@@ -1,5 +1,6 @@
 import { LogisticService } from "src/app/core/services/logistic.service";
 import { ProductService } from "src/app/core/services/product.service";
+import { CompanyService } from "src/app/core/services/company.service";
 import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Logistic } from "src/app/core/interfaces/logistic.interface";
@@ -7,19 +8,26 @@ import * as xml2js from "xml2js";
 import { Company } from "src/app/core/interfaces/company.interface";
 import { Product } from "src/app/core/interfaces/product.interface";
 import { ToastrService } from "ngx-toastr";
+import { ColorPickerModule } from 'ngx-color-picker';
+import { CommonModule } from "@angular/common";
 
 @Component({
   selector: "app-registration",
+  imports: [ColorPickerModule, CommonModule],
+  standalone: true,
   templateUrl: "./registration.component.html",
   styleUrls: ["./registration.component.less"]
 })
 export class RegistrationComponent implements OnInit {
+  color: string = '#127dbc'
   xmlData: any;
 
   logistic = {} as Logistic;
   logistics: Logistic[] = [];
 
   products: Product[] = [];
+
+  companies: Company[] = [];
 
   supplier = {} as Company;
   receiver = {} as Company;
@@ -31,12 +39,14 @@ export class RegistrationComponent implements OnInit {
     private http: HttpClient,
     private logisticService: LogisticService,
     private productsService: ProductService,
+    private companyService: CompanyService,
     private toastr: ToastrService
   ) {}
   @ViewChild("inputContainer") inputContainerRef!: ElementRef;
 
   ngOnInit(): void {
     this.getLogistics();
+    this.getCompanies();
   }
 
   onDragOver(event: Event): void {
@@ -78,17 +88,13 @@ export class RegistrationComponent implements OnInit {
     });
 
     const { ObjectId } = require("bson");
-    // produsctsIds: Array<ObjectId> ;
 
     const nfeId = new ObjectId();
-    const receiverId = new ObjectId(); //TODO Verify if receiver has create on database.
-    const supplierId = new ObjectId(); //TODO Verify if receiver has create on database.
-    const transporterId = new ObjectId(); //TODO Verify if receiver has create on database.
 
     var emit = this.findKey(this.xmlData, "EMIT");
     var dest = this.findKey(this.xmlData, "DEST");
     var transp = this.findKey(this.xmlData, "TRANSP");
-
+    
     this.logistic._id = nfeId;
     this.logistic.nfe = this.toArrayIfNeeded(this.findKey(this.xmlData, "NNF"));
     this.logistic.key = this.toArrayIfNeeded(this.findKey(this.xmlData, "ID"));
@@ -101,32 +107,65 @@ export class RegistrationComponent implements OnInit {
     this.logistic.bulk = this.toArrayIfNeeded(this.findKey(transp, "QVOL"));
     this.logistic.shipping_on_account = this.toArrayIfNeeded(this.findKey(transp, "MODFRETE"));
     this.logistic.merchandise = [];
+    
+    /**
+     * @description Verify if suplier exist on database.
+     */
+    const suplierCnpj = this.toArrayIfNeeded(this.findKey(emit, "CNPJ"));
+    const foundSuplier = this.companies.find(company => company.cnpj === suplierCnpj);
+    if (foundSuplier) {
+      this.logistic.supplier = foundSuplier._id;
+    } else {
+      const supplierId = new ObjectId();
+      this.supplier._id = supplierId;
+      this.logistic.supplier = supplierId;
+      this.supplier.cnpj = suplierCnpj;
+      this.supplier.name = this.toArrayIfNeeded(this.findKey(emit, "XNOME"));
+      this.supplier.uf = this.toArrayIfNeeded(this.findKey(emit, "UF"));
+      this.supplier.type = "supplier";
+    }
 
-    this.supplier._id = supplierId;
-    this.supplier.cnpj = this.toArrayIfNeeded(this.findKey(emit, "CNPJ"));
-    this.supplier.name = this.toArrayIfNeeded(this.findKey(emit, "XNOME"));
-    this.supplier.uf = this.toArrayIfNeeded(this.findKey(emit, "UF"));
-    this.supplier.type = "supplier";
-    this.logistic.supplier = this.supplier;
+    /**
+     * @description Verify if receiver exist on database.
+     */
+    const receiverCnpj = this.toArrayIfNeeded(this.findKey(dest, "CNPJ"));
+    const foundReceiver = this.companies.find(company => company.cnpj === receiverCnpj);
+    if (foundReceiver) {
+      this.logistic.receiver = foundReceiver._id;
+    } else {
+      const receiverId = new ObjectId();
+      this.logistic.receiver = receiverId;
+      this.receiver._id = receiverId;
+      this.receiver.cnpj = receiverCnpj;
+      this.receiver.name = this.toArrayIfNeeded(this.findKey(dest, "XNOME"));
+      this.receiver.uf = this.toArrayIfNeeded(this.findKey(dest, "UF"));
+      this.receiver.color = ""; //TODO: Create a layout to select a color.
+      this.receiver.type = "receiver";
+    }
 
-    this.receiver._id = receiverId;
-    this.receiver.cnpj = this.toArrayIfNeeded(this.findKey(dest, "CNPJ"));
-    this.receiver.name = this.toArrayIfNeeded(this.findKey(dest, "XNOME"));
-    this.receiver.uf = this.toArrayIfNeeded(this.findKey(dest, "UF"));
-    this.receiver.type = "receiver";
-    this.logistic.receiver = this.receiver;
+    /**
+     * @description Verify if transporter exist on database.
+     */
+    const transporterCnpj = this.toArrayIfNeeded(this.findKey(transp, "CNPJ"));
+    const foundTransporter = this.companies.find(company => company.cnpj === transporterCnpj);
+    if (foundTransporter) {
+      this.logistic.transporter = foundTransporter._id;
+    } else {
+      const transporterId = new ObjectId(); 
+      this.transporter._id = transporterId;
+      this.transporter.cnpj = transporterCnpj;
+      this.transporter.name = this.toArrayIfNeeded(this.findKey(transp, "XNOME"));
+      this.transporter.uf = this.toArrayIfNeeded(this.findKey(transp, "UF"));
+      this.transporter.type = "transporter";
+      this.logistic.transporter = transporterId;
+    }
 
-    this.transporter._id = transporterId;
-    this.transporter.cnpj = this.toArrayIfNeeded(this.findKey(transp, "CNPJ"));
-    this.transporter.name = this.toArrayIfNeeded(this.findKey(transp, "XNOME"));
-    this.transporter.uf = this.toArrayIfNeeded(this.findKey(transp, "UF"));
-    this.transporter.type = "transporter";
-    this.logistic.transporter = this.transporter;
+    /**
+     * @description Implements the products
+     */
     const arrayProduct = this.findKey(this.xmlData, "DET");
-
     arrayProduct.forEach((prod: any) => {
       const productId = new ObjectId();
-
       const newProduct = {
         _id: productId,
         nfeId: nfeId,
@@ -136,7 +175,6 @@ export class RegistrationComponent implements OnInit {
         price: this.toArrayIfNeeded(this.findKey(prod, "VUNCOM")),
         total_price: this.toArrayIfNeeded(this.findKey(prod, "VPROD"))
       } as Product;
-
       this.products.push(newProduct);
       this.logistic.merchandise.push(productId);
     });
@@ -171,6 +209,10 @@ export class RegistrationComponent implements OnInit {
     return value;
   }
 
+  /**
+   * @name saveLogistic
+   * @description Save a new Logistic
+   */
   async saveLogistic() {
     try {
       this.logisticService.createLogistic(this.logistic).subscribe(result => {
@@ -181,6 +223,19 @@ export class RegistrationComponent implements OnInit {
     } catch (error) {
       console.error("Creation error: ", error);
       this.toastr.error("Não foi possivel salvar a nota!", "Falha!");
+    }
+  }
+
+  async saveCompany(company: Company) {
+    try {
+      this.companyService.createCompany(company).subscribe(result => {
+        console.log("Company criado: ", result);
+        this.toastr.success("Empresa Salva", "Sucesso!");
+        this.clearPage();
+      });
+    } catch (error) {
+      console.error("Creation error: ", error);
+      this.toastr.error("Não foi possível salvar a empresa!", "Falha!");
     }
   }
 
@@ -195,13 +250,20 @@ export class RegistrationComponent implements OnInit {
     }
   }
 
+  /**
+   * @name saveRegistration
+   * @description Call functions saveLogistic(), saveProducts() and verify if
+   */
   async saveRegistration() {
     this.loadingData = true;
-    let verify = this.logistics.some(log => log.key === this.logistic.key);
-    console.log(verify);
-    if (!verify) {
+    const verifyl = this.logistics.some(log => log.key === this.logistic.key);
+
+    if (!verifyl) {
       this.saveLogistic();
       this.saveProducts();
+      this.saveCompany(this.transporter);  //TODO Perguntar cor quando salvar pela primeira vêz.
+      this.saveCompany(this.supplier);
+      this.saveCompany(this.receiver);
     } else {
       console.log("A nota fiscal que esta tentando salvar já existe no banco de dados");
       this.toastr.error("A nota fiscal já foi salva!", "Falha!");
@@ -212,6 +274,12 @@ export class RegistrationComponent implements OnInit {
   async getLogistics() {
     this.logisticService.getAllLogistics().subscribe((logistics: Logistic[]) => {
       this.logistics = logistics;
+    });
+  }
+
+  async getCompanies() {
+    this.companyService.getAllCompany().subscribe((companies: Company[]) => {
+      this.companies = companies;
     });
   }
 
