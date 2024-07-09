@@ -168,10 +168,10 @@ export class RegistrationComponent implements OnInit {
       const productId = new ObjectId();
       const newProduct = {
         _id: productId,
-        nfeId: nfeId,
+        // nfeId: nfeId,
         factory_code: this.toArrayIfNeeded(this.findKey(prod, "CPROD")),
         description: this.toArrayIfNeeded(this.findKey(prod, "XPROD")),
-        amount: this.toArrayIfNeeded(this.findKey(prod, "QCOM")),
+        // amount: this.toArrayIfNeeded(this.findKey(prod, "QCOM")),
         price: this.toArrayIfNeeded(this.findKey(prod, "VUNCOM")),
         total_price: this.toArrayIfNeeded(this.findKey(prod, "VPROD"))
       } as Product;

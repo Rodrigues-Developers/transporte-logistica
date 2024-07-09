@@ -1,10 +1,9 @@
-import { ObjectId } from 'mongodb';
+import { ObjectId } from "mongodb";
 
 export interface Product {
   _id?: ObjectId;
-  nfeId: ObjectId;
+  nfeRef: nfeReference[];
   description: string;
-  amount: number;
   price: number;
   total_price: number;
   group?: string;
@@ -12,6 +11,11 @@ export interface Product {
   factory_code: number;
   sub_group?: string;
   sys_code?: number;
+}
+
+export interface nfeReference {
+  nfeId: ObjectId;
+  amount: number;
 }
 
 export interface GroupedProducts {
