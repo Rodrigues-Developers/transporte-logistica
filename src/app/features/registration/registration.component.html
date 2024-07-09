@@ -22,7 +22,7 @@
         <div class="treeColls">
           <div> NF-e: {{logistic.nfe}}</div>
           <div>Natureza da Operação: {{logistic.operation}}</div>
-          <!-- <div>Data de emissão: {{logistic.emission_date| date: 'dd/MM/yyyy'}}</div> -->
+          <div>Data de emissão: {{logistic.emission_date| date: 'dd/MM/yyyy'}}</div>
         </div>
         <div class="treeColls">
           <div>Fornecedor: {{supplier.name}}</div>
@@ -36,10 +36,10 @@
         </div>
       </section>
       <section class="fourColls">
-        <div>Frete: {{logistic.freight}}</div>
-        <div>Desconto: {{logistic.discount}}</div>
-        <div>Valor total dos produtos: {{logistic.total_product_value}}</div>
-        <div>Valor total da nota: {{logistic.total_note_value}}</div>
+        <div>Frete: {{logistic.freight | currency:'BRL':'symbol':'1.2-2'}}</div>
+        <div>Desconto: {{logistic.discount | currency:'BRL':'symbol':'1.2-2'}}</div>
+        <div>Valor total dos produtos: {{logistic.total_product_value | currency:'BRL':'symbol':'1.2-2'}}</div>
+        <div>Valor total da nota: {{logistic.total_note_value | currency:'BRL':'symbol':'1.2-2'}}</div>
       </section>
       <section class="treeColls">
         <div>Transportador: {{transporter.name}}</div>
@@ -59,9 +59,9 @@
         <div *ngFor="let prod of products" class="products">
           <div>{{prod.factory_code}}</div>
           <div>{{prod.description}}</div>
-          <div>{{prod.amount}}</div>
-          <div>{{prod.price}}</div>
-          <div>{{prod.total_price}}</div>
+          <div>{{prod.nfeRef}}</div><!--TODO: -->
+          <div>{{prod.price | currency:'BRL':'symbol':'1.2-2'}}</div>
+          <div>{{prod.total_price | currency:'BRL':'symbol':'1.2-2'}}</div>
         </div>
       </section>
     </div>

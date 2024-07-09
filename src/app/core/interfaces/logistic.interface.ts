@@ -10,13 +10,13 @@ export interface Logistic {
   supplier: ObjectId;
   receiver: ObjectId;
   transporter: ObjectId;
-  freight: Number;
-  discount: Number;
-  total_product_value: Number;
-  total_note_value: Number;
+  freight: number;
+  discount: number;
+  total_product_value: number;
+  total_note_value: number;
   arrival_forecast?: Date;
   date_out?: Date;
-  bulk: Number;
+  bulk: number;
   shipping_on_account: boolean;
   merchandise: ObjectId[];
   note?: UserNote[];
