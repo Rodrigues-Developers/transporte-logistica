@@ -8,7 +8,7 @@ import * as xml2js from "xml2js";
 import { Company } from "src/app/core/interfaces/company.interface";
 import { Product } from "src/app/core/interfaces/product.interface";
 import { ToastrService } from "ngx-toastr";
-import { ColorPickerModule } from 'ngx-color-picker';
+import { ColorPickerModule } from "ngx-color-picker";
 import { CommonModule } from "@angular/common";
 
 @Component({
@@ -19,7 +19,7 @@ import { CommonModule } from "@angular/common";
   styleUrls: ["./registration.component.less"]
 })
 export class RegistrationComponent implements OnInit {
-  color: string = '#127dbc'
+  color: string = "#127dbc";
   xmlData: any;
 
   logistic = {} as Logistic;
@@ -94,7 +94,7 @@ export class RegistrationComponent implements OnInit {
     var emit = this.findKey(this.xmlData, "EMIT");
     var dest = this.findKey(this.xmlData, "DEST");
     var transp = this.findKey(this.xmlData, "TRANSP");
-    
+
     this.logistic._id = nfeId;
     this.logistic.nfe = this.toArrayIfNeeded(this.findKey(this.xmlData, "NNF"));
     this.logistic.key = this.toArrayIfNeeded(this.findKey(this.xmlData, "ID"));
@@ -107,7 +107,7 @@ export class RegistrationComponent implements OnInit {
     this.logistic.bulk = this.toArrayIfNeeded(this.findKey(transp, "QVOL"));
     this.logistic.shipping_on_account = this.toArrayIfNeeded(this.findKey(transp, "MODFRETE"));
     this.logistic.merchandise = [];
-    
+
     /**
      * @description Verify if suplier exist on database.
      */
@@ -115,6 +115,7 @@ export class RegistrationComponent implements OnInit {
     const foundSuplier = this.companies.find(company => company.cnpj === suplierCnpj);
     if (foundSuplier) {
       this.logistic.supplier = foundSuplier._id;
+      this.supplier = foundSuplier;
     } else {
       const supplierId = new ObjectId();
       this.supplier._id = supplierId;
@@ -132,6 +133,7 @@ export class RegistrationComponent implements OnInit {
     const foundReceiver = this.companies.find(company => company.cnpj === receiverCnpj);
     if (foundReceiver) {
       this.logistic.receiver = foundReceiver._id;
+      this.receiver = foundReceiver;
     } else {
       const receiverId = new ObjectId();
       this.logistic.receiver = receiverId;
@@ -150,8 +152,9 @@ export class RegistrationComponent implements OnInit {
     const foundTransporter = this.companies.find(company => company.cnpj === transporterCnpj);
     if (foundTransporter) {
       this.logistic.transporter = foundTransporter._id;
+      this.transporter = foundTransporter;
     } else {
-      const transporterId = new ObjectId(); 
+      const transporterId = new ObjectId();
       this.transporter._id = transporterId;
       this.transporter.cnpj = transporterCnpj;
       this.transporter.name = this.toArrayIfNeeded(this.findKey(transp, "XNOME"));
@@ -165,13 +168,18 @@ export class RegistrationComponent implements OnInit {
      */
     const arrayProduct = this.findKey(this.xmlData, "DET");
     arrayProduct.forEach((prod: any) => {
+      //TODO: Verify if product exist on database.
+      const factCode = this.toArrayIfNeeded(this.findKey(prod, "CPROD"));
+      // const product = this.products.find(product => product.factory_code === factCode);
       const productId = new ObjectId();
       const newProduct = {
         _id: productId,
-        // nfeId: nfeId,
         factory_code: this.toArrayIfNeeded(this.findKey(prod, "CPROD")),
+        nfeRef: new Array({
+          nfeId: nfeId,
+          amount: this.toArrayIfNeeded(this.findKey(prod, "QCOM"))
+        }),
         description: this.toArrayIfNeeded(this.findKey(prod, "XPROD")),
-        // amount: this.toArrayIfNeeded(this.findKey(prod, "QCOM")),
         price: this.toArrayIfNeeded(this.findKey(prod, "VUNCOM")),
         total_price: this.toArrayIfNeeded(this.findKey(prod, "VPROD"))
       } as Product;
@@ -242,9 +250,14 @@ export class RegistrationComponent implements OnInit {
   async saveProducts() {
     for (const product of this.products) {
       try {
-        const result = await this.productsService.createProduct(product).toPromise();
-        console.log("Products criado: ", result);
-      } catch (error) {
+        this.productsService.createProduct(product).subscribe(result => {
+          console.log("Products criado: ", result);
+          
+        });
+      } catch (error: any) {
+        if (error.code === 11000) {
+          console.error("### Error 11000 ###");
+        }
         console.error("Erro ao criar products: ", error);
       }
     }
@@ -261,7 +274,7 @@ export class RegistrationComponent implements OnInit {
     if (!verifyl) {
       this.saveLogistic();
       this.saveProducts();
-      this.saveCompany(this.transporter);  //TODO Perguntar cor quando salvar pela primeira vêz.
+      this.saveCompany(this.transporter); //TODO Perguntar cor quando salvar pela primeira vêz.
       this.saveCompany(this.supplier);
       this.saveCompany(this.receiver);
     } else {

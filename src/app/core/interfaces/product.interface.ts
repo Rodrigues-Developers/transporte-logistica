@@ -8,7 +8,7 @@ export interface Product {
   total_price: number;
   group?: string;
   brand: string;
-  factory_code: number;
+  factory_code: string;
   sub_group?: string;
   sys_code?: number;
 }
