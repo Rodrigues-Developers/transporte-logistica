@@ -51,16 +51,16 @@ export class ProductsTrackingComponent implements OnInit, AfterViewInit {
   }
 
   groupProductsByCode() {
-    const allProducts = this.products;
-    const groupedProducts = allProducts.reduce((acc, currentItem) => {
-      if (!acc[currentItem.factory_code]) {
-        acc[currentItem.factory_code] = [];
-      }
-      acc[currentItem.factory_code].push(currentItem);
-      return acc;
-    }, {} as GroupedProducts);
+    // const allProducts = this.products;
+    // const groupedProducts = allProducts.reduce((acc, currentItem) => {
+    //   if (!acc[currentItem.factory_code]) {
+    //     acc[currentItem.factory_code] = [];
+    //   }
+    //   acc[currentItem.factory_code].push(currentItem);
+    //   return acc;
+    // }, {} as GroupedProducts);
 
-    this.productsArray = objectValuesToArray(groupedProducts);
+    // this.productsArray = objectValuesToArray(groupedProducts);
   }
 
   placeProductsOnTop(prodCards: ElementRef<any>[]) {

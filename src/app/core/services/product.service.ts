@@ -41,7 +41,7 @@ export class ProductService {
    */
   getAllProducts = async (): Promise<Observable<Product[]>> => {
     return this.http.get<Product[]>(this.url + "products");
-  };
+  }
 
   /**
    * Retrieves a product by its ID from the server.
