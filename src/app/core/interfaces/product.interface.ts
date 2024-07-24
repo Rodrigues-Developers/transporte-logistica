@@ -2,7 +2,7 @@ import { ObjectId } from "mongodb";
 
 export interface Product {
   _id?: ObjectId;
-  nfeRef: nfeReference[];
+  nfeReference: nfeReference[];
   description: string;
   price: number;
   total_price: number;
