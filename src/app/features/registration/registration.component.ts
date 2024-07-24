@@ -10,6 +10,9 @@ import { Product } from "src/app/core/interfaces/product.interface";
 import { ToastrService } from "ngx-toastr";
 import { ColorPickerModule } from "ngx-color-picker";
 import { CommonModule } from "@angular/common";
+import { ObjectId } from "mongodb";
+import { of } from "rxjs";
+import { catchError } from "rxjs/operators";
 
 @Component({
   selector: "app-registration",
@@ -168,20 +171,32 @@ export class RegistrationComponent implements OnInit {
      */
     const arrayProduct = this.findKey(this.xmlData, "DET");
     arrayProduct.forEach((prod: any) => {
-      //TODO: Verify if product exist on database.
-      const factCode = this.toArrayIfNeeded(this.findKey(prod, "CPROD"));
-      // const product = this.products.find(product => product.factory_code === factCode);
       const productId = new ObjectId();
+      const factory_code = this.toArrayIfNeeded(this.findKey(prod, "CPROD"));
+      const amount = this.toArrayIfNeeded(this.findKey(prod, "QCOM"));
+      const description = this.toArrayIfNeeded(this.findKey(prod, "XPROD"));
+      const price = this.toArrayIfNeeded(this.findKey(prod, "VUNCOM"));
+      const total_price = this.toArrayIfNeeded(this.findKey(prod, "VPROD"));
+
+      console.log("nfeId:", nfeId);
+      console.log("factory_code:", factory_code);
+      console.log("amount:", amount);
+      console.log("description:", description);
+      console.log("price:", price);
+      console.log("total_price:", total_price);
+
       const newProduct = {
         _id: productId,
-        factory_code: this.toArrayIfNeeded(this.findKey(prod, "CPROD")),
-        nfeRef: new Array({
-          nfeId: nfeId,
-          amount: this.toArrayIfNeeded(this.findKey(prod, "QCOM"))
-        }),
-        description: this.toArrayIfNeeded(this.findKey(prod, "XPROD")),
-        price: this.toArrayIfNeeded(this.findKey(prod, "VUNCOM")),
-        total_price: this.toArrayIfNeeded(this.findKey(prod, "VPROD"))
+        factory_code: factory_code,
+        nfeReference: [
+          {
+            nfeId: nfeId,
+            amount: amount
+          }
+        ],
+        description: description,
+        price: price,
+        total_price: total_price
       } as Product;
       this.products.push(newProduct);
       this.logistic.merchandise.push(productId);
@@ -217,6 +232,11 @@ export class RegistrationComponent implements OnInit {
     return value;
   }
 
+  getAmountByNfeId(product: Product, nfeId: ObjectId): number | null {
+    const nfeRef = product.nfeReference.find(ref => ref.nfeId.equals(nfeId));
+    return nfeRef ? nfeRef.amount : null;
+  }
+
   /**
    * @name saveLogistic
    * @description Save a new Logistic
@@ -249,19 +269,56 @@ export class RegistrationComponent implements OnInit {
 
   async saveProducts() {
     for (const product of this.products) {
-      try {
-        this.productsService.createProduct(product).subscribe(result => {
-          console.log("Products criado: ", result);
-          
+      this.productsService
+        .createProduct(product)
+        .pipe(
+          catchError((error: any) => {
+            // Tratamento de erro
+            console.error("Erro ao criar product: ", error);
+            if (error.error.status === 409) {
+              // Código de duplicidade
+              console.error("### Produto duplicado encontrado ###");
+              const existingProduct = error.error.existingProduct;
+              if (existingProduct) {
+                console.log("### PRODUTO EXISTENTE ###", existingProduct);
+                this.logistic.merchandise.push(existingProduct._id);
+                this.productsService.updateProduct(existingProduct._id, existingProduct).subscribe(
+                  updated => console.log("Produto atualizado: ", updated),
+                  updateError => console.error("Erro ao atualizar produto: ", updateError)
+                );
+              }
+            }
+            // Retorna um Observable vazio para continuar o fluxo
+            return of(null);
+          })
+        )
+        .subscribe(result => {
+          if (result) {
+            console.log("Produto criado: ", result);
+          }
         });
-      } catch (error: any) {
-        if (error.code === 11000) {
-          console.error("### Error 11000 ###");
-        }
-        console.error("Erro ao criar products: ", error);
-      }
     }
   }
+
+  // async saveProducts() {
+  //   for (const product of this.products) {
+  //     try {
+  //       this.productsService.createProduct(product).subscribe(result => {
+  //         console.log("Products criado: ", result);
+  //       });
+  //     } catch (error: any) {
+  //       const existingProduct = error.error.existingProduct;
+  //       console.error("### PRODUTO EXISTENTE ###",existingProduct);
+  //       if (error.status === 409) {
+  //         console.error("### Error 11000 ###");
+  //         this.logistic.merchandise.push(existingProduct._id);
+  //         this.productsService.updateProduct(existingProduct._id, existingProduct);
+  //         //TODO: handle error 499 by updating instead of inserting.
+  //       }
+  //       console.error("Erro ao criar products: ", error);
+  //     }
+  //   }
+  // }
 
   /**
    * @name saveRegistration
