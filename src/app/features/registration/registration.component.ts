@@ -1,3 +1,4 @@
+import { nfeReference } from "./../../core/interfaces/product.interface";
 import { LogisticService } from "src/app/core/services/logistic.service";
 import { ProductService } from "src/app/core/services/product.service";
 import { CompanyService } from "src/app/core/services/company.service";
@@ -11,8 +12,9 @@ import { ToastrService } from "ngx-toastr";
 import { ColorPickerModule } from "ngx-color-picker";
 import { CommonModule } from "@angular/common";
 import { ObjectId } from "mongodb";
-import { of } from "rxjs";
+import { of, Subscription, throwError } from "rxjs";
 import { catchError } from "rxjs/operators";
+import { DataShareService } from "src/app/core/services/data-share.service";
 
 @Component({
   selector: "app-registration",
@@ -38,9 +40,13 @@ export class RegistrationComponent implements OnInit {
 
   loadingData = false;
 
+  private logisticObservableSubscription: Subscription = new Subscription();
+  logisticLocal = {} as Logistic;
+
   constructor(
     private http: HttpClient,
     private logisticService: LogisticService,
+    private dataShareService: DataShareService,
     private productsService: ProductService,
     private companyService: CompanyService,
     private toastr: ToastrService
@@ -50,6 +56,11 @@ export class RegistrationComponent implements OnInit {
   ngOnInit(): void {
     this.getLogistics();
     this.getCompanies();
+    this.logisticObservableSubscription = this.dataShareService
+      .getDataObservable()
+      .subscribe((newLogistic: Logistic) => {
+        this.logisticLocal = newLogistic;
+      });
   }
 
   onDragOver(event: Event): void {
@@ -111,6 +122,7 @@ export class RegistrationComponent implements OnInit {
     this.logistic.shipping_on_account = this.toArrayIfNeeded(this.findKey(transp, "MODFRETE"));
     this.logistic.merchandise = [];
 
+
     /**
      * @description Verify if suplier exist on database.
      */
@@ -144,7 +156,7 @@ export class RegistrationComponent implements OnInit {
       this.receiver.cnpj = receiverCnpj;
       this.receiver.name = this.toArrayIfNeeded(this.findKey(dest, "XNOME"));
       this.receiver.uf = this.toArrayIfNeeded(this.findKey(dest, "UF"));
-      this.receiver.color = ""; //TODO: Create a layout to select a color.
+      this.receiver.color = ""; 
       this.receiver.type = "receiver";
     }
 
@@ -178,13 +190,6 @@ export class RegistrationComponent implements OnInit {
       const price = this.toArrayIfNeeded(this.findKey(prod, "VUNCOM"));
       const total_price = this.toArrayIfNeeded(this.findKey(prod, "VPROD"));
 
-      console.log("nfeId:", nfeId);
-      console.log("factory_code:", factory_code);
-      console.log("amount:", amount);
-      console.log("description:", description);
-      console.log("price:", price);
-      console.log("total_price:", total_price);
-
       const newProduct = {
         _id: productId,
         factory_code: factory_code,
@@ -201,6 +206,8 @@ export class RegistrationComponent implements OnInit {
       this.products.push(newProduct);
       this.logistic.merchandise.push(productId);
     });
+
+    this.dataShareService.setData(this.logistic);
   }
 
   /**
@@ -246,7 +253,6 @@ export class RegistrationComponent implements OnInit {
       this.logisticService.createLogistic(this.logistic).subscribe(result => {
         console.log("Logistic criado: ", result);
         this.toastr.success("Nota Salva", "Sucesso!");
-        this.clearPage();
       });
     } catch (error) {
       console.error("Creation error: ", error);
@@ -259,7 +265,6 @@ export class RegistrationComponent implements OnInit {
       this.companyService.createCompany(company).subscribe(result => {
         console.log("Company criado: ", result);
         this.toastr.success("Empresa Salva", "Sucesso!");
-        this.clearPage();
       });
     } catch (error) {
       console.error("Creation error: ", error);
@@ -273,22 +278,7 @@ export class RegistrationComponent implements OnInit {
         .createProduct(product)
         .pipe(
           catchError((error: any) => {
-            // Tratamento de erro
-            console.error("Erro ao criar product: ", error);
-            if (error.error.status === 409) {
-              // Código de duplicidade
-              console.error("### Produto duplicado encontrado ###");
-              const existingProduct = error.error.existingProduct;
-              if (existingProduct) {
-                console.log("### PRODUTO EXISTENTE ###", existingProduct);
-                this.logistic.merchandise.push(existingProduct._id);
-                this.productsService.updateProduct(existingProduct._id, existingProduct).subscribe(
-                  updated => console.log("Produto atualizado: ", updated),
-                  updateError => console.error("Erro ao atualizar produto: ", updateError)
-                );
-              }
-            }
-            // Retorna um Observable vazio para continuar o fluxo
+            this.handleError(error, product);
             return of(null);
           })
         )
@@ -300,25 +290,16 @@ export class RegistrationComponent implements OnInit {
     }
   }
 
-  // async saveProducts() {
-  //   for (const product of this.products) {
-  //     try {
-  //       this.productsService.createProduct(product).subscribe(result => {
-  //         console.log("Products criado: ", result);
-  //       });
-  //     } catch (error: any) {
-  //       const existingProduct = error.error.existingProduct;
-  //       console.error("### PRODUTO EXISTENTE ###",existingProduct);
-  //       if (error.status === 409) {
-  //         console.error("### Error 11000 ###");
-  //         this.logistic.merchandise.push(existingProduct._id);
-  //         this.productsService.updateProduct(existingProduct._id, existingProduct);
-  //         //TODO: handle error 499 by updating instead of inserting.
-  //       }
-  //       console.error("Erro ao criar products: ", error);
-  //     }
-  //   }
-  // }
+  handleError(error: any, product: Product) {
+    if (error.status === 409) {
+      const existingProduct = error.error.existingProduct;
+      const logistic = this.dataShareService.getData() as Logistic;
+      logistic.merchandise.push(existingProduct._id as ObjectId);
+      existingProduct.nfeReference.push(product.nfeReference[0]);
+      this.logisticService.updateLogistic(logistic);
+      this.productsService.updateProduct(existingProduct._id, existingProduct);
+    }
+  }
 
   /**
    * @name saveRegistration
@@ -329,11 +310,15 @@ export class RegistrationComponent implements OnInit {
     const verifyl = this.logistics.some(log => log.key === this.logistic.key);
 
     if (!verifyl) {
-      this.saveLogistic();
-      this.saveProducts();
-      this.saveCompany(this.transporter); //TODO Perguntar cor quando salvar pela primeira vêz.
-      this.saveCompany(this.supplier);
-      this.saveCompany(this.receiver);
+      try {
+        this.saveProducts();
+        this.saveLogistic();
+        this.saveCompany(this.transporter); //TODO Perguntar cor quando salvar pela primeira vêz.
+        this.saveCompany(this.supplier);
+        this.saveCompany(this.receiver);
+      } finally {
+        this.clearPage();
+      }
     } else {
       console.log("A nota fiscal que esta tentando salvar já existe no banco de dados");
       this.toastr.error("A nota fiscal já foi salva!", "Falha!");
