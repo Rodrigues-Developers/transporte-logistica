@@ -12,7 +12,7 @@ import { ToastrService } from "ngx-toastr";
 import { ColorPickerModule } from "ngx-color-picker";
 import { CommonModule } from "@angular/common";
 import { ObjectId } from "mongodb";
-import { of, Subscription, throwError } from "rxjs";
+import { lastValueFrom, of, Subscription, throwError } from "rxjs";
 import { catchError } from "rxjs/operators";
 import { DataShareService } from "src/app/core/services/data-share.service";
 
@@ -122,7 +122,6 @@ export class RegistrationComponent implements OnInit {
     this.logistic.shipping_on_account = this.toArrayIfNeeded(this.findKey(transp, "MODFRETE"));
     this.logistic.merchandise = [];
 
-
     /**
      * @description Verify if suplier exist on database.
      */
@@ -156,7 +155,7 @@ export class RegistrationComponent implements OnInit {
       this.receiver.cnpj = receiverCnpj;
       this.receiver.name = this.toArrayIfNeeded(this.findKey(dest, "XNOME"));
       this.receiver.uf = this.toArrayIfNeeded(this.findKey(dest, "UF"));
-      this.receiver.color = ""; 
+      this.receiver.color = "";
       this.receiver.type = "receiver";
     }
 
@@ -204,7 +203,6 @@ export class RegistrationComponent implements OnInit {
         total_price: total_price
       } as Product;
       this.products.push(newProduct);
-      this.logistic.merchandise.push(productId);
     });
 
     this.dataShareService.setData(this.logistic);
@@ -248,16 +246,27 @@ export class RegistrationComponent implements OnInit {
    * @name saveLogistic
    * @description Save a new Logistic
    */
-  async saveLogistic() {
-    try {
-      this.logisticService.createLogistic(this.logistic).subscribe(result => {
-        console.log("Logistic criado: ", result);
-        this.toastr.success("Nota Salva", "Sucesso!");
-      });
-    } catch (error) {
-      console.error("Creation error: ", error);
-      this.toastr.error("Não foi possivel salvar a nota!", "Falha!");
-    }
+  async saveLogistic(): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      try {
+        this.logisticService.createLogistic(this.logistic).subscribe(
+          result => {
+            console.log("Logistic criado: ", result);
+            this.toastr.success("Nota Salva", "Sucesso!");
+            resolve();
+          },
+          error => {
+            console.error("Creation error: ", error);
+            this.toastr.error("Não foi possível salvar a nota! ", "Falha");
+            reject(error);
+          }
+        );
+      } catch (error) {
+        console.error("Creation error: ", error);
+        this.toastr.error("Não foi possível salvar a nota!", "Falha!");
+        reject(error);
+      }
+    });
   }
 
   async saveCompany(company: Company) {
@@ -272,32 +281,41 @@ export class RegistrationComponent implements OnInit {
     }
   }
 
-  async saveProducts() {
-    for (const product of this.products) {
-      this.productsService
-        .createProduct(product)
-        .pipe(
-          catchError((error: any) => {
-            this.handleError(error, product);
-            return of(null);
-          })
-        )
-        .subscribe(result => {
-          if (result) {
-            console.log("Produto criado: ", result);
-          }
-        });
-    }
+  async saveProducts(): Promise<void> {
+    const productPromise = this.products.map( async (product) => {
+      try {
+        const result = await lastValueFrom(
+          this.productsService.createProduct(product).pipe(
+            catchError((error: any) => {
+              this.handleError(error, product);
+              return of(null);
+            })
+          )
+        );
+        if (result && result._id) {
+          this.logistic.merchandise.push(result._id); 
+          console.log("Produto criado: ", result);
+        }
+      } catch (error) {
+        console.error('Unexpected error:', error);
+      }
+    });
+    await Promise.all(productPromise);
   }
 
   handleError(error: any, product: Product) {
     if (error.status === 409) {
       const existingProduct = error.error.existingProduct;
-      const logistic = this.dataShareService.getData() as Logistic;
-      logistic.merchandise.push(existingProduct._id as ObjectId);
       existingProduct.nfeReference.push(product.nfeReference[0]);
-      this.logisticService.updateLogistic(logistic);
-      this.productsService.updateProduct(existingProduct._id, existingProduct);
+      this.updateProduct(existingProduct);
+    }
+  }
+
+  updateProduct(product: Product) {
+    try {
+      this.productsService.updateProduct(product).subscribe();
+    } catch (error) {
+      console.error(error);
     }
   }
 
@@ -311,9 +329,9 @@ export class RegistrationComponent implements OnInit {
 
     if (!verifyl) {
       try {
-        this.saveProducts();
-        this.saveLogistic();
-        this.saveCompany(this.transporter); //TODO Perguntar cor quando salvar pela primeira vêz.
+        await this.saveProducts();
+        await this.saveLogistic();
+        this.saveCompany(this.transporter);
         this.saveCompany(this.supplier);
         this.saveCompany(this.receiver);
       } finally {
