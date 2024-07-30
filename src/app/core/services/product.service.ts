@@ -37,13 +37,14 @@ export class ProductService {
     return this.http.post<Product>(`${this.url}products`, Product, httpOptions);
   }
 
-  updateProduct(Productid: string, Product: Product): Observable<Product> {
-    const apiurl = `${this.url}/${Productid}`;
+  updateProduct(Product: Product): Observable<Product> {
+    const apiurl = `${this.url}products/${Product._id}`;
+    console.log(`Updating product at ${apiurl}`, Product);
     return this.http.put<Product>(apiurl, Product, httpOptions);
   }
 
   deleteProductById(Productid: string): Observable<number> {
-    const apiurl = `${this.url}/${Productid}`;
+    const apiurl = `${this.url}products/${Productid}`;
     return this.http.delete<number>(apiurl, httpOptions);
   }
 }

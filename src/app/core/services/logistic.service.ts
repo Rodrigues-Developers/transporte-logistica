@@ -35,6 +35,8 @@ export class LogisticService {
 
   updateLogistic(logistic: Logistic): Observable<Logistic> {
     const apiurl = `${this.url}logistics/${logistic._id}`;
+    console.log(`Updating logistic at ${apiurl}`, logistic);
+
     return this.http.put<Logistic>(apiurl, logistic, httpOptions);
   }
 
