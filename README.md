@@ -2,7 +2,7 @@
 
 ## Documentation
 
-https://machado21.github.io/transporte-logistica/
+[documentação](https://rodrigues-developers.github.io/transporte-logistica/)
 
 ## How to install
 
