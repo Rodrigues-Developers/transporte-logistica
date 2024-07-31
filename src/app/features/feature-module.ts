@@ -35,7 +35,7 @@ import { PopupComponent } from "../shared/popup/popup.component";
     DetailsComponent,
     DeliveredComponent,
     ProductsTrackingComponent,
-        TrackingComponent,
+    TrackingComponent,
     TransportDetailTableComponent
   ]
 })
