@@ -306,6 +306,7 @@ export class RegistrationComponent implements OnInit {
   handleError(error: any, product: Product) {
     if (error.status === 409) {
       const existingProduct = error.error.existingProduct;
+      this.logistic.merchandise.push(existingProduct._id);
       existingProduct.nfeReference.push(product.nfeReference[0]);
       this.updateProduct(existingProduct);
     }
