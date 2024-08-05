@@ -81,6 +81,73 @@
         align-items: center;
         padding: 5px;
       }
+
+      .picker-container {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        background: @background-registration-colorpicker;
+        .colors {
+          position: relative;
+          padding: 0;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          background: #28292b;
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 1);
+          border-radius: 10px;
+          span {
+            position: relative;
+            width: 20px;
+            height: 30px;
+            border-radius: 20px;
+            background: @background-registration-colorpicker;
+            margin: 5px 17px;
+            cursor: pointer;
+
+            &.active {
+              &::before {
+                top: 0;
+                opacity: 1;
+                scale: 1.25;
+                box-shadow: 0 0 10px var(--clr), 0 0 20px var(--clr), 0 0 50px var(--clr);
+              }
+            }
+
+            &::before {
+              top: 13px;
+              content: "";
+              position: absolute;
+              left: 0;
+              width: 20px;
+              height: 20px;
+              background: var(--clr);
+              border-radius: 20px;
+              transition: 0.5s;
+              scale: 0.8;
+
+              &:hover {
+                left: 10px;
+                opacity: 1;
+                scale: 1;
+              }
+            }
+          }
+        }
+        .box {
+          caret-color: transparent;
+          cursor: pointer;
+          position: relative;
+          width: 100%;
+          height: 80%;
+          background: #28292b;
+          border-radius: 10px;
+          transition: 0.5s;
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+          margin-left: 0.8rem;
+          border: 1px solid black;
+        }
+      }
     }
 
     .treeColls:not(:last-child) {

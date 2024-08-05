@@ -13,11 +13,10 @@
     </div>
   </div>
   }
-  
+
   @if(xmlData){
   <div class="xml-data">
     <div class="infor-nf">
-
       <section>
         <div class="treeColls">
           <div> NF-e: {{logistic.nfe}}</div>
@@ -45,7 +44,17 @@
         <div>Transportador: {{transporter.name}}</div>
         <div>Volumes: {{logistic.bulk}}</div>
         <div>Frete por conta: {{logistic.shipping_on_account}}</div>
-        <input [(colorPicker)]="color" [style.background]="color" />
+        <div class="picker-container">
+          <div class="colors">
+            <span (click)="changeColor('#ff6b6b', $event)" style="--clr:#ff6b6b;"></span>
+            <span (click)="changeColor('#1dd1a1', $event)" style="--clr:#1dd1a1;"></span>
+            <span (click)="changeColor('#2e86de', $event)" style="--clr:#2e86de;"></span>
+            <span (click)="changeColor('#f368e0', $event)" style="--clr:#f368e0;"></span>
+            <span (click)="changeColor('#ff9f43', $event)" style="--clr:#ff9f43;"></span>
+          </div>
+          <!-- <div class="box"></div> -->
+          <input class="box" [(colorPicker)]="color" [style.background]="color" (click)="removeActiveColor()" readonly />
+        </div>
 
       </section>
       <section>Dados dos produtos:
@@ -65,7 +74,7 @@
         </div>
       </section>
     </div>
-  
+
     <button class="save-button" role="button" (click)="saveRegistration()">Salvar</button>
 
     <div *ngIf="loadingData && xmlData" class="page-spinner">
@@ -76,4 +85,4 @@
       </div>
     </div>
   </div>
-}
+  }

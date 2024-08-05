@@ -62,6 +62,28 @@ export class RegistrationComponent implements OnInit {
       });
   }
 
+  removeActiveColor() {
+    // Removing the "active" class from all color spans
+    document.querySelectorAll(".colors span").forEach(function (item) {
+      item.classList.remove("active");
+    });
+  }
+
+  changeColor(color: string, e: Event) {
+    // Selecting the box element with the class "box"
+    let box = document.querySelector(".box") as HTMLElement;
+
+    if (box) {
+      this.color = color;
+
+      this.removeActiveColor();
+
+      // Adding the "active" class to the clicked color span, highlighting the selected color
+      (e.target as HTMLElement).classList.add("active");
+    }
+    ("");
+  }
+
   onDragOver(event: Event): void {
     event.preventDefault();
     event.stopPropagation();
@@ -281,7 +303,7 @@ export class RegistrationComponent implements OnInit {
   }
 
   async saveProducts(): Promise<void> {
-    const productPromise = this.products.map( async (product) => {
+    const productPromise = this.products.map(async product => {
       try {
         const result = await lastValueFrom(
           this.productsService.createProduct(product).pipe(
@@ -292,11 +314,11 @@ export class RegistrationComponent implements OnInit {
           )
         );
         if (result && result._id) {
-          this.logistic.merchandise.push(result._id); 
+          this.logistic.merchandise.push(result._id);
           console.log("Produto criado: ", result);
         }
       } catch (error) {
-        console.error('Unexpected error:', error);
+        console.error("Unexpected error:", error);
       }
     });
     await Promise.all(productPromise);
