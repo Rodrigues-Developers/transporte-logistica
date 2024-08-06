@@ -14,16 +14,17 @@ import { ObjectId } from "mongodb";
 import { lastValueFrom, of, Subscription, throwError } from "rxjs";
 import { catchError } from "rxjs/operators";
 import { DataShareService } from "src/app/core/services/data-share.service";
+import { MatIcon } from "@angular/material/icon";
 
 @Component({
   selector: "app-registration",
-  imports: [CommonModule],
+  imports: [CommonModule, MatIcon],
   standalone: true,
   templateUrl: "./registration.component.html",
   styleUrls: ["./registration.component.less"]
 })
 export class RegistrationComponent implements OnInit {
-  color: string = "#127dbc";
+  color: string = "";
   xmlData: any;
 
   logistic = {} as Logistic;
