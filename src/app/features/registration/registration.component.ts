@@ -79,7 +79,6 @@ export class RegistrationComponent implements OnInit {
       this.color = color;
 
       this.removeActiveColor();
-
       // Adding the "active" class to the clicked color span, highlighting the selected color
       (e.target as HTMLElement).classList.add("active");
     }
