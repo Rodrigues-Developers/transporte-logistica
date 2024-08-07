@@ -1,6 +1,7 @@
 <div class="registration">
 
-  <div *ngIf="!xmlData" class="container">
+  @if (!xmlData) {
+  <div class="container">
     <div class="input-container" #inputContainer (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)"
       (drop)="onFileChangeOrDrop($event)">
       <label for="xmlFile">
@@ -11,8 +12,10 @@
       <input id="xmlFile" type="file" (change)="onFileChangeOrDrop($event)" text="Selecione" />
     </div>
   </div>
-
-  <div *ngIf="xmlData" class="xml-data">
+  }
+  
+  @if(xmlData){
+  <div class="xml-data">
     <div class="infor-nf">
 
       <section>
@@ -33,15 +36,17 @@
         </div>
       </section>
       <section class="fourColls">
-        <div>Frete: {{logistic.freight}}</div>
-        <div>Desconto: {{logistic.discount}}</div>
-        <div>Valor total dos produtos: {{logistic.total_product_value}}</div>
-        <div>Valor total da nota: {{logistic.total_note_value}}</div>
+        <div>Frete: {{logistic.freight | currency:'BRL':'symbol':'1.2-2'}}</div>
+        <div>Desconto: {{logistic.discount | currency:'BRL':'symbol':'1.2-2'}}</div>
+        <div>Valor total dos produtos: {{logistic.total_product_value | currency:'BRL':'symbol':'1.2-2'}}</div>
+        <div>Valor total da nota: {{logistic.total_note_value | currency:'BRL':'symbol':'1.2-2'}}</div>
       </section>
       <section class="treeColls">
         <div>Transportador: {{transporter.name}}</div>
         <div>Volumes: {{logistic.bulk}}</div>
         <div>Frete por conta: {{logistic.shipping_on_account}}</div>
+        <input [(colorPicker)]="color" [style.background]="color" />
+
       </section>
       <section>Dados dos produtos:
         <div class="products">
@@ -54,12 +59,13 @@
         <div *ngFor="let prod of products" class="products">
           <div>{{prod.factory_code}}</div>
           <div>{{prod.description}}</div>
-          <div>{{prod.amount}}</div>
-          <div>{{prod.price}}</div>
-          <div>{{prod.total_price}}</div>
+          <div>{{getAmountByNfeId(prod, logistic._id!)}}</div><!--TODO: -->
+          <div>{{prod.price | currency:'BRL':'symbol':'1.2-2'}}</div>
+          <div>{{prod.total_price | currency:'BRL':'symbol':'1.2-2'}}</div>
         </div>
       </section>
     </div>
+  
     <button class="save-button" role="button" (click)="saveRegistration()">Salvar</button>
 
     <div *ngIf="loadingData && xmlData" class="page-spinner">
@@ -70,3 +76,4 @@
       </div>
     </div>
   </div>
+}

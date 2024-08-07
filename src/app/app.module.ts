@@ -10,6 +10,7 @@ import { LogisticService } from "src/app/core/services/logistic.service";
 import { AngularMaterialModule } from "./core/modules/angular-material-module/angular-material-module";
 import { ToastrModule } from "ngx-toastr";
 import { FeatureModule } from "./features/feature-module";
+
 @NgModule({
   declarations: [AppComponent],
   imports: [

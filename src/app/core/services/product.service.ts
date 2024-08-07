@@ -64,12 +64,12 @@ export class ProductService {
 
   /**
    * Updates an existing product on the server.
-   * @param {string} productId - The ID of the product to update.
-   * @param {Product} product - The updated product data.
+   * @param {Product} Product - The updated product data.
    * @returns {Observable<Product>} An Observable that emits the updated product.
    */
-  updateProduct(Productid: string, Product: Product): Observable<Product> {
-    const apiurl = `${this.url}/${Productid}`;
+  updateProduct(Product: Product): Observable<Product> {
+    const apiurl = `${this.url}products/${Product._id}`;
+    console.log(`Updating product at ${apiurl}`, Product);
     return this.http.put<Product>(apiurl, Product, httpOptions);
   }
 
@@ -79,7 +79,7 @@ export class ProductService {
    * @returns {Observable<number>} An Observable that emits the status code of the delete operation.
    */
   deleteProductById(Productid: string): Observable<number> {
-    const apiurl = `${this.url}/${Productid}`;
+    const apiurl = `${this.url}products/${Productid}`;
     return this.http.delete<number>(apiurl, httpOptions);
   }
 }

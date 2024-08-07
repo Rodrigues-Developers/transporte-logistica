@@ -18,7 +18,6 @@ import { PopupComponent } from "../shared/popup/popup.component";
     PopupComponent,
     DeliveredComponent,
     ProductsTrackingComponent,
-    RegistrationComponent,
     TrackingComponent,
     TransportDetailTableComponent
   ],
@@ -36,7 +35,6 @@ import { PopupComponent } from "../shared/popup/popup.component";
     DetailsComponent,
     DeliveredComponent,
     ProductsTrackingComponent,
-    RegistrationComponent,
     TrackingComponent,
     TransportDetailTableComponent
   ]
