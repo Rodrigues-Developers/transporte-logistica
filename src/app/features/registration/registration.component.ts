@@ -17,7 +17,7 @@ import { DataShareService } from "src/app/core/services/data-share.service";
 
 @Component({
   selector: "app-registration",
-  imports: [ColorPickerModule, CommonModule],
+  imports: [CommonModule],
   standalone: true,
   templateUrl: "./registration.component.html",
   styleUrls: ["./registration.component.less"]
