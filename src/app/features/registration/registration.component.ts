@@ -9,7 +9,6 @@ import * as xml2js from "xml2js";
 import { Company } from "src/app/core/interfaces/company.interface";
 import { Product } from "src/app/core/interfaces/product.interface";
 import { ToastrService } from "ngx-toastr";
-import { ColorPickerModule } from "ngx-color-picker";
 import { CommonModule } from "@angular/common";
 import { ObjectId } from "mongodb";
 import { lastValueFrom, of, Subscription, throwError } from "rxjs";
