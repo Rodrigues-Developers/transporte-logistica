@@ -83,7 +83,6 @@ export class RegistrationComponent implements OnInit {
       // Adding the "active" class to the clicked color span, highlighting the selected color
       (e.target as HTMLElement).classList.add("active");
     }
-    ("");
   }
 
   onDragOver(event: Event): void {
