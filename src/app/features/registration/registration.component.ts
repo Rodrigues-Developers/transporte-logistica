@@ -15,10 +15,11 @@ import { lastValueFrom, of, Subscription, throwError } from "rxjs";
 import { catchError } from "rxjs/operators";
 import { DataShareService } from "src/app/core/services/data-share.service";
 import { MatIcon } from "@angular/material/icon";
+import { ColorPickerModule } from "ngx-color-picker";
 
 @Component({
   selector: "app-registration",
-  imports: [CommonModule, MatIcon],
+  imports: [CommonModule, MatIcon, ColorPickerModule],
   standalone: true,
   templateUrl: "./registration.component.html",
   styleUrls: ["./registration.component.less"]
