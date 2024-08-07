@@ -81,6 +81,83 @@
         align-items: center;
         padding: 5px;
       }
+
+      p {
+        margin: 1.5rem 0 0 0;
+      }
+
+      #picker-container {
+        display: flex;
+        align-items: flex-end;
+        justify-content: flex-end;
+        .colors {
+          position: relative;
+          padding: 0;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          border-right: none;
+          span {
+            position: relative;
+            width: 20px;
+            height: 30px;
+            border-radius: 20px;
+            margin: 5px 8px;
+            cursor: pointer;
+
+            &.active {
+              &::before {
+                top: 0;
+                opacity: 1;
+                scale: 1.15;
+                box-shadow: 0 0 10px var(--clr), 0 0 20px var(--clr), 0 0 50px var(--clr);
+              }
+            }
+
+            &::before {
+              top: 13px;
+              content: "";
+              position: absolute;
+              left: 0;
+              width: 20px;
+              height: 20px;
+              background: var(--clr);
+              border-radius: 20px;
+              transition: 0.5s;
+              scale: 0.8;
+
+              &:hover {
+                left: 10px;
+                opacity: 1;
+                scale: 1;
+              }
+            }
+          }
+        }
+        .input-container {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          height: 80%;
+          .box {
+            caret-color: transparent;
+            cursor: pointer;
+            position: relative;
+            width: 30px;
+            height: 30px;
+            background: #28292b;
+            border-radius: 10px;
+            transition: 0.5s;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+            border: 1px solid black;
+          }
+          mat-icon {
+            position: absolute;
+            color: white;
+            pointer-events: none;
+          }
+        }
+      }
     }
 
     .treeColls:not(:last-child) {

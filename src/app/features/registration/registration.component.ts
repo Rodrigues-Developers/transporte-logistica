@@ -14,16 +14,18 @@ import { ObjectId } from "mongodb";
 import { lastValueFrom, of, Subscription, throwError } from "rxjs";
 import { catchError } from "rxjs/operators";
 import { DataShareService } from "src/app/core/services/data-share.service";
+import { MatIcon } from "@angular/material/icon";
+import { ColorPickerModule } from "ngx-color-picker";
 
 @Component({
   selector: "app-registration",
-  imports: [CommonModule],
+  imports: [CommonModule, MatIcon, ColorPickerModule],
   standalone: true,
   templateUrl: "./registration.component.html",
   styleUrls: ["./registration.component.less"]
 })
 export class RegistrationComponent implements OnInit {
-  color: string = "#127dbc";
+  color: string = "";
   xmlData: any;
 
   logistic = {} as Logistic;
@@ -60,6 +62,24 @@ export class RegistrationComponent implements OnInit {
       .subscribe((newLogistic: Logistic) => {
         this.logisticLocal = newLogistic;
       });
+  }
+
+  removeActiveColor() {
+    // Removing the "active" class from all color spans
+    document.querySelectorAll(".colors span").forEach(function (item) {
+      item.classList.remove("active");
+    });
+  }
+
+  changeColor(color: string, e: Event) {
+    // Selecting the box element with the class "box"
+    let box = document.querySelector(".box") as HTMLElement;
+    if (box) {
+      this.color = color;
+      this.removeActiveColor();
+      // Adding the "active" class to the clicked color span, highlighting the selected color
+      (e.target as HTMLElement).classList.add("active");
+    }
   }
 
   onDragOver(event: Event): void {
@@ -281,7 +301,7 @@ export class RegistrationComponent implements OnInit {
   }
 
   async saveProducts(): Promise<void> {
-    const productPromise = this.products.map( async (product) => {
+    const productPromise = this.products.map(async product => {
       try {
         const result = await lastValueFrom(
           this.productsService.createProduct(product).pipe(
@@ -292,11 +312,11 @@ export class RegistrationComponent implements OnInit {
           )
         );
         if (result && result._id) {
-          this.logistic.merchandise.push(result._id); 
+          this.logistic.merchandise.push(result._id);
           console.log("Produto criado: ", result);
         }
       } catch (error) {
-        console.error('Unexpected error:', error);
+        console.error("Unexpected error:", error);
       }
     });
     await Promise.all(productPromise);
