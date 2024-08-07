@@ -74,16 +74,12 @@ export class RegistrationComponent implements OnInit {
   changeColor(color: string, e: Event) {
     // Selecting the box element with the class "box"
     let box = document.querySelector(".box") as HTMLElement;
-
     if (box) {
       this.color = color;
-
       this.removeActiveColor();
-
       // Adding the "active" class to the clicked color span, highlighting the selected color
       (e.target as HTMLElement).classList.add("active");
     }
-    ("");
   }
 
   onDragOver(event: Event): void {
