@@ -29,7 +29,7 @@
           <th><input type="checkbox" (click)="toggleSelection(logis, $event)" id="{{logis._id}}" #checkBoxes></th>
           <td (click)="openSidebar(logis)">{{logis.nfe}}</td>
           <td (click)="openSidebar(logis)">{{logis.emission_date | date:'dd/MM/yyyy' : 'UTC-00'}}</td>
-          <td (click)="openSidebar(logis)">{{logis.transporter.id}}</td>
+          <td (click)="openSidebar(logis)">{{this.getTrasnporter(logis.transporter)}}</td>
           <td (click)="openSidebar(logis)">{{logis.date_out | date:'dd/MM/yyyy' : 'UTC-00'}}</td>
           <td (click)="openSidebar(logis)">{{logis.arrival_forecast | date:'dd/MM/yyyy' : 'UTC-00'}}</td>
           <td (click)="openSidebar(logis)">{{logis.pin_release | date:'dd/MM/yyyy' : 'UTC-00'}}</td>
