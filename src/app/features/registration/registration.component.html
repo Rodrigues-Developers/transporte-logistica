@@ -74,7 +74,7 @@
         <div *ngFor="let prod of products" class="products">
           <div>{{prod.factory_code}}</div>
           <div>{{prod.description}}</div>
-          <div>{{getAmountByNfeId(prod, logistic._id!)}}</div><!--TODO: -->
+          <div>{{getAmountByNfeId(prod, logistic._id!)}}</div>
           <div>{{prod.price | currency:'BRL':'symbol':'1.2-2'}}</div>
           <div>{{prod.total_price | currency:'BRL':'symbol':'1.2-2'}}</div>
         </div>
