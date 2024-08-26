@@ -136,11 +136,14 @@ export class TransportDetailTableComponent implements OnInit {
     });
   }
 
-  getTrasnporter(transportId: ObjectId) {
+  getTransporter(transportId: ObjectId) {
     const transporter = this.companies.find(transp => transp._id == transportId);
     return transporter!.name;
   }
-
+  getTransporterColor(transportId: ObjectId) {
+    const transporter = this.companies.find(transp => transp._id == transportId);
+    return transporter!.color;
+  }
   /**
    *
    * @param {Logistic} logis

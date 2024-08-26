@@ -25,15 +25,15 @@
             </ng-template>
           </th>
         </div>
-        <tr *ngFor="let logis of group.logistics" [style.background-color]="getTrasnporter(logis.transporter)">
-          <th><input [ngStyle]="{'background-color': getTrasnporter(logis.transporter)}" type="checkbox" (click)="toggleSelection(logis, $event)" id="{{logis._id}}" #checkBoxes></th>
-          <td [ngStyle]="{'background-color': getTrasnporter(logis.transporter)}" (click)="openSidebar(logis)">{{logis.nfe}}</td>
+        <tr *ngFor="let logis of group.logistics" [style.background-color]="getTransporterColor(logis.transporter)">
+          <th><input [ngStyle]="{'background-color': getTransporterColor(logis.transporter)}" type="checkbox" (click)="toggleSelection(logis, $event)" id="{{logis._id}}" #checkBoxes></th>
+          <td >{{logis.nfe}}</td>
           <td (click)="openSidebar(logis)">{{logis.emission_date | date:'dd/MM/yyyy' : 'UTC-00'}}</td>
-          <td (click)="openSidebar(logis)">{{this.getTrasnporter(logis.transporter)}}</td>
+          <td (click)="openSidebar(logis)">{{this.getTransporter(logis.transporter)}}</td>
           <td (click)="openSidebar(logis)">{{logis.date_out | date:'dd/MM/yyyy' : 'UTC-00'}}</td>
           <td (click)="openSidebar(logis)">{{logis.arrival_forecast | date:'dd/MM/yyyy' : 'UTC-00'}}</td>
           <td (click)="openSidebar(logis)">{{logis.pin_release | date:'dd/MM/yyyy' : 'UTC-00'}}</td>
-          <td (click)="openSidebar(logis)" [class.delayed]="logis.status === 'Atrasada'" [class.inDate]="logis.status !== 'Atrasada'">{{logis.status}}</td>
+          <td (click)="openSidebar(logis)" [class.delayed]="logis.status === 'Atrasada'" [class.inDate]="logis.status === 'Em dia.'" [class.pending]="logis.status === 'Atualize a previsão de chegada.'">{{logis.status}}</td>
         </tr>
       </ng-container>
       <tr *ngIf="loadingData">
