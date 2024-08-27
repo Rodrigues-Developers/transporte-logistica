@@ -44,25 +44,27 @@
         <div>Transportador: {{transporter.name}}</div>
         <div>Volumes: {{logistic.bulk}}</div>
         <div>Frete por conta: {{logistic.shipping_on_account}}</div>
-        <div>
-          <p>Cor:</p>
-          <div id="picker-container">
-            <div class="colors">
-              <span (click)="changeColor('#ff6b6b', $event)" style="--clr:#ff6b6b;"></span>
-              <span (click)="changeColor('#1dd1a1', $event)" style="--clr:#1dd1a1;"></span>
-              <span (click)="changeColor('#2e86de', $event)" style="--clr:#2e86de;"></span>
-              <span (click)="changeColor('#f368e0', $event)" style="--clr:#f368e0;"></span>
-              <span (click)="changeColor('#ff9f43', $event)" style="--clr:#ff9f43;"></span>
-            </div>
-            <div class="input-container">
-              <input class="box" [(colorPicker)]="color" [style.background-color]="color" (click)="removeActiveColor()"
-                readonly />
-              <mat-icon>format_color_fill</mat-icon>
-            </div>
-          </div>
-        </div>
 
       </section>
+      @if(!hasTrasnporter){
+      <section class="picker-section">
+        <p>Cor:</p>
+        <div id="picker-container">
+          <div class="colors">
+            <span (click)="changeColor('#516091', $event)" style="--clr:#516091;"></span>
+            <span (click)="changeColor('#74bec1', $event)" style="--clr:#74bec1;"></span>
+            <span (click)="changeColor('#adebbe', $event)" style="--clr:#adebbe;"></span>
+            <span (click)="changeColor('#eef3ad', $event)" style="--clr:#eef3ad;"></span>
+            <span (click)="changeColor('#75b79e', $event)" style="--clr:#75b79e;"></span>
+          </div>
+          <div class="input-container">
+            <input class="box" [(colorPicker)]="color" [style.background-color]="color" (click)="removeActiveColor()"
+              readonly />
+            <mat-icon>format_color_fill</mat-icon>
+          </div>
+        </div>
+      </section>
+      }
       <section>Dados dos produtos:
         <div class="products">
           <div>Código</div>

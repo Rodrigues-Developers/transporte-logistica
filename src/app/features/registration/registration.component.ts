@@ -43,6 +43,7 @@ export class RegistrationComponent implements OnInit {
 
   private logisticObservableSubscription: Subscription = new Subscription();
   logisticLocal = {} as Logistic;
+  hasTrasnporter = false;
 
   constructor(
     private http: HttpClient,
@@ -191,6 +192,7 @@ export class RegistrationComponent implements OnInit {
     if (foundTransporter) {
       this.logistic.transporter = foundTransporter._id;
       this.transporter = foundTransporter;
+      this.hasTrasnporter = true;
     } else {
       const transporterId = new ObjectId();
       this.transporter._id = transporterId;
