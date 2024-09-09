@@ -16,7 +16,7 @@
     <tbody>
       <ng-container *ngFor="let group of displayedGroupedLogistics">
         <!-- Change this div to tr after adding colors to each company -->
-        <div class="week__range" *ngIf="group.logistics.length > 0">
+        <tr class="week__range" *ngIf="group.logistics.length > 0">
           <th [colSpan]="8">
             <h2 *ngIf="group.initial !== group.final; else elseBlock"> {{(group.initial | date:'dd/MM/yyyy' : 'UTC-00')+ " ~ " +
               (group.final|date:'dd/MM/yyyy' : 'UTC-00')}}</h2>
@@ -24,16 +24,16 @@
               <h2> Atualize a previsão de chegada</h2>
             </ng-template>
           </th>
-        </div>
-        <tr *ngFor="let logis of group.logistics">
+        </tr>
+        <tr *ngFor="let logis of group.logistics" [style.background-color]="getTransporterColor(logis.transporter)">
           <th><input type="checkbox" (click)="toggleSelection(logis, $event)" id="{{logis._id}}" #checkBoxes></th>
-          <td (click)="openSidebar(logis)">{{logis.nfe}}</td>
+          <td >{{logis.nfe}}</td>
           <td (click)="openSidebar(logis)">{{logis.emission_date | date:'dd/MM/yyyy' : 'UTC-00'}}</td>
-          <td (click)="openSidebar(logis)">{{logis.transporter.id}}</td>
+          <td (click)="openSidebar(logis)">{{this.getTransporter(logis.transporter)}}</td>
           <td (click)="openSidebar(logis)">{{logis.date_out | date:'dd/MM/yyyy' : 'UTC-00'}}</td>
           <td (click)="openSidebar(logis)">{{logis.arrival_forecast | date:'dd/MM/yyyy' : 'UTC-00'}}</td>
           <td (click)="openSidebar(logis)">{{logis.pin_release | date:'dd/MM/yyyy' : 'UTC-00'}}</td>
-          <td (click)="openSidebar(logis)" [class.delayed]="logis.status === 'Atrasada'" [class.inDate]="logis.status !== 'Atrasada'">{{logis.status}}</td>
+          <td (click)="openSidebar(logis)" [class.delayed]="logis.status === 'Atrasada'" [class.inDate]="logis.status === 'Em dia.'" [class.pending]="logis.status === 'Atualize a previsão de chegada.'">{{logis.status}}</td>
         </tr>
       </ng-container>
       <tr *ngIf="loadingData">

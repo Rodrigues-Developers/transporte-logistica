@@ -1,3 +1,4 @@
+import { nfeReference } from "./../../core/interfaces/product.interface";
 import { Component, OnInit, OnDestroy, AfterViewChecked } from "@angular/core";
 import { ProductService } from "src/app/core/services/product.service";
 import { Product } from "src/app/core/interfaces/product.interface";
@@ -65,6 +66,11 @@ export class DetailsComponent implements OnInit, OnDestroy, AfterViewChecked {
     }
   }
 
+  getAmount(product: Product) {
+    const amount = product.nfeReference.find(nfe => nfe.nfeId == this.logistic._id);
+    return amount?.amount;
+  }
+
   formatLogisticsDates() {
     this.datesFormated = {
       pin_release: this.logistic.pin_release?.toISOString().split("T")[0],
@@ -101,7 +107,7 @@ export class DetailsComponent implements OnInit, OnDestroy, AfterViewChecked {
     try {
       this.productsNfe = []; // Clear array before adding new products
       for (let i = 0; i < nfe.merchandise.length; i++) {
-        await this.productService.getProductById(nfe.merchandise[i]).subscribe((product: Product) => {
+        this.productService.getProductById(nfe.merchandise[i]).subscribe((product: Product) => {
           this.productsNfe.push(product);
         });
       }
@@ -128,7 +134,6 @@ export class DetailsComponent implements OnInit, OnDestroy, AfterViewChecked {
         //Update the note value
 
         for (let originalNote of logisticTosave.note) {
-          
           if (originalNote._id === note._id) {
             const noteElement = document.getElementById("textarea_" + this.currentAreaIndex) as HTMLTextAreaElement;
 
@@ -141,7 +146,6 @@ export class DetailsComponent implements OnInit, OnDestroy, AfterViewChecked {
         }
       }
       try {
-
         //Call the PUT method to update logistic
         this.logisticService.updateLogistic(logisticTosave).subscribe(e => {
           this.toastr.success("Nota atualizada", "Sucesso!");

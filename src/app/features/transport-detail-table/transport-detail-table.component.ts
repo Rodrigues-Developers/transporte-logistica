@@ -1,3 +1,4 @@
+import { CompanyService } from "src/app/core/services/company.service";
 import { Component, ElementRef, Input, OnInit, Output, QueryList, ViewChildren } from "@angular/core";
 import { DataShareService } from "./../../core/services/data-share.service";
 import { Product } from "../../core/interfaces/product.interface";
@@ -8,6 +9,7 @@ import { ObjectId } from "mongodb";
 import { Subscription } from "rxjs";
 import { EventEmitter } from "@angular/core";
 import { AnimationBuilder, animate, style } from "@angular/animations";
+import { Company } from "src/app/core/interfaces/company.interface";
 
 @Component({
   selector: "app-transport-detail-table",
@@ -24,7 +26,9 @@ export class TransportDetailTableComponent implements OnInit {
   products: Product[] = [];
 
   logistic = {} as Logistic;
+  company = {} as Company;
   logistics: Logistic[] = [];
+  companies: Company[] = [];
   selectedLogistics: Logistic[] = [];
   productServiceObservable: Subscription = new Subscription();
   checkedLogisticsElements: HTMLElement[] = [];
@@ -45,11 +49,13 @@ export class TransportDetailTableComponent implements OnInit {
     private productService: ProductService,
     private logisticService: LogisticService,
     private dataShareService: DataShareService,
-    private animationBuilder: AnimationBuilder
+    private animationBuilder: AnimationBuilder,
+    private companyService: CompanyService
   ) {}
 
   ngOnInit(): void {
     this.getLogistics();
+    this.getCompanies();
   }
 
   @Input()
@@ -102,6 +108,16 @@ export class TransportDetailTableComponent implements OnInit {
   }
 
   /**
+   * @name getCompanies()
+   * @description Get all companies on database.
+   */
+  async getCompanies() {
+    this.companyService.getAllCompany().subscribe((companies: Company[]) => {
+      this.companies = companies;
+    });
+  }
+
+  /**
    * Get all products from database.
    */
   async getProducts() {
@@ -120,6 +136,14 @@ export class TransportDetailTableComponent implements OnInit {
     });
   }
 
+  getTransporter(transportId: ObjectId) {
+    const transporter = this.companies.find(transp => transp._id == transportId);
+    return transporter!.name;
+  }
+  getTransporterColor(transportId: ObjectId) {
+    const transporter = this.companies.find(transp => transp._id == transportId);
+    return transporter!.color;
+  }
   /**
    *
    * @param {Logistic} logis
