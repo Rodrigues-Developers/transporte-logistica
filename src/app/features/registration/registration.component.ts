@@ -43,6 +43,7 @@ export class RegistrationComponent implements OnInit {
 
   private logisticObservableSubscription: Subscription = new Subscription();
   logisticLocal = {} as Logistic;
+  hasTrasnporter = false;
 
   constructor(
     private http: HttpClient,
@@ -114,6 +115,11 @@ export class RegistrationComponent implements OnInit {
     }
   }
 
+  /**
+   * @name parseXml
+   * @description Read the XML file
+   * @param xml
+   */
   parseXml(xml: string) {
     const parser = new xml2js.Parser({ strict: false, trim: true });
     parser.parseString(xml, (err, result) => {
@@ -186,6 +192,7 @@ export class RegistrationComponent implements OnInit {
     if (foundTransporter) {
       this.logistic.transporter = foundTransporter._id;
       this.transporter = foundTransporter;
+      this.hasTrasnporter = true;
     } else {
       const transporterId = new ObjectId();
       this.transporter._id = transporterId;
@@ -228,7 +235,8 @@ export class RegistrationComponent implements OnInit {
   }
 
   /**
-   * findKey function, find a key in a json object
+   * @name findKey
+   * @description FindKey function, find a key in a json object
    * @param object
    * @param keyWanted
    * @returns
@@ -249,6 +257,12 @@ export class RegistrationComponent implements OnInit {
     return undefined;
   }
 
+  /**
+   * @name toArrayIfNeeded
+   * @description Check if the value is an array or not, and return one or the other.
+   * @param value
+   * @returns
+   */
   toArrayIfNeeded(value: any) {
     if (Array.isArray(value)) {
       return value[0];
@@ -346,6 +360,7 @@ export class RegistrationComponent implements OnInit {
   async saveRegistration() {
     this.loadingData = true;
     const verifyl = this.logistics.some(log => log.key === this.logistic.key);
+    this.transporter.color = this.color;
 
     if (!verifyl) {
       try {
@@ -376,6 +391,10 @@ export class RegistrationComponent implements OnInit {
     });
   }
 
+  /**
+   * @name clearPage
+   * @description Clear every object and the page.
+   */
   clearPage() {
     this.xmlData = false;
     this.logistic = {} as Logistic;

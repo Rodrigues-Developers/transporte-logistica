@@ -64,7 +64,7 @@
                     <tr *ngFor="let prod of productsNfe">
                         <th>{{prod.factory_code}}</th>
                         <th>{{prod.description}}</th>
-                        <th>TODO</th>
+                        <th>{{getAmount(prod)}}</th>
                     </tr>
                 </tbody>
             </table>
